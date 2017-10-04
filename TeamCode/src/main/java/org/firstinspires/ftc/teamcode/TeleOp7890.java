@@ -51,7 +51,6 @@ import com.qualcomm.robotcore.util.Range;
  */
 
 @TeleOp(name="Basic: Linear OpMode", group="Linear Opmode")
-@Disabled
 public class TeleOp7890 extends LinearOpMode {
 
     //names of wheel motors
@@ -59,18 +58,28 @@ public class TeleOp7890 extends LinearOpMode {
     public final static String LEFTBACK = "leftBack";
     public final static String RIGHTFRONT = "rightFront";
     public final static String RIGHTBACK = "rightBack";
-
+    //names of the intake wheels
+    /*public final static String LEFTINTAKE = "leftIntake";
+    public final static String RIGHTINTAKE = "leftIntake";
+    //name of the motor that does the lift
+    public final static String LIFTMOTOR = "liftMotor";
+    */
 
     //directions
     private DcMotor.Direction LEFTDIRECTION = DcMotor.Direction.FORWARD;
     private DcMotor.Direction RIGHTDIRECTION = DcMotor.Direction.REVERSE;
 
-    // Declare OpMode members.
+    // declared the opmode members
     private ElapsedTime runtime = new ElapsedTime();
+        //drive
     private DcMotor leftFront;
     private DcMotor leftBack;
     private DcMotor rightFront;
     private DcMotor rightBack;
+        //lift and intake
+    /*private DcMotor leftIntake;
+    private DcMotor rightIntake;
+    private DcMotor liftMotor;*/
 
     @Override
     public void runOpMode() {
@@ -80,22 +89,32 @@ public class TeleOp7890 extends LinearOpMode {
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
+            //wheels
         leftFront  = hardwareMap.get(DcMotor.class, LEFTFRONT);
         leftBack = hardwareMap.get(DcMotor.class, LEFTBACK);
         rightFront = hardwareMap.get(DcMotor.class, RIGHTFRONT);
         rightBack = hardwareMap.get(DcMotor.class, RIGHTBACK);
-
+            //mechanism #1
+        /*leftIntake = hardwareMap.get(DcMotor.class, LEFTINTAKE);
+        rightIntake = hardwareMap.get(DcMotor.class, RIGHTINTAKE);
+        liftMotor = hardwareMap.get(DcMotor.class, LIFTMOTOR);
+        */
         //motor directions
+            //wheels
         leftFront.setDirection(LEFTDIRECTION);
         leftBack.setDirection(LEFTDIRECTION);
         rightFront.setDirection(RIGHTDIRECTION);
         rightBack.setDirection(RIGHTDIRECTION);
-
+            //intake and lift
+        /*leftIntake.setDirection(LEFTDIRECTION);
+        rightIntake.setDirection(RIGHTDIRECTION);
+        liftMotor.setDirection(LEFTDIRECTION);
+        */
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
-        runtime.reset();
-
+        runtime.reset();//akira is bad
+//hi its arden
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
 
@@ -109,8 +128,9 @@ public class TeleOp7890 extends LinearOpMode {
             // POV drivings controls
             double drive = -gamepad1.left_stick_y;
             double turn  =  gamepad1.right_stick_x;
-            leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
-            rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
+            leftPower    = Range.clip(drive + turn, 1.0, -1.0) ;
+            rightPower   = Range.clip(drive - turn, 1.0, -1.0) ;
+
 
             // Send calculated power to wheels
             leftFront.setPower(leftPower);
