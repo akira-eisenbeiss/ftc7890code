@@ -59,11 +59,10 @@ public class TeleOp7890 extends LinearOpMode {
     public final static String RIGHTFRONT = "rightFront";
     public final static String RIGHTBACK = "rightBack";
     //names of the intake wheels
-    /*public final static String LEFTINTAKE = "leftIntake";
+    public final static String LEFTINTAKE = "leftIntake";
     public final static String RIGHTINTAKE = "leftIntake";
     //name of the motor that does the lift
     public final static String LIFTMOTOR = "liftMotor";
-    */
 
     //directions
     private DcMotor.Direction LEFTDIRECTION = DcMotor.Direction.FORWARD;
@@ -77,9 +76,9 @@ public class TeleOp7890 extends LinearOpMode {
     private DcMotor rightFront;
     private DcMotor rightBack;
         //lift and intake
-    /*private DcMotor leftIntake;
+    private DcMotor leftIntake;
     private DcMotor rightIntake;
-    private DcMotor liftMotor;*/
+    private DcMotor liftMotor;
 
     @Override
     public void runOpMode() {
@@ -95,10 +94,10 @@ public class TeleOp7890 extends LinearOpMode {
         rightFront = hardwareMap.get(DcMotor.class, RIGHTFRONT);
         rightBack = hardwareMap.get(DcMotor.class, RIGHTBACK);
             //mechanism #1
-        /*leftIntake = hardwareMap.get(DcMotor.class, LEFTINTAKE);
+        leftIntake = hardwareMap.get(DcMotor.class, LEFTINTAKE);
         rightIntake = hardwareMap.get(DcMotor.class, RIGHTINTAKE);
         liftMotor = hardwareMap.get(DcMotor.class, LIFTMOTOR);
-        */
+
         //motor directions
             //wheels
         leftFront.setDirection(LEFTDIRECTION);
@@ -106,10 +105,10 @@ public class TeleOp7890 extends LinearOpMode {
         rightFront.setDirection(RIGHTDIRECTION);
         rightBack.setDirection(RIGHTDIRECTION);
             //intake and lift
-        /*leftIntake.setDirection(LEFTDIRECTION);
+        leftIntake.setDirection(LEFTDIRECTION);
         rightIntake.setDirection(RIGHTDIRECTION);
         liftMotor.setDirection(LEFTDIRECTION);
-        */
+
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -121,22 +120,62 @@ public class TeleOp7890 extends LinearOpMode {
             // Setup a variable for each drive wheel to save power level for telemetry
             double leftPower;
             double rightPower;
-
-            // Choose to drive using either Tank Mode, or POV Mode
-            // Comment out the method that's not used.  The default below is POV.
+            double intakeLeft;
+            double intakeRight;
+            double liftRaise;
+            double liftLower;
 
             // POV drivings controls
-            double drive = -gamepad1.left_stick_y;
-            double turn  =  gamepad1.right_stick_x;
+            float drive = -gamepad1.left_stick_y;
+            float turn  =  gamepad1.right_stick_x;
             leftPower    = Range.clip(drive + turn, 1.0, -1.0) ;
             rightPower   = Range.clip(drive - turn, 1.0, -1.0) ;
 
+            //wheel lift mechanism controls
+            float leftTrigger1 = gamepad1.left_trigger;
+            float rightTrigger1 = gamepad1.right_trigger;
+            boolean toggleIn = gamepad1.a;
+            boolean toggleOut = gamepad1.b;
+            liftRaise = Range.clip(leftTrigger1, -1.0, 1.0);
+            liftLower = Range.clip(rightTrigger1, 1.0, -1.0);
 
             // Send calculated power to wheels
             leftFront.setPower(leftPower);
             leftBack.setPower(leftPower);
             rightFront.setPower(rightPower);
             rightBack.setPower(rightPower);
+
+            //the ifs that control the life mechanism
+            if(leftTrigger1 > 0){
+                liftMotor.setPower(liftRaise);
+            }else{
+
+            }
+            if(rightTrigger1 > 0)
+            {
+                liftMotor.setPower(liftLower);
+            }else{
+
+            }
+
+            //the ifs that are used for toggling the intake mechanism
+            if(toggleIn){
+                int cntr = 0;
+                cntr++;
+                if(cntr%2!=0){
+                    leftIntake.setPower(1.0);
+                    rightIntake.setPower(-1.0);
+                }
+            }
+            if(toggleOut){
+                int cntr = 0;
+                cntr++;
+                if(cntr%2!=0){
+                    leftIntake.setPower(-1.0);
+                    rightIntake.setPower(1.0);
+                }
+            }
+
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
