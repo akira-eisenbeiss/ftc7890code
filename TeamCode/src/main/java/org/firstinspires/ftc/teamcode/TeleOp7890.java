@@ -83,7 +83,7 @@ public class TeleOp7890 extends LinearOpMode {
         leftIntake = hardwareMap.get(DcMotor.class, LEFTINTAKE);
         rightIntake = hardwareMap.get(DcMotor.class, RIGHTINTAKE);
         //liftMotor = hardwareMap.get(DcMotor.class, LIFTMOTOR);
-
+//hiii
         //motor directions
             //wheels
         leftFront.setDirection(LEFTDIRECTION);
@@ -98,7 +98,7 @@ public class TeleOp7890 extends LinearOpMode {
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
-        runtime.reset();//akira is bad
+        runtime.reset();
 //hi its arden
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
@@ -131,7 +131,7 @@ public class TeleOp7890 extends LinearOpMode {
             rightFront.setPower(rightPower);
             rightBack.setPower(rightPower);
 
-            //the ifs that control the life mechanism
+            //the ifs that control the lift mechanism
             /*if(leftTrigger1 > 0){
                 liftMotor.setPower(liftRaise);
             }else{
