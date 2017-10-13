@@ -47,7 +47,7 @@ public class TeleOp7890 extends LinearOpMode {
     //names of the intake wheels
     public final static String LEFTINTAKE = "leftIntake";
     public final static String RIGHTINTAKE = "rightIntake";
-    //name of the motor that does the lift
+    //name of the motor that does the lisft
     //public final static String LIFTMOTOR = "liftMotor";
 
     //directions
@@ -64,7 +64,7 @@ public class TeleOp7890 extends LinearOpMode {
         //lift and intake
     private DcMotor leftIntake;
     private DcMotor rightIntake;
-    //private DcMotor liftMotor;
+    private DcMotor liftMotor;
 
     @Override
     public void runOpMode() {
@@ -76,13 +76,13 @@ public class TeleOp7890 extends LinearOpMode {
         // step (using the FTC Robot Controller app on the phone).
             //wheels
         leftFront  = hardwareMap.get(DcMotor.class, LEFTFRONT);
-        leftBack = hardwareMap.get(DcMotor.class, LEFTBACK);
+        leftBack = hardwareMap.get(DcMotor.class, LEFTBACK); //left = forward
         rightFront = hardwareMap.get(DcMotor.class, RIGHTFRONT);
-        rightBack = hardwareMap.get(DcMotor.class, RIGHTBACK);
+        rightBack = hardwareMap.get(DcMotor.class, RIGHTBACK); //right = backwards
             //mechanism #1
         leftIntake = hardwareMap.get(DcMotor.class, LEFTINTAKE);
         rightIntake = hardwareMap.get(DcMotor.class, RIGHTINTAKE);
-        //liftMotor = hardwareMap.get(DcMotor.class, LIFTMOTOR);
+        liftMotor = hardwareMap.get(DcMotor.class, LIFTMOTOR);
 //hiii
         //motor directions
             //wheels
@@ -93,7 +93,7 @@ public class TeleOp7890 extends LinearOpMode {
             //intake and lift
         leftIntake.setDirection(LEFTDIRECTION);
         rightIntake.setDirection(RIGHTDIRECTION);
-        //liftMotor.setDirection(LEFTDIRECTION);
+        liftMotor.setDirection(LEFTDIRECTION);
 
 
         // Wait for the game to start (driver presses PLAY)
@@ -106,10 +106,8 @@ public class TeleOp7890 extends LinearOpMode {
             // Setup a variable for each drive wheel to save power level for telemetry
             double leftPower;
             double rightPower;
-            //double intakeLeft;
-            //double intakeRight;
-            //double liftRaise;
-            //double liftLower;
+            double liftRaise;
+            double liftLower;
 
             // POV drivings controls
             float drive = -gamepad1.left_stick_y;
@@ -122,8 +120,8 @@ public class TeleOp7890 extends LinearOpMode {
             float rightTrigger1 = gamepad1.right_trigger;
             boolean toggleIn = gamepad1.a;
             boolean toggleOut = gamepad1.b;
-            //liftRaise = Range.clip(leftTrigger1, -1.0, 1.0);
-            //liftLower = Range.clip(rightTrigger1, 1.0, -1.0);
+            liftRaise = Range.clip(leftTrigger1, -1.0, 1.0);
+            liftLower = Range.clip(rightTrigger1, 1.0, -1.0);
 
             // Send calculated power to wheels
             leftFront.setPower(leftPower);
@@ -132,7 +130,7 @@ public class TeleOp7890 extends LinearOpMode {
             rightBack.setPower(rightPower);
 
             //the ifs that control the lift mechanism
-            /*if(leftTrigger1 > 0){
+            if(leftTrigger1 > 0){
                 liftMotor.setPower(liftRaise);
             }else{
 
@@ -143,21 +141,20 @@ public class TeleOp7890 extends LinearOpMode {
             }else{
 
             }
-            */
 
+            int x = 0;
             //the ifs that are used for toggling the intake mechanism
             if(toggleIn){
-                int cntr = 0;
-                cntr++;
-                if(cntr%2!=0){
+                x++;
+                if(x%2!=0){
                     leftIntake.setPower(1.0);
                     rightIntake.setPower(-1.0);
                 }
             }
+            int y = 0;
             if(toggleOut){
-                int cntr = 0;
-                cntr++;
-                if(cntr%2!=0){
+                y++;
+                if(y%2!=0){
                     leftIntake.setPower(-1.0);
                     rightIntake.setPower(1.0);
                 }
