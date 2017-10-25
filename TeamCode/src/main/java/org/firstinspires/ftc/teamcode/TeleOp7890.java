@@ -48,7 +48,7 @@ public class TeleOp7890 extends LinearOpMode {
     public final static String LEFTINTAKE = "leftIntake";
     public final static String RIGHTINTAKE = "rightIntake";
     //name of the motor that does the lift
-   // public final static String LIFTMOTOR = "liftMotor";
+    public final static String LIFTMOTOR = "liftMotor";
 
     //directions
     private DcMotor.Direction LEFTDIRECTION = DcMotor.Direction.FORWARD;
@@ -64,7 +64,7 @@ public class TeleOp7890 extends LinearOpMode {
         //lift and intake
     private DcMotor leftIntake;
     private DcMotor rightIntake;
-  //  private DcMotor liftMotor;
+    private DcMotor liftMotor;
 
     @Override
     public void runOpMode() {
@@ -82,7 +82,7 @@ public class TeleOp7890 extends LinearOpMode {
             //mechanism #1
         leftIntake = hardwareMap.get(DcMotor.class, LEFTINTAKE);
         rightIntake = hardwareMap.get(DcMotor.class, RIGHTINTAKE);
-     //   liftMotor = hardwareMap.get(DcMotor.class, LIFTMOTOR);
+        liftMotor = hardwareMap.get(DcMotor.class, LIFTMOTOR);
 //hiiii
         //motor directions
             //wheels
@@ -93,7 +93,7 @@ public class TeleOp7890 extends LinearOpMode {
             //intake and lift
         leftIntake.setDirection(LEFTDIRECTION);
         rightIntake.setDirection(RIGHTDIRECTION);
-  //      liftMotor.setDirection(LEFTDIRECTION);
+        liftMotor.setDirection(LEFTDIRECTION);
 
 
         // Wait for the game to start (driver presses PLAY)
@@ -130,7 +130,7 @@ public class TeleOp7890 extends LinearOpMode {
             rightBack.setPower(rightPower);
 
             //the ifs that control the lift mechanism
-    /*        if(leftTrigger1 > 0){
+            if(leftTrigger1 > 0){
                 liftMotor.setPower(liftRaise);
             }else{
 
@@ -141,7 +141,7 @@ public class TeleOp7890 extends LinearOpMode {
             }else{
 
             }
-*/
+
             int x = 0;
             //the ifs that are used for toggling the intake mechanism
             if(toggleIn){
