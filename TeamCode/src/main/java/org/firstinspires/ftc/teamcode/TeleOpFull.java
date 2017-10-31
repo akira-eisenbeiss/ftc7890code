@@ -9,16 +9,6 @@ import com.qualcomm.robotcore.util.Range;
 
 @TeleOp(name="complete tele op", group="Tele Op")
 public class TeleOpFull extends OpMode {
-    //names of wheel motors
-    public final static String LEFTFRONT = "leftFront";
-    public final static String LEFTBACK = "leftBack";
-    public final static String RIGHTFRONT = "rightFront";
-    public final static String RIGHTBACK = "rightBack";
-    //names of the intake wheels
-    public final static String LEFTINTAKE = "leftIntake";
-    public final static String RIGHTINTAKE = "rightIntake";
-    //name of the motor that does the lift
-    public final static String LIFTMOTOR = "liftMotor";
 
     //directions
     private DcMotor.Direction LEFTDIRECTION = DcMotor.Direction.FORWARD;
@@ -27,14 +17,14 @@ public class TeleOpFull extends OpMode {
     // declared the opmode members
     private ElapsedTime runtime = new ElapsedTime();
     //drive
-    private DcMotor leftFront;
-    private DcMotor leftBack;
-    private DcMotor rightFront;
-    private DcMotor rightBack;
+    private DcMotor leftFront = null;
+    private DcMotor leftBack = null;
+    private DcMotor rightFront = null;
+    private DcMotor rightBack = null;
     //lift and intake
-    private DcMotor leftIntake;
-    private DcMotor rightIntake;
-    private DcMotor liftMotor;
+    private DcMotor leftIntake = null;
+    private DcMotor rightIntake = null;
+    private DcMotor liftMotor = null;
 
     @Override
     public void init() {
@@ -42,14 +32,14 @@ public class TeleOpFull extends OpMode {
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
         //wheels
-        leftFront = hardwareMap.get(DcMotor.class, LEFTFRONT);
-        leftBack = hardwareMap.get(DcMotor.class, LEFTBACK); //left = forward
-        rightFront = hardwareMap.get(DcMotor.class, RIGHTFRONT);
-        rightBack = hardwareMap.get(DcMotor.class, RIGHTBACK); //right = backwards
+        leftFront = hardwareMap.get(DcMotor.class, "left front");
+        leftBack = hardwareMap.get(DcMotor.class, "left back");
+        rightFront = hardwareMap.get(DcMotor.class, "right front");
+        rightBack = hardwareMap.get(DcMotor.class, "right back");
         //mechanism #1
-        leftIntake = hardwareMap.get(DcMotor.class, LEFTINTAKE);
-        rightIntake = hardwareMap.get(DcMotor.class, RIGHTINTAKE);
-        liftMotor = hardwareMap.get(DcMotor.class, LIFTMOTOR);
+        leftIntake = hardwareMap.get(DcMotor.class, "left intake");
+        rightIntake = hardwareMap.get(DcMotor.class, "right intake");
+        liftMotor = hardwareMap.get(DcMotor.class, "lift motor");
 //hiiii
         //motor directions
         //wheels
@@ -74,12 +64,18 @@ public class TeleOpFull extends OpMode {
             double liftRaise;
             double liftLower;
 
+
             // POV drivings controls
             float drive = -gamepad1.left_stick_y;
             float turn = gamepad1.right_stick_x;
-            leftPower = Range.clip(drive + turn, 1.0, -1.0);
-            rightPower = Range.clip(drive - turn, 1.0, -1.0);
-
+            leftPower = Range.clip(drive - turn, -1.0, 1.0);
+            rightPower = Range.clip(drive + turn, -1.0, 1.0);
+        
+        /*
+            //tank mode version
+            leftPower  = -gamepad1.left_stick_y ;
+            rightPower = -gamepad1.right_stick_y ;
+        */
             //wheel lift mechanism controls
             float leftTrigger1 = gamepad1.left_trigger;
             float rightTrigger1 = gamepad1.right_trigger;
@@ -113,7 +109,7 @@ public class TeleOpFull extends OpMode {
                 if (x % 2 != 0) {
                     leftIntake.setPower(1.0);
                     rightIntake.setPower(1.0);
-                } else {
+                } else if (x % 2 == 0){
                     leftIntake.setPower(0.0);
                     rightIntake.setPower(0.0);
                 }
@@ -124,7 +120,7 @@ public class TeleOpFull extends OpMode {
                 if (y % 2 != 0) {
                     leftIntake.setPower(-1.0);
                     rightIntake.setPower(-1.0);
-                } else {
+                } else if (y % 2 == 0){
                     leftIntake.setPower(0.0);
                     rightIntake.setPower(0.0);
                 }
