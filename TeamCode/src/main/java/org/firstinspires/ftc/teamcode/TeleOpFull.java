@@ -10,21 +10,31 @@ import com.qualcomm.robotcore.util.Range;
 @TeleOp(name="complete tele op", group="Tele Op")
 public class TeleOpFull extends OpMode {
 
+    public final static String LEFTFRONT = "leftFront";
+    public final static String LEFTBACK = "leftBack";
+    public final static String RIGHTFRONT = "rightFront";
+    public final static String RIGHTBACK = "rightBack";
+    //names of the intake wheels
+    public final static String LEFTINTAKE = "leftIntake";
+    public final static String RIGHTINTAKE = "rightIntake";
+    //name of the motor that does the lift
+    public final static String LIFTMOTOR = "liftMotor";
+
     //directions
-    private DcMotor.Direction LEFTDIRECTION = DcMotor.Direction.FORWARD;
-    private DcMotor.Direction RIGHTDIRECTION = DcMotor.Direction.REVERSE;
+    private DcMotor.Direction LEFTDIRECTION = DcMotor.Direction.REVERSE;
+    private DcMotor.Direction RIGHTDIRECTION = DcMotor.Direction.FORWARD;
 
     // declared the opmode members
     private ElapsedTime runtime = new ElapsedTime();
     //drive
-    private DcMotor leftFront = null;
-    private DcMotor leftBack = null;
-    private DcMotor rightFront = null;
-    private DcMotor rightBack = null;
+    private DcMotor leftFront;
+    private DcMotor leftBack;
+    private DcMotor rightFront;
+    private DcMotor rightBack;
     //lift and intake
-    private DcMotor leftIntake = null;
-    private DcMotor rightIntake = null;
-    private DcMotor liftMotor = null;
+    private DcMotor leftIntake;
+    private DcMotor rightIntake;
+    private DcMotor liftMotor;
 
     @Override
     public void init() {
@@ -32,14 +42,14 @@ public class TeleOpFull extends OpMode {
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
         //wheels
-        leftFront = hardwareMap.get(DcMotor.class, "left front");
-        leftBack = hardwareMap.get(DcMotor.class, "left back");
-        rightFront = hardwareMap.get(DcMotor.class, "right front");
-        rightBack = hardwareMap.get(DcMotor.class, "right back");
+        leftFront = hardwareMap.get(DcMotor.class, LEFTFRONT);
+        leftBack = hardwareMap.get(DcMotor.class, LEFTBACK);
+        rightFront = hardwareMap.get(DcMotor.class, RIGHTFRONT);
+        rightBack = hardwareMap.get(DcMotor.class, RIGHTBACK);
         //mechanism #1
-        leftIntake = hardwareMap.get(DcMotor.class, "left intake");
-        rightIntake = hardwareMap.get(DcMotor.class, "right intake");
-        liftMotor = hardwareMap.get(DcMotor.class, "lift motor");
+        leftIntake = hardwareMap.get(DcMotor.class, LEFTINTAKE);
+        rightIntake = hardwareMap.get(DcMotor.class, RIGHTINTAKE);
+        liftMotor = hardwareMap.get(DcMotor.class, LIFTMOTOR);
 //hiiii
         //motor directions
         //wheels
@@ -68,9 +78,9 @@ public class TeleOpFull extends OpMode {
             // POV drivings controls
             float drive = -gamepad1.left_stick_y;
             float turn = gamepad1.right_stick_x;
-            leftPower = Range.clip(drive - turn, -1.0, 1.0);
-            rightPower = Range.clip(drive + turn, -1.0, 1.0);
-        
+            leftPower = Range.clip(drive + turn, -1.0, 1.0);
+            rightPower = Range.clip(drive - turn, -1.0, 1.0);
+
         /*
             //tank mode version
             leftPower  = -gamepad1.left_stick_y ;
