@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -19,6 +20,9 @@ public class TeleOpFull extends OpMode {
     public final static String RIGHTINTAKE = "rightIntake";
     //name of the motor that does the lift
     public final static String LIFTMOTOR = "liftMotor";
+    //servos
+    public final static String LEFTCLAMP = "leftClamp";
+    public final static String RIGHTCLAMP = "rightClamp";
 
     //directions
     private DcMotor.Direction LEFTDIRECTION = DcMotor.Direction.REVERSE;
@@ -35,6 +39,9 @@ public class TeleOpFull extends OpMode {
     private DcMotor leftIntake;
     private DcMotor rightIntake;
     private DcMotor liftMotor;
+    //servos
+    //private Servo leftClamp;
+    //private Servo rightClamp;
 
     @Override
     public void init() {
@@ -50,6 +57,10 @@ public class TeleOpFull extends OpMode {
         leftIntake = hardwareMap.get(DcMotor.class, LEFTINTAKE);
         rightIntake = hardwareMap.get(DcMotor.class, RIGHTINTAKE);
         liftMotor = hardwareMap.get(DcMotor.class, LIFTMOTOR);
+        //servos
+        //leftClamp = hardwareMap.get(Servo.class, LEFTCLAMP);
+      //  rightClamp = hardwareMap.get(Servo.class, RIGHTCLAMP);
+
 //hiiii
         //motor directions
         //wheels
@@ -73,7 +84,6 @@ public class TeleOpFull extends OpMode {
             double rightPower;
             double liftRaise;
             double liftLower;
-
 
             // POV drivings controls
             float drive = -gamepad1.left_stick_y;
@@ -136,6 +146,20 @@ public class TeleOpFull extends OpMode {
                 }
             }
 
+/*
+            //servos
+            boolean gamepad2A = gamepad2.a;
+            boolean gamepad2B = gamepad2.b;
+            int a = 0;
+            if (gamepad2A) {
+                leftClamp.setPosition(1.0)
+                rightClamp.setPosition(-1.0)
+            }
+            if (gamepad2B){
+                leftClamp.setPosition(-1.0);
+                rightClamp.setPosition(1.0);
+            }
+*/
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
