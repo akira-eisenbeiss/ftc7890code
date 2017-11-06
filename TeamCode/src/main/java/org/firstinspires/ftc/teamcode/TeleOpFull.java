@@ -90,6 +90,9 @@ public class TeleOpFull extends OpMode {
         float turn = gamepad1.right_stick_x;
         leftPower = Range.clip(drive + turn, -1.0, 1.0);
         rightPower = Range.clip(drive - turn, -1.0, 1.0);
+        float strafe = gamepad1.right_stick_y;
+        rightStrafe = Range.clip(strafe, -1.0, 1.0);
+        leftStrafe = Range.clip(strafe, -1.0, 1.0);
 
         /*
             //tank mode version
