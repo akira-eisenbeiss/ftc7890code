@@ -84,21 +84,19 @@ public class TeleOpFull extends OpMode {
         double rightPower;
         double liftRaise;
         double liftLower;
+        double backStrafe;
+        double frontStrafe;
 
         // POV drivings controls
         float drive = -gamepad1.left_stick_y;
         float turn = gamepad1.right_stick_x;
         leftPower = Range.clip(drive + turn, -1.0, 1.0);
         rightPower = Range.clip(drive - turn, -1.0, 1.0);
-        float strafe = gamepad1.right_stick_y;
-        rightStrafe = Range.clip(strafe, -1.0, 1.0);
-        leftStrafe = Range.clip(-strafe, -1.0, 1.0);
+        //strafing
+        float strafe = gamepad1.left_stick_x;
+        frontStrafe = Range.clip(strafe, -1.0, 1.0);
+        backStrafe = Range.clip(-strafe, -1.0, 1.0);
 
-        /*
-            //tank mode version
-            leftPower  = -gamepad1.left_stick_y ;
-            rightPower = -gamepad1.right_stick_y ;
-        */
         //wheel lift mechanism controls
         float leftTrigger1 = gamepad1.left_trigger;
         float rightTrigger1 = gamepad1.right_trigger;
@@ -112,6 +110,12 @@ public class TeleOpFull extends OpMode {
         leftBack.setPower(leftPower);
         rightFront.setPower(rightPower);
         rightBack.setPower(rightPower);
+
+        //strafing power
+        leftFront.setPower(frontStrafe);
+        rightFront.setPower(frontStrafe);
+        leftBack.setPower(backStrafe);
+        rightBack.setPower(backStrafe);
 
         //the ifs that control the lift mechanism
         if (leftTrigger1 > 0) {
@@ -148,6 +152,8 @@ public class TeleOpFull extends OpMode {
                 rightIntake.setPower(0.0);
             }
         }
+
+        /*
             //servos
             boolean gamepad2A = gamepad2.a;
             boolean gamepad2B = gamepad2.b;
@@ -159,7 +165,7 @@ public class TeleOpFull extends OpMode {
                 leftClamp.setPosition(-1.0);
                 rightClamp.setPosition(1.0);
             }
-
+*/
 
 
         // Show the elapsed game time and wheel power.
