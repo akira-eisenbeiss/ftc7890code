@@ -86,9 +86,10 @@ public class TeleOpFull extends OpMode {
         double liftRaise;
         double liftLower;
 
+        /*
         double frontStrafe;
         double backStrafe;
-
+        */
 
 
         // POV drivings controls
@@ -97,28 +98,13 @@ public class TeleOpFull extends OpMode {
         leftPower = Range.clip(drive + turn, -1.0, 1.0);
         rightPower = Range.clip(drive - turn, -1.0, 1.0);
 
-
+        /*
         //strafing
         float strafe = gamepad1.left_stick_x;
 
         frontStrafe = Range.clip(-strafe, -1.0, 1.0);
         backStrafe = Range.clip(strafe, -1.0, 1.0);
-
-
-        //an if statement for the strafing
-        if (strafe > 0) {
-            leftFront.setPower(frontStrafe);
-            rightFront.setPower(frontStrafe);
-            leftBack.setPower(backStrafe);
-            rightBack.setPower(backStrafe);
-        }
-        else if (strafe < 0) {
-            leftFront.setPower(backStrafe);
-            rightFront.setPower(backStrafe);
-            leftBack.setPower(frontStrafe);
-            rightBack.setPower(frontStrafe);
-        }
-
+        */
 
         //wheel lift mechanism controls
         float leftTrigger1 = gamepad1.left_trigger;
@@ -135,6 +121,22 @@ public class TeleOpFull extends OpMode {
         rightBack.setPower(rightPower);
 
         /*
+        //an if statement for the strafing
+        if (strafe > 0) {
+            leftFront.setPower(frontStrafe);
+            rightFront.setPower(frontStrafe);
+            leftBack.setPower(backStrafe);
+            rightBack.setPower(backStrafe);
+        }
+        else if (strafe < 0) {
+            leftFront.setPower(backStrafe);
+            rightFront.setPower(backStrafe);
+            leftBack.setPower(frontStrafe);
+            rightBack.setPower(frontStrafe);
+        }
+        */
+
+
         //strafe with dpad
         if (gamepad1.dpad_right){
             leftFront.setPower(1);
@@ -154,7 +156,7 @@ public class TeleOpFull extends OpMode {
             rightFront.setPower(0);
             rightBack.setPower(0);
         }
-        */
+        
 
         /*
         //strafing power
