@@ -73,11 +73,12 @@ public class TeleOpFull extends OpMode {
         rightIntake.setDirection(RIGHTDIRECTION);
         liftMotor.setDirection(LEFTDIRECTION);
     }
+
     /*
      * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
      */
     @Override
-    public void loop(){
+    public void loop() {
 
         // Setup a variable for each drive wheel to save power level for telemetry
         double leftPower;
@@ -136,7 +137,7 @@ public class TeleOpFull extends OpMode {
             if (x % 2 != 0) {
                 leftIntake.setPower(1.0);
                 rightIntake.setPower(1.0);
-            } else if (x % 2 == 0){
+            } else if (x % 2 == 0) {
                 leftIntake.setPower(0.0);
                 rightIntake.setPower(0.0);
             }
@@ -147,7 +148,7 @@ public class TeleOpFull extends OpMode {
             if (y % 2 != 0) {
                 leftIntake.setPower(-1.0);
                 rightIntake.setPower(-1.0);
-            } else if (y % 2 == 0){
+            } else if (y % 2 == 0) {
                 leftIntake.setPower(0.0);
                 rightIntake.setPower(0.0);
             }
@@ -173,3 +174,4 @@ public class TeleOpFull extends OpMode {
         telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
         telemetry.update();
     }
+}
