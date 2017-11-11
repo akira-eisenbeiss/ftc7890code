@@ -97,10 +97,9 @@ public class TeleOpFull extends OpMode {
         leftPower = Range.clip(drive + turn, -1.0, 1.0);
         rightPower = Range.clip(drive - turn, -1.0, 1.0);
 
-        
+
         //strafing
         float strafe = gamepad1.left_stick_x;
-
         frontStrafe = Range.clip(-strafe, -1.0, 1.0);
         backStrafe = Range.clip(strafe, -1.0, 1.0);
 
@@ -134,35 +133,6 @@ public class TeleOpFull extends OpMode {
             rightBack.setPower(frontStrafe);
         }
 
-        /*
-        //strafe with dpad
-        if (gamepad1.dpad_right){
-            leftFront.setPower(1);
-            leftBack.setPower(-1);
-            rightFront.setPower(-1);
-            rightBack.setPower(1);
-        }
-        else if (gamepad1.dpad_left){
-            leftFront.setPower(-1);
-            leftBack.setPower(1);
-            rightFront.setPower(1);
-            rightBack.setPower(-1);
-        }
-        else{
-            leftFront.setPower(0);
-            leftBack.setPower(0);
-            rightFront.setPower(0);
-            rightBack.setPower(0);
-        }
-        */
-
-        /*
-        //strafing power
-        leftFront.setPower(frontStrafe);
-        rightFront.setPower(frontStrafe);
-        leftBack.setPower(backStrafe);
-        rightBack.setPower(backStrafe);
-        */
 
         //the ifs that control the lift mechanism
         if (leftTrigger1 > 0) {
