@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.util.Range;
 @TeleOp(name="complete tele op", group="Tele Op")
 public class TeleOpFull extends OpMode {
 
+    //sorry about these strings, btw
     public final static String LEFTFRONT = "leftFront";
     public final static String LEFTBACK = "leftBack";
     public final static String RIGHTFRONT = "rightFront";
@@ -85,24 +86,23 @@ public class TeleOpFull extends OpMode {
         double rightPower;
         double liftRaise;
         double liftLower;
-
-        double frontStrafe;
-        double backStrafe;
-
-
+        
 
         // POV drivings controls
         float drive = -gamepad1.left_stick_y;
         float turn = gamepad1.right_stick_x;
-        leftPower = Range.clip(drive + turn, -1.0, 1.0);
-        rightPower = Range.clip(drive - turn, -1.0, 1.0);
-
-
         //strafing
         float strafe = gamepad1.left_stick_x;
-        frontStrafe = Range.clip(-strafe, -1.0, 1.0);
-        backStrafe = Range.clip(strafe, -1.0, 1.0);
 
+        double lfDrive;
+        double lbDrive;
+        double rfDrive;
+        double rbDrive;
+
+        lfDrive = Range.clip(drive + turn - strafe, -1.0, 1.0);
+        lbDrive = Range.clip(drive + turn + strafe, -1.0, 1.0);
+        rfDrive = Range.clip(drive - turn + strafe, -1.0, 1.0);
+        rbDrive = Range.clip(drive - turn - strafe, -1.0, 1.0);
 
         //wheel lift mechanism controls
         float leftTrigger1 = gamepad1.left_trigger;
@@ -112,27 +112,12 @@ public class TeleOpFull extends OpMode {
         liftRaise = Range.clip(leftTrigger1, -0.75, 0.75);
         liftLower = Range.clip(rightTrigger1, 0.75, -0.75);
 
+
         // Send calculated power to wheels
-        leftFront.setPower(leftPower);
-        leftBack.setPower(leftPower);
-        rightFront.setPower(rightPower);
-        rightBack.setPower(rightPower);
-
-
-        //an if statement for the strafing
-        if (strafe > 0) {
-            leftFront.setPower(frontStrafe);
-            rightFront.setPower(frontStrafe);
-            leftBack.setPower(backStrafe);
-            rightBack.setPower(backStrafe);
-        }
-        else if (strafe < 0) {
-            leftFront.setPower(backStrafe);
-            rightFront.setPower(backStrafe);
-            leftBack.setPower(frontStrafe);
-            rightBack.setPower(frontStrafe);
-        }
-
+        leftFront.setPower(lfDrive);
+        leftBack.setPower(lbDrive);
+        rightFront.setPower(rfDrive);
+        rightBack.setPower(rbDrive);
 
         //the ifs that control the lift mechanism
         if (leftTrigger1 > 0) {
@@ -175,7 +160,7 @@ public class TeleOpFull extends OpMode {
             boolean gamepad2A = gamepad2.a;
             boolean gamepad2B = gamepad2.b;
             if (gamepad2A) {
-                leftClamp.setPosition(0)
+                leftClamp.setPosition(0ran)
                 rightClamp.setPosition(0)
             }
             if (gamepad2B){
@@ -187,7 +172,7 @@ public class TeleOpFull extends OpMode {
 
         // Show the elapsed game time and wheel power.
         telemetry.addData("Status", "Run Time: " + runtime.toString());
-        telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
+        telemetry.addData("Motors", "left (%.2f), right (%.2f)", rfDrive, rbDrive, lbDrive, rbDrive);
         telemetry.update();
     }
 }
