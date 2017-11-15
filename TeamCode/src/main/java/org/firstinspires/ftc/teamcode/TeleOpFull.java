@@ -86,13 +86,13 @@ public class TeleOpFull extends OpMode {
         double rightPower;
         double liftRaise;
         double liftLower;
-        
+
 
         // POV drivings controls
         float drive = -gamepad1.left_stick_y;
         float turn = gamepad1.right_stick_x;
         //strafing
-        float strafe = gamepad1.left_stick_x;
+        float strafe = -gamepad1.left_stick_x;
 
         double lfDrive;
         double lbDrive;
@@ -160,8 +160,8 @@ public class TeleOpFull extends OpMode {
             boolean gamepad2A = gamepad2.a;
             boolean gamepad2B = gamepad2.b;
             if (gamepad2A) {
-                leftClamp.setPosition(0ran)
-                rightClamp.setPosition(0)
+                leftClamp.setPosition(0);
+                rightClamp.setPosition(0);
             }
             if (gamepad2B){
                 leftClamp.setPosition(-1.0);
