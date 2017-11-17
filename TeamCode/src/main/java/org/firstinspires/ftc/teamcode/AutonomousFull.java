@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import java.lang.*;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
@@ -25,9 +26,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefau
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 
-@TeleOp(name="autonomous full", group="Linear Opmode")
-
-@Disabled
+@Autonomous(name="autonomous full", group="Linear Opmode")
 public class AutonomousFull extends LinearOpMode {
 
     //sorry about these strings, btw
@@ -35,7 +34,7 @@ public class AutonomousFull extends LinearOpMode {
     public final static String LEFTBACK = "leftBack";
     public final static String RIGHTFRONT = "rightFront";
     public final static String RIGHTBACK = "rightBack";
-    public final static String ballArm = "BALLARM";
+    public final static String BALLARM = "ballArm";
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
@@ -47,6 +46,7 @@ public class AutonomousFull extends LinearOpMode {
     private Servo ballArm;
 
 
+    public boolean detected = false;
     @Override
     public void runOpMode() {
         color_sensor = hardwareMap.colorSensor.get("color");
@@ -57,8 +57,6 @@ public class AutonomousFull extends LinearOpMode {
         double lbDrive;
         double rfDrive;
         double rbDrive;
-
-        ballArm = hardwareMap.get(DcMotor.class, BALLARM);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -71,34 +69,49 @@ public class AutonomousFull extends LinearOpMode {
             leftBack = hardwareMap.get(DcMotor.class, LEFTBACK);
             rightFront = hardwareMap.get(DcMotor.class, RIGHTFRONT);
             rightBack = hardwareMap.get(DcMotor.class, RIGHTBACK);
+            ballArm = hardwareMap.get(Servo.class, BALLARM);
 
-            double ballposition = 0.1;
-            ballArm.setPosition(ballposition);
+            double ballposition = 1;
+            ballArm.setPosition(-1.0);
+            double move = 0.5;
             color_sensor = hardwareMap.colorSensor.get("color");
 
-            double move = 1;
-
-            if(color_sensor.blue() > color_sensor.red()){
-                leftFront.setPower(-move);
-                leftBack.setPower(-move);
-                rightFront.setPower(move);
-                rightBack.setPower(move);
+            if(detected == false) {
+                if (color_sensor.blue() > color_sensor.red()) {
+                    leftFront.setPower(-move);
+                    leftBack.setPower(-move);
+                    rightFront.setPower(move);
+                    rightBack.setPower(move);
+                    sleep(1000);
+                    stopDatMovement(leftFront, rightFront, leftBack, rightBack);
+                    ballArm.setPosition(0.0);
+                    detected = true;
+                } else if (color_sensor.red() > color_sensor.blue()) {
+                    leftFront.setPower(move);
+                    leftBack.setPower(move);
+                    rightFront.setPower(-move);
+                    rightBack.setPower(-move);
+                    sleep(1000);
+                    stopDatMovement(leftFront, rightFront, leftBack, rightBack);
+                    ballArm.setPosition(0.0);
+                    detected = true;
+                }
+//bool
             }
-            else if(color_sensor.red() > color_sensor.blue()){
-                leftFront.setPower(move);
-                leftBack.setPower(move);
-                rightFront.setPower(-move);
-                rightBack.setPower(-move);
-            }else{
-
-            }
-            ballArm.setPosition(0.0);
-
+            ballArm.setPosition(0);
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
+            telemetry.addData("Motors", "left (%.2f), right (%.2f)");
             telemetry.update();
         }
+    }
+
+    public static void stopDatMovement(DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4)
+    {
+        motor1.setPower(0);
+        motor2.setPower(0);
+        motor3.setPower(0);
+        motor4.setPower(0);
     }
 }
