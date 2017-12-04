@@ -22,8 +22,8 @@ public class TeleOpFull extends OpMode {
     //name of the motor that does the lift
     public final static String LIFTMOTOR = "liftMotor";
     //servos
-    public final static String LEFTCLAMP = "leftClamp";
-    public final static String RIGHTCLAMP = "rightClamp";
+    //public final static String CLAMPSERVO = "clampServo";
+    //public final static String VERTSERVO = "vertServo";
 
     //directions
     private DcMotor.Direction LEFTDIRECTION = DcMotor.Direction.REVERSE;
@@ -41,8 +41,8 @@ public class TeleOpFull extends OpMode {
     private DcMotor rightIntake;
     private DcMotor liftMotor;
     //servos
-    //private Servo leftClamp;
-    //private Servo rightClamp;
+    //private Servo clampServo;
+    //private Servo vertServo;
 
     @Override
     public void init() {
@@ -59,8 +59,8 @@ public class TeleOpFull extends OpMode {
         rightIntake = hardwareMap.get(DcMotor.class, RIGHTINTAKE);
         liftMotor = hardwareMap.get(DcMotor.class, LIFTMOTOR);
         //servos
-        //leftClamp = hardwareMap.get(Servo.class, LEFTCLAMP);
-        //  rightClamp = hardwareMap.get(Servo.class, RIGHTCLAMP);
+        //clampServo = hardwareMap.get(Servo.class, CLAMPSERVO);
+       // vertServo = hardwareMap.get(Servo.class, VERTSERVO);
 
 //hiiii
         //motor directions
