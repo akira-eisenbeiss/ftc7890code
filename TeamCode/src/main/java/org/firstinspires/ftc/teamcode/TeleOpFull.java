@@ -184,7 +184,7 @@ public class TeleOpFull extends OpMode {
             liftMotor.setPower(leftTrigger2);
         }
         if (rightTrigger2 > 0) {
-            liftMotor.setPower(scissorIn;
+            liftMotor.setPower(scissorIn);
         } else {
             liftMotor.setPower(rightTrigger2);
         }
