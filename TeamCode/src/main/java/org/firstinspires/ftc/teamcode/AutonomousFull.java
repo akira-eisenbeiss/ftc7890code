@@ -97,19 +97,24 @@ public class AutonomousFull extends LinearOpMode {
                     leftBack.setPower(-move);
                     rightFront.setPower(move);
                     rightBack.setPower(move);
-                    sleep(1000);
+                    sleep(600);
                     stopDatMovement(leftFront, rightFront, leftBack, rightBack);
                     ballArm.setPosition(0.0);
                     detected = true;
-                } else if (color_sensor.red() > color_sensor.blue()) {
-                    leftFront.setPower(move);
+
+                    //moves to the corner
+                    leftFront.setPower(-move);
                     leftBack.setPower(move);
                     rightFront.setPower(-move);
-                    rightBack.setPower(-move);
-                    sleep(1000);
+                    rightBack.setPower(move);
+
+                } else if (color_sensor.red() > color_sensor.blue()) {
+                    sleep(700);
                     stopDatMovement(leftFront, rightFront, leftBack, rightBack);
                     ballArm.setPosition(0.0);
                     detected = true;
+
+
                 }
 //bool
 
