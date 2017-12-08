@@ -54,6 +54,7 @@ public class AutonomousFull extends LinearOpMode {
     @Override
     public void runOpMode() {
 
+        /*
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
         parameters.vuforiaLicenseKey = "AcoS+YP/////AAAAGTq922ywuU6FquBqcm2CeatGNf2voKamgXI1KwF7yLiQKP+RqBNrI4ND0i98TsuYnBytFG0YYUz2+4wvHBN5pz+/CacheTAG6upbc95Ts0UJgGRg0aTLaVzdYUQUI5dRlAh50DsGYdPkabTZmPO+5EYj79XDDHhok7wTZDb6ZyiCLlzXtM5EZ9nyiWQxz6XJ3M7Q+m4nVuaAdvWN+qwkQsqohSoxB8TNI4dDYlSMQbbO6d3SkCgfXy4K8y/lBNDF8suTeSgNY0YGs/N5FIYTLa+eyu+r3kbf2ig0EsL1Er+AhLZkVDpksvMp+MMBdDVyi6JDjr4E+P2D82ztt8Ex0aoR+h0n4RyRnkS+G4FB4wRD";
@@ -61,7 +62,7 @@ public class AutonomousFull extends LinearOpMode {
         this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
         VuforiaTrackables relicTrack = this.vuforia.loadTrackablesFromAsset("relicTrack");
         VuforiaTrackable Template = relicTrack.get(0);
-
+        */
 
         color_sensor = hardwareMap.colorSensor.get("color");
         telemetry.addData("Status", "Initialized");
@@ -117,6 +118,7 @@ public class AutonomousFull extends LinearOpMode {
 
             ballArm.setPosition(0);
 
+            /*
             sleep(2000);
             relicTrack.activate();
             boolean canSee = false;
@@ -129,7 +131,7 @@ public class AutonomousFull extends LinearOpMode {
 
                 if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
 
-                    canSee  = true;
+                    canSee = true;
                     telemetry.addData("Vumark", vuMark);
                     leftFront.setPower(0.0);
                     leftBack.setPower(0.0);
@@ -148,7 +150,7 @@ public class AutonomousFull extends LinearOpMode {
 
                 telemetry.update();
             }
-
+        */
         }
 
 

@@ -19,10 +19,10 @@ public class TeleOpFull extends OpMode {
     //name of the motor that does the lift
     public final static String LIFTMOTOR = "liftMotor";
     //servos
-    public final static String CLAMPSERVO = "clampServo";
-    public final static String VERTSERVO = "vertServo";
+  //  public final static String CLAMPSERVO = "clampServo";
+   // public final static String VERTSERVO = "vertServo";
     //scissor
-    public final static String SCISSOR = "scissor";
+   // public final static String SCISSOR = "scissor";
     //directions
     private DcMotor.Direction LEFTDIRECTION = DcMotor.Direction.REVERSE;
     private DcMotor.Direction RIGHTDIRECTION = DcMotor.Direction.FORWARD;
@@ -38,8 +38,8 @@ public class TeleOpFull extends OpMode {
     private DcMotor rightIntake;
     private DcMotor liftMotor;
     //servos
-    private Servo clampServo;
-    private Servo vertServo;
+   // private Servo clampServo;
+ //   private Servo vertServo;
     //scissor
     private DcMotor scissor;
     @Override
@@ -57,10 +57,10 @@ public class TeleOpFull extends OpMode {
         rightIntake = hardwareMap.get(DcMotor.class, RIGHTINTAKE);
         liftMotor = hardwareMap.get(DcMotor.class, LIFTMOTOR);
         //servos
-        clampServo = hardwareMap.get(Servo.class, CLAMPSERVO);
-        vertServo = hardwareMap.get(Servo.class, VERTSERVO);
+       // clampServo = hardwareMap.get(Servo.class, CLAMPSERVO);
+        //vertServo = hardwareMap.get(Servo.class, VERTSERVO);
         //scissor
-        scissor = hardwareMap.get(DcMotor.class, SCISSOR);
+        //scissor = hardwareMap.get(DcMotor.class, SCISSOR);
 //hiiii
         //motor directions
         //wheels
@@ -72,7 +72,7 @@ public class TeleOpFull extends OpMode {
         leftIntake.setDirection(LEFTDIRECTION);
         rightIntake.setDirection(RIGHTDIRECTION);
         liftMotor.setDirection(LEFTDIRECTION);
-        scissor.setDirection(LEFTDIRECTION);
+       //]  scissor.setDirection(LEFTDIRECTION);
     }
 
     //Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
@@ -112,8 +112,8 @@ public class TeleOpFull extends OpMode {
         scissorOut = Range.clip(leftTrigger2, -1.0, 1.0);
         scissorIn = Range.clip(rightTrigger2, 1.0, -1.0);
         //clamp
-        float leftStick2 = -gamepad2.left_stick_y;
-        float rightStick2 = gamepad2.right_stick_y;
+    //    float leftStick2 = -gamepad2.left_stick_y;
+  //      float rightStick2 = gamepad2.right_stick_y;
 
         // Send calculated power to wheels
         leftFront.setPower(lfDrive);
@@ -143,6 +143,7 @@ public class TeleOpFull extends OpMode {
                 rightIntake.setPower(0.0);
             }
         }
+        // hoot897
         int y = 0;
         if (gamepad1B) {
             y++;
@@ -154,7 +155,7 @@ public class TeleOpFull extends OpMode {
                 rightIntake.setPower(0.0);
             }
         }
-
+/*
         //servo clamp position
         if (leftStick2 != 0.0) {
             clampServo.setPosition(leftStick2);
@@ -163,7 +164,7 @@ public class TeleOpFull extends OpMode {
         if (rightStick2 != 0.0) {
         vertServo.setPosition(rightStick2);
         }
-
+*/
 
         //lift
         if (leftTrigger1 > 0) {
@@ -176,7 +177,7 @@ public class TeleOpFull extends OpMode {
         } else {
             liftMotor.setPower(rightTrigger1);
         }
-
+/*
         //scissor
         if (leftTrigger2 > 0) {
             liftMotor.setPower(scissorOut);
@@ -188,7 +189,7 @@ public class TeleOpFull extends OpMode {
         } else {
             liftMotor.setPower(rightTrigger2);
         }
-
+*/
 
     // Show the elapsed game time and wheel power.
         telemetry.addData("Status", "Run Time: " + runtime.toString());
