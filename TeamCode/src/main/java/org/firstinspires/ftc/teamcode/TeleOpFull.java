@@ -21,6 +21,7 @@ public class TeleOpFull extends OpMode {
     //servos
   //  public final static String CLAMPSERVO = "clampServo";
    // public final static String VERTSERVO = "vertServo";
+    public final static String BALLARM = "ballArm";
     //scissor
    // public final static String SCISSOR = "scissor";
     //directions
@@ -40,6 +41,7 @@ public class TeleOpFull extends OpMode {
     //servos
    // private Servo clampServo;
  //   private Servo vertServo;
+    private Servo ballArm;
     //scissor
     private DcMotor scissor;
     @Override
@@ -57,6 +59,7 @@ public class TeleOpFull extends OpMode {
         rightIntake = hardwareMap.get(DcMotor.class, RIGHTINTAKE);
         liftMotor = hardwareMap.get(DcMotor.class, LIFTMOTOR);
         //servos
+        ballArm = hardwareMap.get(Servo.class, BALLARM);
        // clampServo = hardwareMap.get(Servo.class, CLAMPSERVO);
         //vertServo = hardwareMap.get(Servo.class, VERTSERVO);
         //scissor
@@ -104,16 +107,19 @@ public class TeleOpFull extends OpMode {
         float rightTrigger1 = gamepad1.right_trigger;
         boolean gamepad1A = gamepad1.a;
         boolean gamepad1B = gamepad1.b;
-        liftRaise = Range.clip(leftTrigger1, -1.0, 1.0);
-        liftLower = Range.clip(rightTrigger1, 1.0, -1.0);
+        liftRaise = Range.clip(-leftTrigger1, -1.0, 1.0);
+        liftLower = Range.clip(rightTrigger1, -1.0, 1.0);
         //relic mech
         float leftTrigger2 = gamepad2.left_trigger;
         float rightTrigger2 = gamepad2.right_trigger;
         scissorOut = Range.clip(leftTrigger2, -1.0, 1.0);
-        scissorIn = Range.clip(rightTrigger2, 1.0, -1.0);
+        scissorIn = Range.clip(rightTrigger2, -1.0, 1.0);
         //clamp
     //    float leftStick2 = -gamepad2.left_stick_y;
   //      float rightStick2 = gamepad2.right_stick_y;
+
+        //just the servo arm up so it doesn't break
+        ballArm.setPosition(1.0);
 
         // Send calculated power to wheels
         leftFront.setPower(lfDrive);
@@ -123,16 +129,21 @@ public class TeleOpFull extends OpMode {
         //the ifs that control the lift mechanism
         if (leftTrigger1 > 0) {
             liftMotor.setPower(liftRaise);
+            //liftMotor.setPower(1);
         } else {
-            liftMotor.setPower(leftTrigger1);
+            liftMotor.setPower(0.0);
+            //liftMotor.setPower(0);
         }
         if (rightTrigger1 > 0) {
+            //liftMotor.setPower(-1);
             liftMotor.setPower(liftLower);
         } else {
-            liftMotor.setPower(rightTrigger1);
+            liftMotor.setPower(0.0);
+            //liftMotor.setPower(0);
+
         }
-        int x = 0;
         //the ifs that are used for toggling the intake mechanism
+        int x = 0;
         if (gamepad1A) {
             x++;
             if (x % 2 != 0) {

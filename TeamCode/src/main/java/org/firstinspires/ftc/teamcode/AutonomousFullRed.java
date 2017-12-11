@@ -1,37 +1,21 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import java.lang.*;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcontroller.external.samples.ConceptVuforiaNavigation;
-import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
-import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
-import org.firstinspires.ftc.robotcore.external.navigation.VuMarkInstanceId;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 
-@Autonomous(name="autonomous full", group="Linear Opmode")
-public class AutonomousFull extends LinearOpMode {
+@Autonomous(name="autonomous full red", group="Linear Opmode")
+public class AutonomousFullRed extends LinearOpMode {
 
     //vuforia
-    VuforiaLocalizer vuforia;
+    VuforiaLocalizer vuforia;    //vuforia initializer
 
     //sorry about these strings, btw
     public final static String LEFTFRONT = "leftFront";
@@ -49,20 +33,27 @@ public class AutonomousFull extends LinearOpMode {
     private ColorSensor color_sensor;
     private Servo ballArm;
     public final static double move = 0.5;
-    public final static double slowMove = 0.25;
+    public final static double slowMove = move / 2; //minor change
     public boolean detected = false;
     @Override
     public void runOpMode() {
 
         /*
+        //Vuforia - starting the camera  --> from 4326 code
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
-        parameters.vuforiaLicenseKey = "AcoS+YP/////AAAAGTq922ywuU6FquBqcm2CeatGNf2voKamgXI1KwF7yLiQKP+RqBNrI4ND0i98TsuYnBytFG0YYUz2+4wvHBN5pz+/CacheTAG6upbc95Ts0UJgGRg0aTLaVzdYUQUI5dRlAh50DsGYdPkabTZmPO+5EYj79XDDHhok7wTZDb6ZyiCLlzXtM5EZ9nyiWQxz6XJ3M7Q+m4nVuaAdvWN+qwkQsqohSoxB8TNI4dDYlSMQbbO6d3SkCgfXy4K8y/lBNDF8suTeSgNY0YGs/N5FIYTLa+eyu+r3kbf2ig0EsL1Er+AhLZkVDpksvMp+MMBdDVyi6JDjr4E+P2D82ztt8Ex0aoR+h0n4RyRnkS+G4FB4wRD";
+        //License Key, I already set it up I think
+        parameters.vuforiaLicenseKey = "AZD9V+f/////AAAAGZDj5Sa0JkeSohNtCSdf0T94R9bz9UlzQyuCIZuJ2d1ehAEqmbPYzprSq4hmd/9XUZYT088pUIzwl79q9h2ljFjUFD5p0RHKBx+ggMJ+qgCelvbeNf7Rd771vlduzibSBN6np49m6Z31Eyk0dYFZJbpdmw4P7mQ8LaeR6UOLgmiythqcCZga9VoEHPA2e8Z9/7At1SZVPiOBkVlEKz5AGhPhL5/A/R3sb30NSaiq5yquyJ+sOWvNQ5ovdVND6OrAQrc2DdQcCDyD8JQLOiVZYCPoNohKfuZ9N2jnZRSueEH4XV6i2DOqWxfJ5vmNf6jBcrOWLROO8KEoPa2Fvibxj7lPMp4JM/nMXK7TwEopU91v";
+        //Which camera we choose - I used back right now because I think the range is better, but front could work
         parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
         this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
-        VuforiaTrackables relicTrack = this.vuforia.loadTrackablesFromAsset("relicTrack");
-        VuforiaTrackable Template = relicTrack.get(0);
-        */
+        //Define Pictographs as VuMarks which the Vuforia can track
+//        VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
+//        VuforiaTrackable relicTemplate = relicTrackables.get(0);
+        VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
+        VuforiaTrackable relicTemplate = relicTrackables.get(0);
+        relicTemplate.setName("relicVuMarkTemplate");
+*/
 
         color_sensor = hardwareMap.colorSensor.get("color");
         telemetry.addData("Status", "Initialized");
@@ -72,6 +63,8 @@ public class AutonomousFull extends LinearOpMode {
         double lbDrive;
         double rfDrive;
         double rbDrive;
+
+        OpenGLMatrix lastLocation = null; //from 4326
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -88,62 +81,64 @@ public class AutonomousFull extends LinearOpMode {
 
 
             double ballposition = 1;
-            ballArm.setPosition(-1.0);
             color_sensor = hardwareMap.colorSensor.get("color");
 
             if(detected == false) {
-                if (color_sensor.blue() > color_sensor.red()) {
+                ballArm.setPosition(-1.0);
+                if (color_sensor.blue() < color_sensor.red()) {
                     leftFront.setPower(-move);
                     leftBack.setPower(-move);
                     rightFront.setPower(move);
                     rightBack.setPower(move);
                     sleep(600);
                     stopDatMovement(leftFront, rightFront, leftBack, rightBack);
-                    ballArm.setPosition(0.0);
+                    sleep(2000);
+                    ballArm.setPosition(1.0);
                     detected = true;
 
-                    //moves to the corner
-                    leftFront.setPower(-move);
+                } else if (color_sensor.red() < color_sensor.blue()) {
+                    leftFront.setPower(move);
                     leftBack.setPower(move);
                     rightFront.setPower(-move);
-                    rightBack.setPower(move);
-
-                } else if (color_sensor.red() > color_sensor.blue()) {
-                    sleep(700);
+                    rightBack.setPower(-move);
+                    sleep(600);
                     stopDatMovement(leftFront, rightFront, leftBack, rightBack);
-                    ballArm.setPosition(0.0);
+                    sleep(2000);
+                    ballArm.setPosition(1.0);
                     detected = true;
-
-
                 }
 //bool
 
             }
+/*
 
+            //more VuForia
+            relicTrackables.activate();
+            RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate); //camera
 
             ballArm.setPosition(0);
 
-            /*
             sleep(2000);
-            relicTrack.activate();
-            boolean canSee = false;
+//            relicTrack.activate();
+//            boolean canSee = false;
+//
+//            RelicRecoveryVuMark vuMark;
 
-            RelicRecoveryVuMark vuMark;
-
-            while(canSee == false) {
-                vuMark = RelicRecoveryVuMark.from(Template);
+//            while(canSee == false) {
+//                vuMark = RelicRecoveryVuMark.from(Template);
                 telemetry.addData("VuMark", "%s visible", vuMark);
 
                 if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
 
-                    canSee = true;
+//                    canSee = true;
                     telemetry.addData("Vumark", vuMark);
                     leftFront.setPower(0.0);
                     leftBack.setPower(0.0);
                     rightFront.setPower(0.0);
                     rightBack.setPower(0.0);
 
-                }else {
+                }
+                else {
                     telemetry.addData("VuMark", "not visible");
                     //add some stuff in here
 
@@ -154,11 +149,10 @@ public class AutonomousFull extends LinearOpMode {
                 }
 
                 telemetry.update();
-            }
-        */
+//            }
+
+*/
         }
-
-
         // Show the elapsed game time and wheel power.
         telemetry.addData("Status", "Run Time: " + runtime.toString());
         telemetry.addData("Motors", "left (%.2f), right (%.2f)");
