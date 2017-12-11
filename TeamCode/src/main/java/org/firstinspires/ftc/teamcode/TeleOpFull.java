@@ -138,30 +138,32 @@ public class TeleOpFull extends OpMode {
         } else {
             liftMotor.setPower(0.0);
         }
-        //the ifs that are used for toggling the intake mechanism
-        int a = 0;
+        //the ifs that are used for toggling the intake mechanis
+        boolean a = false;
+        //if a is pressed, wheels turn inwards or outwarsd
         if (gamepad2A) {
-            a++;
-            if (a % 2 != 0) {
+            boolean a = true;
+            if (a) {
                 leftIntake.setPower(1.0);
                 rightIntake.setPower(1.0);
             }
         }
         // hoot897
-        int b = 0;
+        boolean b = false;
+        //if a is pressed, wheels turn inwards or outwarsd
         if (gamepad2B) {
-            b++;
-            if (b % 2 != 0) {
+            boolean b = true;
+            if (b) {
                 leftIntake.setPower(-1.0);
                 rightIntake.setPower(-1.0);
             }
         }
-        int x = 0;
+        boolean x = false;
         if (gamepad2X) {
-            x++;
-            if (x % 2 != 0) {
+            boolean x = true;
+            if (x) {
                 leftIntake.setPower(0.0);
-                rightIntake.setPower(0ss.0);
+                rightIntake.setPower(0.0);
             }
         }
 /*
