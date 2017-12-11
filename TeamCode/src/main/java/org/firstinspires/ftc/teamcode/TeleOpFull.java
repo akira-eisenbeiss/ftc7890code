@@ -126,25 +126,27 @@ public class TeleOpFull extends OpMode {
         //just the servo arm up so it doesn't break
         ballArm.setPosition(1.0);
 
-        // Send calculated power to wheels
+        //wheel
         leftFront.setPower(lfDrive);
         leftBack.setPower(lbDrive);
         rightFront.setPower(rfDrive);
         rightBack.setPower(rbDrive);
-        //the ifs that control the lift mechanism
-        if (leftTrigger1 > 0) {
+
+        //lift mechanism
+        if (leftTrigger2 > 0) {
             liftMotor.setPower(liftRaise);
         } else {
             liftMotor.setPower(0.0);
         }
-        if (rightTrigger1 > 0) {
+        if (rightTrigger2 > 0) {
             liftMotor.setPower(liftLower);
         } else {
             liftMotor.setPower(0.0);
         }
-        //the ifs that are used for toggling the intake mechanis
+
+
+        //the intake, outtake, and stop
         boolean a = false;
-        //if a is pressed, wheels turn inwards or outwarsd
         if (gamepad2A) {
             boolean a = true;
             if (a) {
@@ -153,14 +155,7 @@ public class TeleOpFull extends OpMode {
             }
         }
         // hoot897
-<<<<<<< HEAD
-
-        //the intake, outtake, and stop
-        int b = 0;
-=======
         boolean b = false;
-        //if a is pressed, wheels turn inwards or outwarsd
->>>>>>> c2b2c0870ca36a792a9bc3b6a06307483b5cb4f2
         if (gamepad2B) {
             boolean b = true;
             if (b) {
@@ -185,20 +180,7 @@ public class TeleOpFull extends OpMode {
         if (rightStick2 != 0.0) {
         vertServo.setPosition(rightStick2);
         }
-*/
 
-        //lift
-        if (leftTrigger2 > 0) {
-            liftMotor.setPower(liftRaise);
-        } else {
-            liftMotor.setPower(leftTrigger2);
-        }
-        if (rightTrigger2 > 0) {
-            liftMotor.setPower(liftLower);
-        } else {
-            liftMotor.setPower(rightTrigger2);
-        }
-/*
         //scissor
         if (leftTrigger1 > 0) {
             liftMotor.setPower(scissorOut);
