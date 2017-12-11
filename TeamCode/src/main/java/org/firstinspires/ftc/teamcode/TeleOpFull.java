@@ -81,7 +81,7 @@ public class TeleOpFull extends OpMode {
     //Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
 
     @Override
-    public void loop() {
+    public void loop(){
         // Setup a variable for each drive wheel to save power level for telemetry
         double leftPower;
         double rightPower;
@@ -105,15 +105,16 @@ public class TeleOpFull extends OpMode {
         //wheel lift mechanism controls
         float leftTrigger1 = gamepad1.left_trigger;
         float rightTrigger1 = gamepad1.right_trigger;
-        boolean gamepad1A = gamepad1.a;
-        boolean gamepad1B = gamepad1.b;
-        liftRaise = Range.clip(-leftTrigger1, -1.0, 1.0);
-        liftLower = Range.clip(rightTrigger1, -1.0, 1.0);
+        boolean gamepad2A = gamepad2.a;
+        boolean gamepad2B = gamepad2.b;
+        boolean gamepad2X = gamepad2.x;
+        liftRaise = Range.clip(-leftTrigger1, -1.0, 0.0);
+        liftLower = Range.clip(rightTrigger1, 0.0, 1.0);
         //relic mech
-        float leftTrigger2 = gamepad2.left_trigger;
-        float rightTrigger2 = gamepad2.right_trigger;
-        scissorOut = Range.clip(leftTrigger2, -1.0, 1.0);
-        scissorIn = Range.clip(rightTrigger2, -1.0, 1.0);
+        float leftTrigger2 = gamepad1.left_trigger;
+        float rightTrigger2 = gamepad1.right_trigger;
+        scissorOut = Range.clip(leftTrigger2, -1.0, 0.0);
+        scissorIn = Range.clip(rightTrigger2, 0.0, 1.0);
         //clamp
     //    float leftStick2 = -gamepad2.left_stick_y;
   //      float rightStick2 = gamepad2.right_stick_y;
@@ -129,41 +130,38 @@ public class TeleOpFull extends OpMode {
         //the ifs that control the lift mechanism
         if (leftTrigger1 > 0) {
             liftMotor.setPower(liftRaise);
-            //liftMotor.setPower(1);
         } else {
             liftMotor.setPower(0.0);
-            //liftMotor.setPower(0);
         }
         if (rightTrigger1 > 0) {
-            //liftMotor.setPower(-1);
             liftMotor.setPower(liftLower);
         } else {
             liftMotor.setPower(0.0);
-            //liftMotor.setPower(0);
-
         }
         //the ifs that are used for toggling the intake mechanism
-        int x = 0;
-        if (gamepad1A) {
-            x++;
-            if (x % 2 != 0) {
+        int a = 0;
+        if (gamepad2A) {
+            a++;
+            if (a % 2 != 0) {
                 leftIntake.setPower(1.0);
                 rightIntake.setPower(1.0);
-            } else if (x % 2 == 0) {
-                leftIntake.setPower(0.0);
-                rightIntake.setPower(0.0);
             }
         }
         // hoot897
-        int y = 0;
-        if (gamepad1B) {
-            y++;
-            if (y % 2 != 0) {
+        int b = 0;
+        if (gamepad2B) {
+            b++;
+            if (b % 2 != 0) {
                 leftIntake.setPower(-1.0);
                 rightIntake.setPower(-1.0);
-            } else if (y % 2 == 0) {
+            }
+        }
+        int x = 0;
+        if (gamepad2X) {
+            x++;
+            if (x % 2 != 0) {
                 leftIntake.setPower(0.0);
-                rightIntake.setPower(0.0);
+                rightIntake.setPower(0ss.0);
             }
         }
 /*
