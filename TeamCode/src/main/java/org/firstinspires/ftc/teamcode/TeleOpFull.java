@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
+
 @TeleOp(name="complete tele op", group="Tele Op")
 public class TeleOpFull extends OpMode {
     //sorry about these strings, btw
@@ -151,6 +152,8 @@ public class TeleOpFull extends OpMode {
             }
         }
         // hoot897
+
+        //the intake, outtake, and stop
         int b = 0;
         if (gamepad2B) {
             b++;
@@ -168,11 +171,11 @@ public class TeleOpFull extends OpMode {
             }
         }
 /*
-        //servo clamp position
+        //servo clamp that grabs the relic
         if (leftStick2 != 0.0) {
             clampServo.setPosition(leftStick2);
         }
-        //rotatey servo
+        //servo that changes the position of the grabbed relic
         if (rightStick2 != 0.0) {
         vertServo.setPosition(rightStick2);
         }
