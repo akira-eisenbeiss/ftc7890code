@@ -82,18 +82,20 @@ public class TeleOpFull extends OpMode {
 
     @Override
     public void loop(){
-        // Setup a variable for each drive wheel to save power level for telemetry
+        // doubles
         double leftPower;
         double rightPower;
         double liftRaise;
         double liftLower;
         double scissorIn;
         double scissorOut;
+
         // POV drivings controls
         float drive = -gamepad1.left_stick_y;
         float turn = gamepad1.right_stick_x;
-        //strafing
         float strafe = -gamepad1.left_stick_x;
+
+        //wheels
         double lfDrive;
         double lbDrive;
         double rfDrive;
@@ -102,6 +104,7 @@ public class TeleOpFull extends OpMode {
         lbDrive = Range.clip(drive + turn + strafe, -1.0, 1.0);
         rfDrive = Range.clip(drive - turn + strafe, -1.0, 1.0);
         rbDrive = Range.clip(drive - turn - strafe, -1.0, 1.0);
+
         //wheel lift mechanism controls
         float leftTrigger1 = gamepad1.left_trigger;
         float rightTrigger1 = gamepad1.right_trigger;
@@ -161,7 +164,7 @@ public class TeleOpFull extends OpMode {
             x++;
             if (x % 2 != 0) {
                 leftIntake.setPower(0.0);
-                rightIntake.setPower(0ss.0);
+                rightIntake.setPower(0.0);
             }
         }
 /*
@@ -176,27 +179,27 @@ public class TeleOpFull extends OpMode {
 */
 
         //lift
-        if (leftTrigger1 > 0) {
-            liftMotor.setPower(liftRaise);
-        } else {
-            liftMotor.setPower(leftTrigger1);
-        }
-        if (rightTrigger1 > 0) {
-            liftMotor.setPower(liftLower);
-        } else {
-            liftMotor.setPower(rightTrigger1);
-        }
-/*
-        //scissor
         if (leftTrigger2 > 0) {
-            liftMotor.setPower(scissorOut);
+            liftMotor.setPower(liftRaise);
         } else {
             liftMotor.setPower(leftTrigger2);
         }
         if (rightTrigger2 > 0) {
-            liftMotor.setPower(scissorIn);
+            liftMotor.setPower(liftLower);
         } else {
             liftMotor.setPower(rightTrigger2);
+        }
+/*
+        //scissor
+        if (leftTrigger1 > 0) {
+            liftMotor.setPower(scissorOut);
+        } else {
+            liftMotor.setPower(leftTrigger1);
+        }
+        if (rightTrigger1 > 0) {
+            liftMotor.setPower(scissorIn);
+        } else {
+            liftMotor.setPower(rightTrigger1);
         }
 */
 
