@@ -148,7 +148,7 @@ public class TeleOpFull extends OpMode {
         //the intake, outtake, and stop
         boolean a = false;
         if (gamepad2A) {
-            boolean a = true;
+            a = true;
             if (a) {
                 leftIntake.setPower(1.0);
                 rightIntake.setPower(1.0);
@@ -157,7 +157,7 @@ public class TeleOpFull extends OpMode {
         // hoot897
         boolean b = false;
         if (gamepad2B) {
-            boolean b = true;
+            b = true;
             if (b) {
                 leftIntake.setPower(-1.0);
                 rightIntake.setPower(-1.0);
@@ -165,7 +165,7 @@ public class TeleOpFull extends OpMode {
         }
         boolean x = false;
         if (gamepad2X) {
-            boolean x = true;
+            x = true;
             if (x) {
                 leftIntake.setPower(0.0);
                 rightIntake.setPower(0.0);
