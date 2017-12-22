@@ -167,7 +167,6 @@ public class AutonomousFullRed extends LinearOpMode {
         telemetry.addData("Motors", "left (%.2f), right (%.2f)");
         telemetry.update();
     }
-
     public static void stopDatMovement(DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4)
     {
         motor1.setPower(0);
