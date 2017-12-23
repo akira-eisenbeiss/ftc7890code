@@ -23,7 +23,7 @@ public class AutonomousFullRed extends LinearOpMode {
     public final static String RIGHTFRONT = "rightFront";
     public final static String RIGHTBACK = "rightBack";
     public final static String BALLARM = "ballArm";
-
+    private ColorSensor testy_color_sensor;
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor leftFront;
@@ -50,11 +50,9 @@ public class AutonomousFullRed extends LinearOpMode {
         //Define Pictographs as VuMarks which the Vuforia can track
 //        VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
 //        VuforiaTrackable relicTemplate = relicTrackables.get(0);
-        VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
-        VuforiaTrackable relicTemplate = relicTrackables.get(0);
         relicTemplate.setName("relicVuMarkTemplate");
 */
-
+        testy_color_sensor = hardwareMap.colorSensor.get("color");
         color_sensor = hardwareMap.colorSensor.get("color");
         telemetry.addData("Status", "Initialized");
         telemetry.update();
@@ -64,6 +62,7 @@ public class AutonomousFullRed extends LinearOpMode {
         double rfDrive;
         double rbDrive;
 
+//probs remove
         OpenGLMatrix lastLocation = null; //from 4326
 
         // Wait for the game to start (driver presses PLAY)
@@ -83,7 +82,7 @@ public class AutonomousFullRed extends LinearOpMode {
             double ballposition = 1;
             color_sensor = hardwareMap.colorSensor.get("color");
 
-            if(detected == false) {
+            if(!detected) {
                 ballArm.setPosition(-1.0);
                 if (color_sensor.blue() < color_sensor.red()) {
                     leftFront.setPower(-move);
@@ -110,27 +109,25 @@ public class AutonomousFullRed extends LinearOpMode {
 //bool
 
             }
-/*
+
 
             //more VuForia
             relicTrackables.activate();
-            RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate); //camera
-
-            ballArm.setPosition(0);
+            public enum RelicRecoveryVuMark = RelicRecoveryVuMark.from(relicTemplate); //camera
 
             sleep(2000);
-//            relicTrack.activate();
-//            boolean canSee = false;
-//
-//            RelicRecoveryVuMark vuMark;
+           relicTrack.activate();
+            boolean canSee = false;
+ //why is this
+            RelicRecoveryVuMark vuMark;
 
-//            while(canSee == false) {
-//                vuMark = RelicRecoveryVuMark.from(Template);
+            while(!canSee) {
+                vuMark = RelicRecoveryVuMark.from(Template);
                 telemetry.addData("VuMark", "%s visible", vuMark);
 
                 if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
 
-//                    canSee = true;
+                    canSee = true;
                     telemetry.addData("Vumark", vuMark);
                     leftFront.setPower(0.0);
                     leftBack.setPower(0.0);
@@ -144,20 +141,30 @@ public class AutonomousFullRed extends LinearOpMode {
 
                     leftFront.setPower(slowMove);
                     leftBack.setPower(slowMove);
-                    rightFront.setPower(-slowMove);
-                    rightBack.setPower(-slowMove);
+                    rightFront.setPower(slowMove);
+                    rightBack.setPower(slowMove);
                 }
 
                 telemetry.update();
 //            }
-
-*/
+             if (testy_color_sensor.red() > testy_color_sensor.blue()) {
+                leftFront.setPower(0);
+                leftBack.setPower(0);
+                rightFront.setPower(0);
+                rightBack.setPower(0);
+             }
+             else {
+                 leftFront.setPower(-slowMove);
+                 leftBack.setPower(-slowMove);
+                 rightFront.setPower(-slowMove);
+                 rightBack.setPower(-slowMove);
+             }
         }
         // Show the elapsed game time and wheel power.
         telemetry.addData("Status", "Run Time: " + runtime.toString());
         telemetry.addData("Motors", "left (%.2f), right (%.2f)");
         telemetry.update();
-    }
+    }}
 
     public static void stopDatMovement(DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4)
     {
