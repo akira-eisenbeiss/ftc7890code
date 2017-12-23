@@ -173,22 +173,23 @@ public class AutonomousFullRed extends LinearOpMode {
             //x is the left-right direction if the wire is at the bottom
             while (heading != targetHeading) {
                 //turns, hopefully
-                leftFront.setPower(move);
-                leftBack.setPower(move);
-                rightFront.setPower(0);
-                rightBack.setPower(0);
+                //also, we don't know on winterbreak which way color_sensor is facing, so we're assuming it's facing the back
+                leftFront.setPower(-move);
+                leftBack.setPower(-move);
+                rightFront.setPower(-move);
+                rightBack.setPower(-move);
             }
 
             if (cryptoSensor.red() > cryptoSensor.blue() && cryptoSensor.red() > cryptoSensor.green()) {
                 //strafe strafe
                 leftFront.setPower(-move);
-                leftBack.setPower(-move);
-                rightFront.setPower(move);
+                leftBack.setPower(move);
+                rightFront.setPower(-move);
                 rightBack.setPower(move);
                 if (cryptoSensor.red() > cryptoSensor.blue() && cryptoSensor.red() > cryptoSensor.green()) {
                     leftFront.setPower(-move);
-                    leftBack.setPower(-move);
-                    rightFront.setPower(move);
+                    leftBack.setPower(move);
+                    rightFront.setPower(-move);
                     rightBack.setPower(move);
                     if (cryptoSensor.red() > cryptoSensor.blue() && cryptoSensor.red() > cryptoSensor.green()){
                         stopDatMovement(leftFront, rightFront, leftBack, rightBack);
@@ -197,8 +198,8 @@ public class AutonomousFullRed extends LinearOpMode {
             }
             else {
                 leftFront.setPower(-move);
-                leftBack.setPower(-move);
-                rightFront.setPower(move);
+                leftBack.setPower(move);
+                rightFront.setPower(-move);
                 rightBack.setPower(move);
             }
 
