@@ -182,25 +182,27 @@ public class AutonomousFullRed extends LinearOpMode {
 
             if (cryptoSensor.red() > cryptoSensor.blue() && cryptoSensor.red() > cryptoSensor.green()) {
                 //strafe strafe
-                leftFront.setPower(-move);
-                leftBack.setPower(move);
-                rightFront.setPower(-move);
-                rightBack.setPower(move);
+                leftFront.setPower(move);
+                leftBack.setPower(-move);
+                rightFront.setPower(move);
+                rightBack.setPower(-move);
+                
                 if (cryptoSensor.red() > cryptoSensor.blue() && cryptoSensor.red() > cryptoSensor.green()) {
-                    leftFront.setPower(-move);
-                    leftBack.setPower(move);
-                    rightFront.setPower(-move);
-                    rightBack.setPower(move);
-                    if (cryptoSensor.red() > cryptoSensor.blue() && cryptoSensor.red() > cryptoSensor.green()){
+                    leftFront.setPower(move);
+                    leftBack.setPower(-move);
+                    rightFront.setPower(move);
+                    rightBack.setPower(-move);
+                    
+                    if (cryptoSensor.red() > cryptoSensor.blue() && cryptoSensor.red() > cryptoSensor.green()) {
                         stopDatMovement(leftFront, rightFront, leftBack, rightBack);
                     }
                 }
             }
             else {
-                leftFront.setPower(-move);
-                leftBack.setPower(move);
-                rightFront.setPower(-move);
-                rightBack.setPower(move);
+                leftFront.setPower(move);
+                leftBack.setPower(-move);
+                rightFront.setPower(move);
+                rightBack.setPower(-move);
             }
 
 /*
