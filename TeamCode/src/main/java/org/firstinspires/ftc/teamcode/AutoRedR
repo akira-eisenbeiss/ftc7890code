@@ -1,26 +1,26 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.ColorSensor;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.ElapsedTime;
+        import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+        import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+        import com.qualcomm.robotcore.hardware.ColorSensor;
+        import com.qualcomm.robotcore.hardware.DcMotor;
+        import com.qualcomm.robotcore.hardware.Servo;
+        import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.Gyroscope;
-import com.qualcomm.robotcore.hardware.IntegratingGyroscope;
-import com.qualcomm.robotcore.util.ElapsedTime;
+        import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
+        import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+        import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
+        import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+        import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+        import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+        import com.qualcomm.robotcore.hardware.Gyroscope;
+        import com.qualcomm.robotcore.hardware.IntegratingGyroscope;
+        import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AngularVelocity;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+        import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+        import org.firstinspires.ftc.robotcore.external.navigation.AngularVelocity;
+        import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+        import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 
 
 @Autonomous(name="autonomous full red", group="Linear Opmode")
@@ -35,7 +35,10 @@ public class AutonomousFullRed extends LinearOpMode {
     public final static String RIGHTFRONT = "rightFront";
     public final static String RIGHTBACK = "rightBack";
     public final static String BALLARM = "ballArm";
-    //outtake of glyphs
+    //intake wheels
+    private DcMotor leftIntake;
+    private DcMotor rightIntake;
+    //servoes outtake of glyphs
     public Servo leftOut;
     public Servo rightOut;
     // Declare OpMode members.
@@ -101,6 +104,10 @@ public class AutonomousFullRed extends LinearOpMode {
         rightFront = hardwareMap.get(DcMotor.class, RIGHTFRONT);
         rightBack = hardwareMap.get(DcMotor.class, RIGHTBACK);
         ballArm = hardwareMap.get(Servo.class, BALLARM);
+        
+        //intake wheels, hahahahahahaha
+        leftIntake = hardwareMap.dcMotor.get("left intake");
+        rightIntake = hardwareMap.dcMotor.get("right intake");
         //servo for outtakes
         leftOut = hardwareMap.servo.get("left out");
         rightOut = hardwareMap.servo.get("right out");
@@ -186,15 +193,21 @@ public class AutonomousFullRed extends LinearOpMode {
                 leftBack.setPower(-move);
                 rightFront.setPower(move);
                 rightBack.setPower(-move);
-                
+
                 if (cryptoSensor.red() > cryptoSensor.blue() && cryptoSensor.red() > cryptoSensor.green()) {
                     leftFront.setPower(move);
                     leftBack.setPower(-move);
                     rightFront.setPower(move);
                     rightBack.setPower(-move);
-                    
+
                     if (cryptoSensor.red() > cryptoSensor.blue() && cryptoSensor.red() > cryptoSensor.green()) {
                         stopDatMovement(leftFront, rightFront, leftBack, rightBack);
+                        //RELEASE YOUR GLYPH INTO THE BOX
+                        leftIntake.setPower(-1.0);
+                        rightIntake.setPower(-1.0);
+                        //no. to be changed in testing. duh
+                        leftOut.setPosition(0.2);
+                        rightOut.setPosition(0.2);
                     }
                 }
             }
