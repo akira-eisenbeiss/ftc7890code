@@ -122,13 +122,22 @@ public class AutonomousFullRed extends LinearOpMode {
         MRGyro.calibrate();
 
 //move forward method
-public static void moveForward(DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4)
-    {
-       motor1.setPower(move);
-        motor2.setPower(move);
-        motor3.setPower(-move);
-        motor4.setPower(-move);
-    }
+        public static void moveForward(DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4)
+        {
+                motor1.setPower(move);
+                motor2.setPower(move);
+                motor3.setPower(-move);
+                motor4.setPower(-move);
+        }
+    
+    //move backwards method. Also, always put the left motors first, dumbo
+        public static void moveBackwards((DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4) {
+                motor1.setPower(-move);
+                motor2.setPower(-move);
+                motor3.setPower(move);
+                motor4.setPower(move);
+        }
+        
         while (opModeIsActive()) {
 
             double ballposition = 1;
@@ -165,10 +174,7 @@ public static void moveForward(DcMotor motor1, DcMotor motor2, DcMotor motor3, D
             }
 
             //hard code for moving off balancing stone
-            leftFront.setPower(move);
-            leftBack.setPower(move);
-            rightFront.setPower(move);
-            rightBack.setPower(move);
+            moveForward(leftFront, leftBack, rightFront, rightBack);
             sleep(300);
 
             //resets the z heading but only once when buttons pressed
@@ -188,22 +194,29 @@ public static void moveForward(DcMotor motor1, DcMotor motor2, DcMotor motor3, D
                 rightFront.setPower(-move);
                 rightBack.setPower(-move);
             }
-
+//strafe method. Once again, always put left motors first!!
+            public static void leftStrafe(DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4) {
+                motor1.setPower(move);
+                motor2.setPower(-move);
+                motor3.setPower(move);
+                motor4.setPower(-move);
+            }
+            public static void rightStrafe((DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4) {
+                motor1.setPower(-move);
+                motor2.setPower(move);
+                motor3.setPower(-move);
+                motor4.setPower(move);
+            }
+            
             if (cryptoSensor.red() > cryptoSensor.blue() && cryptoSensor.red() > cryptoSensor.green()) {
-                //strafe strafe
-                leftFront.setPower(move);
-                leftBack.setPower(-move);
-                rightFront.setPower(move);
-                rightBack.setPower(-move);
+                //to the left, to the left
+               leftStrafe(leftFront, leftBack, rightFront, rightBack);
 
                 if (cryptoSensor.red() > cryptoSensor.blue() && cryptoSensor.red() > cryptoSensor.green()) {
-                    leftFront.setPower(move);
-                    leftBack.setPower(-move);
-                    rightFront.setPower(move);
-                    rightBack.setPower(-move);
+                    leftStrafe(leftFront, leftBack, rightFront, rightBack);
 
                     if (cryptoSensor.red() > cryptoSensor.blue() && cryptoSensor.red() > cryptoSensor.green()) {
-                        stopDatMovement(leftFront, rightFront, leftBack, rightBack);
+                        stopDatMovement(leftFront, leftBack, rightFront, rightBack);
                         //RELEASE YOUR GLYPH INTO THE BOX
                         leftIntake.setPower(-1.0);
                         rightIntake.setPower(-1.0);
@@ -214,10 +227,7 @@ public static void moveForward(DcMotor motor1, DcMotor motor2, DcMotor motor3, D
                 }
             }
             else {
-                leftFront.setPower(move);
-                leftBack.setPower(-move);
-                rightFront.setPower(move);
-                rightBack.setPower(-move);
+                leftStrafe(leftFront, leftBack, rightFront, rightBack);
             }
 
 /*
