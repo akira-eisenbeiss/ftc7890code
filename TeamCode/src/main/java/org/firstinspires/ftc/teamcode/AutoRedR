@@ -49,6 +49,7 @@ public class AutonomousFullRed extends LinearOpMode {
     private DcMotor rightBack;
     private ColorSensor color_sensor;
     private Servo ballArm;
+    private Servo moveJewel;
     public final static double move = 0.5;
     public final static double slowMove = move / 2; //minor change
     public boolean detected = false;
@@ -104,6 +105,7 @@ public class AutonomousFullRed extends LinearOpMode {
         rightFront = hardwareMap.get(DcMotor.class, RIGHTFRONT);
         rightBack = hardwareMap.get(DcMotor.class, RIGHTBACK);
         ballArm = hardwareMap.get(Servo.class, BALLARM);
+        moveJewel = hardwareMap.servo.get("move jewel");
         
         //intake wheels, hahahahahahaha
         leftIntake = hardwareMap.dcMotor.get("left intake");
@@ -136,24 +138,16 @@ public class AutonomousFullRed extends LinearOpMode {
                 ballArm.setPosition(-1.0);
                 //we need to change this code so that the arm moves, not the robot
                 if (color_sensor.blue() < color_sensor.red()) {
-                    leftFront.setPower(-move);
-                    leftBack.setPower(-move);
-                    rightFront.setPower(move);
-                    rightBack.setPower(move);
-                    sleep(600);
-                    stopDatMovement(leftFront, rightFront, leftBack, rightBack);
-                    sleep(2000);
+                       //no. for testing purposes only
+                    moveJewel.setPosition(0.1);
+                    
                     ballArm.setPosition(1.0);
                     detected = true;
 
                 } else if (color_sensor.red() < color_sensor.blue()) {
-                    leftFront.setPower(move);
-                    leftBack.setPower(move);
-                    rightFront.setPower(-move);
-                    rightBack.setPower(-move);
-                    sleep(600);
-                    stopDatMovement(leftFront, rightFront, leftBack, rightBack);
-                    sleep(2000);
+                //again, no. for testing purposes only
+                    moveJewel.setPosition(-0.1);
+                    
                     ballArm.setPosition(1.0);
                     detected = true;
                 }
