@@ -121,6 +121,14 @@ public class AutonomousFullRed extends LinearOpMode {
 
         MRGyro.calibrate();
 
+//move forward method
+public static void moveForward(DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4)
+    {
+       motor1.setPower(move);
+        motor2.setPower(move);
+        motor3.setPower(-move);
+        motor4.setPower(-move);
+    }
         while (opModeIsActive()) {
 
             double ballposition = 1;
