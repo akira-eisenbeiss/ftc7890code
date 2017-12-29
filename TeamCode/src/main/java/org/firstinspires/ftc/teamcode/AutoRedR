@@ -128,19 +128,34 @@ public class AutonomousFullRed extends LinearOpMode {
                 motor2.setPower(move);
                 motor3.setPower(-move);
                 motor4.setPower(-move);
-        }
-    
+        }    
     //move backwards method. Also, always put the left motors first, dumbo
         public static void moveBackwards((DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4) {
                 motor1.setPower(-move);
                 motor2.setPower(-move);
                 motor3.setPower(move);
                 motor4.setPower(move);
+        } 
+        //strafe method. Once again, always put left motors first!!
+        public static void leftStrafe(DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4) {
+                motor1.setPower(move);
+                motor2.setPower(-move);
+                motor3.setPower(move);
+                motor4.setPower(-move);
         }
+        public static void rightStrafe((DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4) {
+                motor1.setPower(-move);
+                motor2.setPower(move);
+                motor3.setPower(-move);
+                motor4.setPower(move);
+        }
+            
         
         while (opModeIsActive()) {
 
+//what is this variable?
             double ballposition = 1;
+            
             color_sensor = hardwareMap.colorSensor.get("color");
 
             //for storing raw data
@@ -150,7 +165,6 @@ public class AutonomousFullRed extends LinearOpMode {
             //heading variable
             int heading = MRGyro.getHeading();
 
-            //all of this needs to be fixe
             if(!detected) {
                 ballArm.setPosition(-1.0);
                 //we need to change this code so that the arm moves, not the robot
@@ -182,6 +196,7 @@ public class AutonomousFullRed extends LinearOpMode {
             resetState = (gamepad2.x && gamepad2.y);
             if (resetState && !lastResetState) {
                 MRGyro.resetZAxisIntegrator();
+                set.getOffMyLawn
             }
             lastResetState = resetState;
 
@@ -194,25 +209,12 @@ public class AutonomousFullRed extends LinearOpMode {
                 rightFront.setPower(-move);
                 rightBack.setPower(-move);
             }
-//strafe method. Once again, always put left motors first!!
-            public static void leftStrafe(DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4) {
-                motor1.setPower(move);
-                motor2.setPower(-move);
-                motor3.setPower(move);
-                motor4.setPower(-move);
-            }
-            public static void rightStrafe((DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4) {
-                motor1.setPower(-move);
-                motor2.setPower(move);
-                motor3.setPower(-move);
-                motor4.setPower(move);
-            }
-            
-            if (cryptoSensor.red() > cryptoSensor.blue() && cryptoSensor.red() > cryptoSensor.green()) {
-                //to the left, to the left
-               leftStrafe(leftFront, leftBack, rightFront, rightBack);
 
-                if (cryptoSensor.red() > cryptoSensor.blue() && cryptoSensor.red() > cryptoSensor.green()) {
+            if (cryptoSensor.red() > cryptoSensor.blue() && cryptoSensor.red() > cryptoSensor.green()) {
+               //to the left, to the left
+               leftStrafe(leftFront, leftBack, rightFront, rightBack);
+               
+               if (cryptoSensor.red() > cryptoSensor.blue() && cryptoSensor.red() > cryptoSensor.green()) {
                     leftStrafe(leftFront, leftBack, rightFront, rightBack);
 
                     if (cryptoSensor.red() > cryptoSensor.blue() && cryptoSensor.red() > cryptoSensor.green()) {
