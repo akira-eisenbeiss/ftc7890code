@@ -236,50 +236,6 @@ public class AutonomousFullRed extends LinearOpMode {
                 leftStrafe(leftFront, leftBack, rightFront, rightBack);
             }
 
-/*
-
-            //more VuForia
-            relicTrackables.activate();
-            RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate); //camera
-
-            ballArm.setPosition(0);
-
-            sleep(2000);
-//            relicTrack.activate();
-//            boolean canSee = false;
-//
-//            RelicRecoveryVuMark vuMark;
-
-//            while(canSee == false) {
-//                vuMark = RelicRecoveryVuMark.from(Template);
-                telemetry.addData("VuMark", "%s visible", vuMark);
-
-                if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
-
-//                    canSee = true;
-                    telemetry.addData("Vumark", vuMark);
-                    leftFront.setPower(0.0);
-                    leftBack.setPower(0.0);
-                    rightFront.setPower(0.0);
-                    rightBack.setPower(0.0);
-
-                }
-                else {
-                    telemetry.addData("VuMark", "not visible");
-                    //add some stuff in here
-
-                    leftFront.setPower(slowMove);
-                    leftBack.setPower(slowMove);
-                    rightFront.setPower(-slowMove);
-                    rightBack.setPower(-slowMove);
-                }
-
-                telemetry.update();
-//            }
-
-*/
-
-
         }
         // Show the elapsed game time and wheel power.
         telemetry.addData("Status", "Run Time: " + runtime.toString());
