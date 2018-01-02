@@ -29,12 +29,6 @@ public class AutonomousFullRed extends LinearOpMode {
     //vuforia
     VuforiaLocalizer vuforia;    //vuforia initializer
 
-    //sorry about these strings, btw
-    public final static String LEFTFRONT = "leftFront";
-    public final static String LEFTBACK = "leftBack";
-    public final static String RIGHTFRONT = "rightFront";
-    public final static String RIGHTBACK = "rightBack";
-    public final static String BALLARM = "ballArm";
     //intake wheels
     private DcMotor leftIntake;
     private DcMotor rightIntake;
@@ -63,22 +57,6 @@ public class AutonomousFullRed extends LinearOpMode {
     @Override
     public void runOpMode() {
 
-        /*
-        //Vuforia - starting the camera  --> from 4326 code
-        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
-        //License Key, I already set it up I think
-        parameters.vuforiaLicenseKey = "AZD9V+f/////AAAAGZDj5Sa0JkeSohNtCSdf0T94R9bz9UlzQyuCIZuJ2d1ehAEqmbPYzprSq4hmd/9XUZYT088pUIzwl79q9h2ljFjUFD5p0RHKBx+ggMJ+qgCelvbeNf7Rd771vlduzibSBN6np49m6Z31Eyk0dYFZJbpdmw4P7mQ8LaeR6UOLgmiythqcCZga9VoEHPA2e8Z9/7At1SZVPiOBkVlEKz5AGhPhL5/A/R3sb30NSaiq5yquyJ+sOWvNQ5ovdVND6OrAQrc2DdQcCDyD8JQLOiVZYCPoNohKfuZ9N2jnZRSueEH4XV6i2DOqWxfJ5vmNf6jBcrOWLROO8KEoPa2Fvibxj7lPMp4JM/nMXK7TwEopU91v";
-        //Which camera we choose - I used back right now because I think the range is better, but front could work
-        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
-        this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
-        //Define Pictographs as VuMarks which the Vuforia can track
-//        VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
-//        VuforiaTrackable relicTemplate = relicTrackables.get(0);
-        VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
-        VuforiaTrackable relicTemplate = relicTrackables.get(0);
-        relicTemplate.setName("relicVuMarkTemplate");
-*/
         //gyro stuff for resetting Zheader
         boolean resetState = false;
         boolean lastResetState = false;
@@ -100,11 +78,11 @@ public class AutonomousFullRed extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
-        leftFront = hardwareMap.get(DcMotor.class, LEFTFRONT);
-        leftBack = hardwareMap.get(DcMotor.class, LEFTBACK);
-        rightFront = hardwareMap.get(DcMotor.class, RIGHTFRONT);
-        rightBack = hardwareMap.get(DcMotor.class, RIGHTBACK);
-        ballArm = hardwareMap.get(Servo.class, BALLARM);
+        leftFront = hardwareMap.dcMotor.get("left front");
+        leftBack = hardwareMap.dcMotor.get("left back");
+        rightFront = hardwareMap.dcMotor.get("right front");
+        rightBack = hardwareMap.dcMotor.get("right back");
+        ballArm = hardwareMap.servo.get("ball arm");
         moveJewel = hardwareMap.servo.get("move jewel");
         
         //intake wheels, hahahahahahaha
@@ -122,8 +100,7 @@ public class AutonomousFullRed extends LinearOpMode {
         MRGyro.calibrate();
 
 //move forward method
-        public static void moveForward(DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4)
-        {
+        public static void moveForward(DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4) {
                 motor1.setPower(move);
                 motor2.setPower(move);
                 motor3.setPower(-move);
@@ -136,6 +113,7 @@ public class AutonomousFullRed extends LinearOpMode {
                 motor3.setPower(move);
                 motor4.setPower(move);
         } 
+        
         //strafe method. Once again, always put left motors first!!
         public static void leftStrafe(DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4) {
                 motor1.setPower(move);
@@ -156,6 +134,7 @@ public class AutonomousFullRed extends LinearOpMode {
 //what is this variable?
             double ballposition = 1;
             
+            //do we need this repeated in here?
             color_sensor = hardwareMap.colorSensor.get("color");
 
             //for storing raw data
