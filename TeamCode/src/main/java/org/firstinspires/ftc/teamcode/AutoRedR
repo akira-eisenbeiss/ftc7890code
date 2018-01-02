@@ -222,6 +222,10 @@ public class AutonomousFullRed extends LinearOpMode {
                         //RELEASE YOUR GLYPH INTO THE BOX
                         leftIntake.setPower(-1.0);
                         rightIntake.setPower(-1.0);
+                        //moves robot forward a little
+                        // the sleep time is probs inacccurate
+                        moveForward(leftFront, leftBack, rightFront, rightBack);
+                        sleep(20);
                         //no. to be changed in testing. duh
                         leftOut.setPosition(0.2);
                         rightOut.setPosition(0.2);
