@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
-@TeleOp(name="complete tele op2", group="Tele Op")
+@TeleOp(name="lift test", group="Tele Op")
 public class LiftTest extends OpMode {
     //sorry about these strings, btw
     public final static String LIFTMOTOR = "liftMotor";
@@ -27,9 +27,5 @@ public class LiftTest extends OpMode {
         if (rightTrigger < 0)
             liftMotor.setPower(0.0);
 
-        // Show the elapsed game time and wheel power.
-        telemetry.addData("Status", "Run Time: " + runtime.toString());
-        telemetry.addData("Motors", "left (%.2f), right (%.2f)", rfDrive, rbDrive, lbDrive, rbDrive);
-        telemetry.update();
     }
 }
