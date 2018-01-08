@@ -23,7 +23,7 @@ package org.firstinspires.ftc.teamcode;
         import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 
 
-@Autonomous(name="autonomous full red", group="Linear Opmode")
+@Autonomous(name="autonomous red window side", group="Linear Opmode")
 public class AutoRedW extends LinearOpMode {
 
     //vuforia
