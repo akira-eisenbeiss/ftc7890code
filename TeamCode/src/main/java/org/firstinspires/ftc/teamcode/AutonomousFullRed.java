@@ -23,7 +23,13 @@ public class AutonomousFullRed extends LinearOpMode {
     public final static String RIGHTFRONT = "rightFront";
     public final static String RIGHTBACK = "rightBack";
     public final static String BALLARM = "ballArm";
+<<<<<<< HEAD
     private ColorSensor testy_color_sensor;
+=======
+    //outtake of glyphs
+    public Servo leftOut;
+    public Servo rightOut;
+>>>>>>> 0aaa1179eab32ca6ed08583fd62c35a08fceb285
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor leftFront;
@@ -35,6 +41,8 @@ public class AutonomousFullRed extends LinearOpMode {
     public final static double move = 0.5;
     public final static double slowMove = move / 2; //minor change
     public boolean detected = false;
+    //servoes for outtake of glyphs
+
     @Override
     public void runOpMode() {
 
@@ -74,11 +82,14 @@ public class AutonomousFullRed extends LinearOpMode {
         rightFront = hardwareMap.get(DcMotor.class, RIGHTFRONT);
         rightBack = hardwareMap.get(DcMotor.class, RIGHTBACK);
         ballArm = hardwareMap.get(Servo.class, BALLARM);
-
+        //servo for outtakes
+        leftOut = hardwareMap.servo.get("left out");
+        rightOut = hardwareMap.servo.get("right out");
         // run until the end of the match (driver presses STOP)
+
         while (opModeIsActive()) {
 
-
+/*
             double ballposition = 1;
             color_sensor = hardwareMap.colorSensor.get("color");
 
@@ -160,12 +171,18 @@ public class AutonomousFullRed extends LinearOpMode {
                  rightBack.setPower(-slowMove);
              }
         }
+        leftOut.setPosition(0.0);
+        rightOut.setPosition(0.0);
         // Show the elapsed game time and wheel power.
         telemetry.addData("Status", "Run Time: " + runtime.toString());
         telemetry.addData("Motors", "left (%.2f), right (%.2f)");
         telemetry.update();
+<<<<<<< HEAD
     }}
 
+=======
+    }
+>>>>>>> 0aaa1179eab32ca6ed08583fd62c35a08fceb285
     public static void stopDatMovement(DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4)
     {
         motor1.setPower(0);
@@ -173,5 +190,3 @@ public class AutonomousFullRed extends LinearOpMode {
         motor3.setPower(0);
         motor4.setPower(0);
     }
-
-}
