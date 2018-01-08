@@ -1,3 +1,4 @@
+/**
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -23,13 +24,10 @@ public class AutonomousFullRed extends LinearOpMode {
     public final static String RIGHTFRONT = "rightFront";
     public final static String RIGHTBACK = "rightBack";
     public final static String BALLARM = "ballArm";
-<<<<<<< HEAD
     private ColorSensor testy_color_sensor;
-=======
     //outtake of glyphs
     public Servo leftOut;
     public Servo rightOut;
->>>>>>> 0aaa1179eab32ca6ed08583fd62c35a08fceb285
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor leftFront;
@@ -59,7 +57,7 @@ public class AutonomousFullRed extends LinearOpMode {
 //        VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
 //        VuforiaTrackable relicTemplate = relicTrackables.get(0);
         relicTemplate.setName("relicVuMarkTemplate");
-*/
+
         testy_color_sensor = hardwareMap.colorSensor.get("color");
         color_sensor = hardwareMap.colorSensor.get("color");
         telemetry.addData("Status", "Initialized");
@@ -89,7 +87,6 @@ public class AutonomousFullRed extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-/*
             double ballposition = 1;
             color_sensor = hardwareMap.colorSensor.get("color");
 
@@ -177,12 +174,9 @@ public class AutonomousFullRed extends LinearOpMode {
         telemetry.addData("Status", "Run Time: " + runtime.toString());
         telemetry.addData("Motors", "left (%.2f), right (%.2f)");
         telemetry.update();
-<<<<<<< HEAD
     }}
 
-=======
     }
->>>>>>> 0aaa1179eab32ca6ed08583fd62c35a08fceb285
     public static void stopDatMovement(DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4)
     {
         motor1.setPower(0);
@@ -190,3 +184,4 @@ public class AutonomousFullRed extends LinearOpMode {
         motor3.setPower(0);
         motor4.setPower(0);
     }
+**/

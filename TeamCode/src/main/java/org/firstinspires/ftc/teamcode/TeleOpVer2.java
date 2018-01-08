@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
-@TeleOp(name="complete tele op", group="Tele Op")
+@TeleOp(name="complete tele op2", group="Tele Op")
 public class TeleOpVer2 extends OpMode {
     //sorry about these strings, btw
     public final static String LEFTFRONT = "leftFront";
@@ -46,11 +46,8 @@ public class TeleOpVer2 extends OpMode {
     //scissor
     private DcMotor scissor;
 
-
     //intake outtake variables
-    boolean a = true;
-    boolean b = true;
-
+    int intakePower = 0;
 
     @Override
     public void init() {
@@ -140,8 +137,9 @@ public class TeleOpVer2 extends OpMode {
         } else {
             liftMotor.setPower(0.0);
         }
-
+        // hoot897
         //the intake, outtake, and stop
+        /*
         if (gamepad2A && a == true) {
             leftIntake.setPower(1.0);
             rightIntake.setPower(1.0);
@@ -153,7 +151,7 @@ public class TeleOpVer2 extends OpMode {
             a = true;
         }
         telemetry.addData("rando boolean", "your welcome ;) " + a );
-        // hoot897
+
         if (gamepad2B && b == true) {
             leftIntake.setPower(1.0);
             rightIntake.setPower(1.0);
@@ -164,6 +162,27 @@ public class TeleOpVer2 extends OpMode {
             rightIntake.setPower(0);
             a = true;
         }
+        */
+
+        if(gamepad2A && intakePower == 0) // in
+        {
+            leftIntake.setPower(1.0);
+            rightIntake.setPower(1.0);
+            intakePower ^= 1;
+        }
+        else if(gamepad2A && intakePower == 1)// out
+        {
+            leftIntake.setPower(-1.0);
+            rightIntake.setPower(-1.0);
+            intakePower ^= 1;
+        }
+        else if(gamepad2B)
+        {
+            leftIntake.setPower(0);
+            rightIntake.setPower(0);
+        }
+
+
 /*
         //servo clamp that grabs the relic
         if (leftStick2 != 0.0) {

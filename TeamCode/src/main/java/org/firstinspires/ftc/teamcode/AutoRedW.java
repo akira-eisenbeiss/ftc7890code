@@ -52,8 +52,6 @@ public class AutoRedW extends LinearOpMode {
     IntegratingGyroscope gyro;
     ModernRoboticsI2cGyro MRGyro;
 
-
-
     @Override
     public void runOpMode() {
 
@@ -99,37 +97,9 @@ public class AutoRedW extends LinearOpMode {
 
         MRGyro.calibrate();
 
-//move forward method
-        public static void moveForward(DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4) {
-                motor1.setPower(move);
-                motor2.setPower(move);
-                motor3.setPower(-move);
-                motor4.setPower(-move);
-        }    
-    //move backwards method. Also, always put the left motors first, dumbo
-        public static void moveBackwards((DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4) {
-                motor1.setPower(-move);
-                motor2.setPower(-move);
-                motor3.setPower(move);
-                motor4.setPower(move);
-        } 
-        
-        //strafe method. Once again, always put left motors first!!
-        public static void leftStrafe(DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4) {
-                motor1.setPower(move);
-                motor2.setPower(-move);
-                motor3.setPower(move);
-                motor4.setPower(-move);
-        }
-        public static void rightStrafe((DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4) {
-                motor1.setPower(-move);
-                motor2.setPower(move);
-                motor3.setPower(-move);
-                motor4.setPower(move);
-        }
             
         
-        while(opModeIsActive()) {
+        while(opModeIsActive()){
 
 //what is this variable?
             double ballposition = 1;
@@ -170,7 +140,6 @@ public class AutoRedW extends LinearOpMode {
             resetState = (gamepad2.x && gamepad2.y);
             if (resetState && !lastResetState) {
                 MRGyro.resetZAxisIntegrator();
-                set.getOffMyLawn
             }
             lastResetState = resetState;
 
@@ -213,6 +182,35 @@ public class AutoRedW extends LinearOpMode {
         motor2.setPower(0);
         motor3.setPower(0);
         motor4.setPower(0);
+    }
+
+    //move forward method
+    public static void moveForward(DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4) {
+        motor1.setPower(move);
+        motor2.setPower(move);
+        motor3.setPower(-move);
+        motor4.setPower(-move);
+    }
+    //move backwards method. Also, always put the left motors first, dumbo
+    public static void moveBackwards(DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4) {
+        motor1.setPower(-move);
+        motor2.setPower(-move);
+        motor3.setPower(move);
+        motor4.setPower(move);
+    }
+
+    //strafe method. Once again, always put left motors first!!
+    public static void leftStrafe(DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4) {
+        motor1.setPower(move);
+        motor2.setPower(-move);
+        motor3.setPower(move);
+        motor4.setPower(-move);
+    }
+    public static void rightStrafe(DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4) {
+        motor1.setPower(-move);
+        motor2.setPower(move);
+        motor3.setPower(-move);
+        motor4.setPower(move);
     }
 
 }

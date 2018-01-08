@@ -1,3 +1,4 @@
+
 package org.firstinspires.ftc.teamcode;
 
         import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -99,35 +100,6 @@ public class AutoRedR extends LinearOpMode {
 
         MRGyro.calibrate();
 
-//move forward method
-        public static void moveForward(DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4) {
-                motor1.setPower(move);
-                motor2.setPower(move);
-                motor3.setPower(-move);
-                motor4.setPower(-move);
-        }    
-    //move backwards method. Also, always put the left motors first, dumbo
-        public static void moveBackwards((DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4) {
-                motor1.setPower(-move);
-                motor2.setPower(-move);
-                motor3.setPower(move);
-                motor4.setPower(move);
-        } 
-        
-        //strafe method. Once again, always put left motors first!!
-        public static void leftStrafe(DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4) {
-                motor1.setPower(move);
-                motor2.setPower(-move);
-                motor3.setPower(move);
-                motor4.setPower(-move);
-        }
-        public static void rightStrafe((DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4) {
-                motor1.setPower(-move);
-                motor2.setPower(move);
-                motor3.setPower(-move);
-                motor4.setPower(move);
-        }
-            
         
         while (opModeIsActive()) {
 
@@ -175,7 +147,6 @@ public class AutoRedR extends LinearOpMode {
             resetState = (gamepad2.x && gamepad2.y);
             if (resetState && !lastResetState) {
                 MRGyro.resetZAxisIntegrator();
-                set.getOffMyLawn
             }
             lastResetState = resetState;
 
@@ -229,5 +200,35 @@ public class AutoRedR extends LinearOpMode {
         motor3.setPower(0);
         motor4.setPower(0);
     }
+
+    //move forward method
+    public static void moveForward(DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4) {
+        motor1.setPower(move);
+        motor2.setPower(move);
+        motor3.setPower(-move);
+        motor4.setPower(-move);
+    }
+    //move backwards method. Also, always put the left motors first, dumbo
+    public static void moveBackwards(DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4) {
+        motor1.setPower(-move);
+        motor2.setPower(-move);
+        motor3.setPower(move);
+        motor4.setPower(move);
+    }
+
+    //strafe method. Once again, always put left motors first!!
+    public static void leftStrafe(DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4) {
+        motor1.setPower(move);
+        motor2.setPower(-move);
+        motor3.setPower(move);
+        motor4.setPower(-move);
+    }
+    public static void rightStrafe(DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4) {
+        motor1.setPower(-move);
+        motor2.setPower(move);
+        motor3.setPower(-move);
+        motor4.setPower(move);
+    }
+
 
 }

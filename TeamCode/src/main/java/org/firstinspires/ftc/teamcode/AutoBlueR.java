@@ -27,9 +27,6 @@ package org.firstinspires.ftc.teamcode;
 @Autonomous(name="autonomous full red", group="Linear Opmode")
 public class AutoBlueR extends LinearOpMode {
 
-    //vuforia
-    VuforiaLocalizer vuforia;    //vuforia initializer
-
     //sorry about these strings, btw
     public final static String LEFTFRONT = "leftFront";
     public final static String LEFTBACK = "leftBack";
@@ -122,23 +119,8 @@ public class AutoBlueR extends LinearOpMode {
 
         MRGyro.calibrate();
 
-//move forward method
-        public static void moveForward(DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4)
-        {
-                motor1.setPower(move);
-                motor2.setPower(move);
-                motor3.setPower(-move);
-                motor4.setPower(-move);
-        }
-    
-    //move backwards method. Also, always put the left motors first, dumbo
-        public static void moveBackwards((DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4) {
-                motor1.setPower(-move);
-                motor2.setPower(-move);
-                motor3.setPower(move);
-                motor4.setPower(move);
-        }
-        
+
+
         while (opModeIsActive()) {
 
             double ballposition = 1;
@@ -196,20 +178,7 @@ public class AutoBlueR extends LinearOpMode {
                 rightFront.setPower(-move);
                 rightBack.setPower(-move);
             }
-//strafe method. Once again, always put left motors first!!
-            public static void leftStrafe(DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4) {
-                motor1.setPower(move);
-                motor2.setPower(-move);
-                motor3.setPower(move);
-                motor4.setPower(-move);
-            }
-            public static void rightStrafe((DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4) {
-                motor1.setPower(-move);
-                motor2.setPower(move);
-                motor3.setPower(-move);
-                motor4.setPower(move);
-            }
-            
+
             if (cryptoSensor.red() > cryptoSensor.blue() && cryptoSensor.red() > cryptoSensor.green()) {
                 //strafe strafe
                rightStrafe(leftFront, leftBack, rightFront, rightBack);
@@ -228,18 +197,11 @@ public class AutoBlueR extends LinearOpMode {
                         rightOut.setPosition(0.2);
                     }
                 }
-            }
             else {
                 rightStrafe(leftFront, leftBack, rightFront, rightBack);
             }
-
-        }
-        // Show the elapsed game time and wheel power.
-        telemetry.addData("Status", "Run Time: " + runtime.toString());
-        telemetry.addData("Motors", "left (%.2f), right (%.2f)");
-        telemetry.update();
-    }
-
+}
+}
     public static void stopDatMovement(DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4)
     {
         motor1.setPower(0);
@@ -247,5 +209,36 @@ public class AutoBlueR extends LinearOpMode {
         motor3.setPower(0);
         motor4.setPower(0);
     }
+    //strafe method. Once again, always put left motors first!!
+    public static void leftStrafe(DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4) {
+        motor1.setPower(move);
+        motor2.setPower(-move);
+        motor3.setPower(move);
+        motor4.setPower(-move);
+    }
+    public static void rightStrafe(DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4) {
+        motor1.setPower(-move);
+        motor2.setPower(move);
+        motor3.setPower(-move);
+        motor4.setPower(move);
+    }
+    //move forward method
+    public static void moveForward(DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4)
+    {
+        motor1.setPower(move);
+        motor2.setPower(move);
+        motor3.setPower(-move);
+        motor4.setPower(-move);
+    }
+
+    //move backwards method. Also, always put the left motors first, dumbo
+    public static void moveBackwards(DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4) {
+        motor1.setPower(-move);
+        motor2.setPower(-move);
+        motor3.setPower(move);
+        motor4.setPower(move);
+    }
 
 }
+
+
