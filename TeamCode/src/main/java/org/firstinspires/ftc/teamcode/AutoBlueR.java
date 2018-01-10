@@ -1,4 +1,3 @@
-
 package org.firstinspires.ftc.teamcode;
 
         import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -40,7 +39,7 @@ public class AutoBlueR extends LinearOpMode {
     //knocks off jewel
     private final static String MOVEJEWEL = "moveJewel";
     //gyro sensor stuff
-    public final static String MRGYRO = "MRGyro";
+    private final static String MRGYRO = "MRGyro";
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor leftFront;
@@ -57,7 +56,7 @@ public class AutoBlueR extends LinearOpMode {
     public boolean detected = false;
     public boolean runner = false;
     public boolean turner = false;
-    //private ColorSensor cryptoSensor;
+    private ColorSensor cryptoSensor;
     //gyro stuff
     IntegratingGyroscope gyro;
     ModernRoboticsI2cGyro MRGyro;
@@ -74,6 +73,7 @@ public class AutoBlueR extends LinearOpMode {
         int targetHeading = 90;
 
         color_sensor = hardwareMap.colorSensor.get("color");
+        cryptoSensor = hardwareMap.colorSensor.get("color");
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
@@ -97,8 +97,7 @@ public class AutoBlueR extends LinearOpMode {
         //intake wheels, hahahahahahaha
         leftIntake = hardwareMap.get(DcMotor.class, LEFTINTAKE);
         rightIntake = hardwareMap.get(DcMotor.class, RIGHTINTAKE);
-        // run until the end of the match (driver presses STOP)
-
+        // run until the end of the match
         //calirbate gyro
         MRGyro = hardwareMap.get(ModernRoboticsI2cGyro.class, MRGYRO);
         gyro = (IntegratingGyroscope) MRGyro;
@@ -108,6 +107,7 @@ public class AutoBlueR extends LinearOpMode {
 
         while (opModeIsActive()) {
 
+            stopDatMovement(leftFront, leftBack, rightFront, rightBack);
             double ballposition = 1;
             color_sensor = hardwareMap.colorSensor.get("color");
 
@@ -168,12 +168,11 @@ public class AutoBlueR extends LinearOpMode {
                     rightBack.setPower(-move);
                 }
             }
-/*
             if (cryptoSensor.red() > cryptoSensor.blue() && cryptoSensor.red() > cryptoSensor.green()) {
                 //strafe strafe
                rightStrafe(leftFront, leftBack, rightFront, rightBack);
 
-                    if (cryptoSensor.red() > cryptoSensor.blue() && cryptoSensor.red() > cryptoSensor.green()) {
+                    if (cryptoSensor.blue() > cryptoSensor.red() && cryptoSensor.blue() > cryptoSensor.green()) {
                         stopDatMovement(leftFront, leftBack, rightFront, rightBack);
                         //RELEASE YOUR GLYPH INTO THE BOX
                         leftIntake.setPower(-1.0);
@@ -187,7 +186,7 @@ public class AutoBlueR extends LinearOpMode {
             else {
                 rightStrafe(leftFront, leftBack, rightFront, rightBack);
             }
-            */
+
         }
     }
     public static void stopDatMovement(DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4)
