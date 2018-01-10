@@ -57,7 +57,7 @@ public class AutoBlueR extends LinearOpMode {
     public boolean detected = false;
     public boolean runner = false;
     public boolean turner = false;
-    private ColorSensor cryptoSensor;
+    //private ColorSensor cryptoSensor;
     //gyro stuff
     IntegratingGyroscope gyro;
     ModernRoboticsI2cGyro MRGyro;
@@ -106,7 +106,6 @@ public class AutoBlueR extends LinearOpMode {
         MRGyro.calibrate();
 
 
-
         while (opModeIsActive()) {
 
             double ballposition = 1;
@@ -120,21 +119,21 @@ public class AutoBlueR extends LinearOpMode {
             int heading = MRGyro.getHeading();
 
             //all of this needs to be fixe
-            if(!detected) {
+            if (!detected) {
                 ballArm.setPosition(-1.0);
                 //we need to change this code so that the arm moves, not the robot
                 if (color_sensor.blue() < color_sensor.red()) {
-                       //no. for testing purposes only
-                       //make it so arm will move forward, hitting red jewel in front
+                    //no. for testing purposes only
+                    //make it so arm will move forward, hitting red jewel in front
                     moveJewel.setPosition(0.1);
-                    
+
                     ballArm.setPosition(1.0);
                     detected = true;
                     runner = true;
                 } else if (color_sensor.red() < color_sensor.blue()) {
-                //again, no. for testing purposes only
+                    //again, no. for testing purposes only
                     moveJewel.setPosition(-0.1);
-                    
+
                     ballArm.setPosition(1.0);
                     detected = true;
                     runner = true;
@@ -169,7 +168,7 @@ public class AutoBlueR extends LinearOpMode {
                     rightBack.setPower(-move);
                 }
             }
-
+/*
             if (cryptoSensor.red() > cryptoSensor.blue() && cryptoSensor.red() > cryptoSensor.green()) {
                 //strafe strafe
                rightStrafe(leftFront, leftBack, rightFront, rightBack);
@@ -188,8 +187,9 @@ public class AutoBlueR extends LinearOpMode {
             else {
                 rightStrafe(leftFront, leftBack, rightFront, rightBack);
             }
-}
-}
+            */
+        }
+    }
     public static void stopDatMovement(DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4)
     {
         motor1.setPower(0);
@@ -228,4 +228,5 @@ public class AutoBlueR extends LinearOpMode {
     }
 
 }
+
 
