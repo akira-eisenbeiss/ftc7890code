@@ -23,6 +23,8 @@ public class TeleOpVer2 extends OpMode {
     //  public final static String CLAMPSERVO = "clampServo";
     // public final static String VERTSERVO = "vertServo";
     public final static String BALLARM = "ballArm";
+    public final static String LEFTCLAMP = "leftClamp";
+    public final static String RIGHTCLAMP = "rightClamp";
     //scissor
     // public final static String SCISSOR = "scissor";
     //directions
@@ -43,6 +45,8 @@ public class TeleOpVer2 extends OpMode {
     // private Servo clampServo;
     //   private Servo vertServo;
     private Servo ballArm;
+    private Servo leftClamp;
+    private Servo rightClamp;
     //scissor
     private DcMotor scissor;
 
@@ -65,13 +69,15 @@ public class TeleOpVer2 extends OpMode {
         liftMotor = hardwareMap.get(DcMotor.class, LIFTMOTOR);
         //servos
         ballArm = hardwareMap.get(Servo.class, BALLARM);
-        // clampServo = hardwareMap.get(Servo.class, CLAMPSERVO);
+        leftClamp = hardwareMap.get(Servo.class, LEFTCLAMP);
+        rightClamp = hardwareMap.get(Servo.class, RIGHTCLAMP);
+
+        /* clampServo = hardwareMap.get(Servo.class, CLAMPSERVO);
         //vertServo = hardwareMap.get(Servo.class, VERTSERVO);
         //scissor
-        //scissor = hardwareMap.get(DcMotor.class, SCISSOR);
+        scissor = hardwareMap.get(DcMotor.class, SCISSOR);*/
 //hiiii
         //motor directions
-        //wheels
         leftFront.setDirection(LEFTDIRECTION);
         leftBack.setDirection(LEFTDIRECTION);
         rightFront.setDirection(RIGHTDIRECTION);
@@ -99,12 +105,15 @@ public class TeleOpVer2 extends OpMode {
         double rfDrive = Range.clip(drive - turn + strafe, -1.0, 1.0);
         double rbDrive = Range.clip(drive - turn - strafe, -1.0, 1.0);
 
-        //wheel lift mechanism controls
+        //wheel lift and intake mechanism controls
         float leftTrigger2 = gamepad2.left_trigger;
         float rightTrigger2 = gamepad2.right_trigger;
+            //intake wheels
+        boolean gamepad1A = gamepad1.a;
+        boolean gamepad1B = gamepad1.b;
+            //intake clamps
         boolean gamepad2A = gamepad2.a;
         boolean gamepad2B = gamepad2.b;
-        boolean gamepad2X = gamepad2.x;
         double liftRaise = Range.clip(-leftTrigger2, -1.0, 0.0);
         double liftLower = Range.clip(rightTrigger2, 0.0, 1.0);
         //relic mech
@@ -113,8 +122,7 @@ public class TeleOpVer2 extends OpMode {
         double scissorOut = Range.clip(leftTrigger1, -1.0, 0.0);
         double scissorIn = Range.clip(rightTrigger1, 0.0, 1.0);
         //clamp
-        //    float leftStick2 = -gamepad2.left_stick_y;7777
-        ;
+        //    float leftStick2 = -gamepad2.left_stick_y;
         //      float rightStick2 = gamepad2.right_stick_y;
 
         //just the servo arm up so it doesn't break
@@ -137,49 +145,33 @@ public class TeleOpVer2 extends OpMode {
         } else {
             liftMotor.setPower(0.0);
         }
-        // hoot897
-        //the intake, outtake, and stop
-        /*
-        if (gamepad2A && a == true) {
-            leftIntake.setPower(1.0);
-            rightIntake.setPower(1.0);
-            a = false;
-        }
-        else if (gamepad2A && a == false) {
-            leftIntake.setPower(0);
-            rightIntake.setPower(0);
-            a = true;
-        }
-        telemetry.addData("rando boolean", "your welcome ;) " + a );
+        // hoot897 @arden
 
-        if (gamepad2B && b == true) {
-            leftIntake.setPower(1.0);
-            rightIntake.setPower(1.0);
-            a = false;
-        }
-        else if (gamepad2B && b == false) {
-            leftIntake.setPower(0);
-            rightIntake.setPower(0);
-            a = true;
-        }
-        */
-
-        if(gamepad2A && intakePower == 0) // in
+        if(gamepad1A && intakePower == 0) // in
         {
             leftIntake.setPower(1.0);
             rightIntake.setPower(1.0);
             intakePower ^= 1;
         }
-        else if(gamepad2A && intakePower == 1)// out
+        else if(gamepad1A && intakePower == 1)// out
         {
             leftIntake.setPower(-1.0);
             rightIntake.setPower(-1.0);
             intakePower ^= 1;
         }
-        else if(gamepad2B)
+        else if(gamepad1B)
         {
             leftIntake.setPower(0);
             rightIntake.setPower(0);
+        }
+        //intake clampss
+        if (gamepad2A){
+            leftClamp.setPosition(1.0);
+            rightClamp.setPosition(-1.0);
+        }
+        if (gamepad2B){
+            leftClamp.setPosition(0.0);
+            rightClamp.setPosition(0.0);
         }
 
 
