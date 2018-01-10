@@ -38,10 +38,10 @@ public class AutoBlueR extends LinearOpMode {
     //servoes outtake of glyphs
     public final static String LEFTOUT = "leftOut";
     public final static String RIGHTOUT = "rightOut";
-    public Servo leftOut;
-    public Servo rightOut;
     //knocks off jewel
     private final static String MOVEJEWEL = "moveJewel";
+    //gyro sensor stuff
+    public final static String MRGYRO = "MRGyro";
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor leftFront;
@@ -53,6 +53,8 @@ public class AutoBlueR extends LinearOpMode {
     private Servo moveJewel;
     private DcMotor leftIntake;
     private DcMotor rightIntake;
+    private Servo leftOut;
+    private Servo rightOut;
     public final static double move = 0.5;
     public final static double slowMove = move / 2; //minor change
     public boolean detected = false;
@@ -109,7 +111,6 @@ public class AutoBlueR extends LinearOpMode {
         rightBack = hardwareMap.get(DcMotor.class, RIGHTBACK);
         ballArm = hardwareMap.get(Servo.class, BALLARM);
         moveJewel = hardwareMap.get(Servo.class, MOVEJEWEL);
-
         //intake wheels, hahahahahahaha
         leftIntake = hardwareMap.get(DcMotor.class, LEFTINTAKE);
         rightIntake = hardwareMap.get(DcMotor.class, RIGHTINTAKE);
@@ -119,7 +120,7 @@ public class AutoBlueR extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
 
         //calirbate gyro
-        MRGyro = hardwareMap.get(ModernRoboticsI2cGyro.class, "gyro");
+        MRGyro = hardwareMap.get(ModernRoboticsI2cGyro.class, MRGYRO);
         gyro = (IntegratingGyroscope) MRGyro;
 
         MRGyro.calibrate();
@@ -245,6 +246,9 @@ public class AutoBlueR extends LinearOpMode {
     }
 
 }
+
+
+
 
 
 
