@@ -1,3 +1,4 @@
+
 package org.firstinspires.ftc.teamcode;
 
         import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -36,8 +37,6 @@ public class AutoBlueR extends LinearOpMode {
     public final static String LEFTINTAKE = "leftIntake";
     public final static String RIGHTINTAKE = "rightIntake";
     //servoes outtake of glyphs
-    public final static String LEFTOUT = "leftOut";
-    public final static String RIGHTOUT = "rightOut";
     //knocks off jewel
     private final static String MOVEJEWEL = "moveJewel";
     //gyro sensor stuff
@@ -53,11 +52,11 @@ public class AutoBlueR extends LinearOpMode {
     private Servo moveJewel;
     private DcMotor leftIntake;
     private DcMotor rightIntake;
-    private Servo leftOut;
-    private Servo rightOut;
     public final static double move = 0.5;
     public final static double slowMove = move / 2; //minor change
     public boolean detected = false;
+    public boolean runner = false;
+    public boolean turner = false;
     private ColorSensor cryptoSensor;
     //gyro stuff
     IntegratingGyroscope gyro;
@@ -68,22 +67,6 @@ public class AutoBlueR extends LinearOpMode {
     @Override
     public void runOpMode() {
 
-        /*
-        //Vuforia - starting the camera  --> from 4326 code
-        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
-        //License Key, I already set it up I think
-        parameters.vuforiaLicenseKey = "AZD9V+f/////AAAAGZDj5Sa0JkeSohNtCSdf0T94R9bz9UlzQyuCIZuJ2d1ehAEqmbPYzprSq4hmd/9XUZYT088pUIzwl79q9h2ljFjUFD5p0RHKBx+ggMJ+qgCelvbeNf7Rd771vlduzibSBN6np49m6Z31Eyk0dYFZJbpdmw4P7mQ8LaeR6UOLgmiythqcCZga9VoEHPA2e8Z9/7At1SZVPiOBkVlEKz5AGhPhL5/A/R3sb30NSaiq5yquyJ+sOWvNQ5ovdVND6OrAQrc2DdQcCDyD8JQLOiVZYCPoNohKfuZ9N2jnZRSueEH4XV6i2DOqWxfJ5vmNf6jBcrOWLROO8KEoPa2Fvibxj7lPMp4JM/nMXK7TwEopU91v";
-        //Which camera we choose - I used back right now because I think the range is better, but front could work
-        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
-        this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
-        //Define Pictographs as VuMarks which the Vuforia can track
-//        VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
-//        VuforiaTrackable relicTemplate = relicTrackables.get(0);
-        VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
-        VuforiaTrackable relicTemplate = relicTrackables.get(0);
-        relicTemplate.setName("relicVuMarkTemplate");
-*/
         //gyro stuff for resetting Zheader
         boolean resetState = false;
         boolean lastResetState = false;
@@ -114,9 +97,6 @@ public class AutoBlueR extends LinearOpMode {
         //intake wheels, hahahahahahaha
         leftIntake = hardwareMap.get(DcMotor.class, LEFTINTAKE);
         rightIntake = hardwareMap.get(DcMotor.class, RIGHTINTAKE);
-        //servo for outtakes
-        leftOut = hardwareMap.get(Servo.class, LEFTOUT);
-        rightOut = hardwareMap.get(Servo.class, RIGHTOUT);
         // run until the end of the match (driver presses STOP)
 
         //calirbate gyro
@@ -150,22 +130,25 @@ public class AutoBlueR extends LinearOpMode {
                     
                     ballArm.setPosition(1.0);
                     detected = true;
-
+                    runner = true;
                 } else if (color_sensor.red() < color_sensor.blue()) {
                 //again, no. for testing purposes only
                     moveJewel.setPosition(-0.1);
                     
                     ballArm.setPosition(1.0);
                     detected = true;
+                    runner = true;
                 }
 //bool
-
-
             }
 
-            //hard code for moving off balancing stone
-            moveBackwards(leftFront, leftBack, rightFront, rightBack);
-            sleep(300);
+            if (runner) {
+                //hard code for moving off balancing stone
+                moveBackwards(leftFront, leftBack, rightFront, rightBack);
+                sleep(300);
+
+                turner = true;
+            }
 
             //resets the z heading but only once when buttons pressed
             //don't actualy know if necessary
@@ -175,14 +158,16 @@ public class AutoBlueR extends LinearOpMode {
             }
             lastResetState = resetState;
 
-            //x is the left-right direction if the wire is at the bottom
-            while (heading != targetHeading) {
-                //turns, hopefully
-                //also, we don't know on winterbreak which way color_sensor is facing, so we're assuming it's facing the back
-                leftFront.setPower(-move);
-                leftBack.setPower(-move);
-                rightFront.setPower(-move);
-                rightBack.setPower(-move);
+            if (turner) {
+                //x is the left-right direction if the wire is at the bottom
+                while (heading != targetHeading) {
+                    //turns, hopefully
+                    //also, we don't know on winterbreak which way color_sensor is facing, so we're assuming it's facing the back
+                    leftFront.setPower(-move);
+                    leftBack.setPower(-move);
+                    rightFront.setPower(-move);
+                    rightBack.setPower(-move);
+                }
             }
 
             if (cryptoSensor.red() > cryptoSensor.blue() && cryptoSensor.red() > cryptoSensor.green()) {
@@ -198,9 +183,6 @@ public class AutoBlueR extends LinearOpMode {
                         // the sleep time is probs inacccurate
                         moveForward(leftFront, leftBack, rightFront, rightBack);
                         sleep(20);
-                        //no. to be changed in testing. duh
-                        leftOut.setPosition(0.2);
-                        rightOut.setPosition(0.2);
                     }
                 }
             else {
@@ -231,24 +213,19 @@ public class AutoBlueR extends LinearOpMode {
     //move forward method
     public static void moveForward(DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4)
     {
-        motor1.setPower(move);
-        motor2.setPower(move);
-        motor3.setPower(-move);
-        motor4.setPower(-move);
-    }
-
-    //move backwards method. Also, always put the left motors first, dumbo
-    public static void moveBackwards(DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4) {
         motor1.setPower(-move);
         motor2.setPower(-move);
         motor3.setPower(move);
         motor4.setPower(move);
     }
 
+    //move backwards method. Also, always put the left motors first, dumbo
+    public static void moveBackwards(DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4) {
+        motor1.setPower(move);
+        motor2.setPower(move);
+        motor3.setPower(-move);
+        motor4.setPower(-move);
+    }
+
 }
-
-
-
-
-
 
