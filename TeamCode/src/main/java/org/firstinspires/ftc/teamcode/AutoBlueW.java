@@ -115,21 +115,21 @@ public class AutoBlueW extends LinearOpMode {
             int heading = MRGyro.getHeading();
 
             //all of this needs to be fixe
-            if(!detected) {
+            if (!detected) {
                 ballArm.setPosition(-1.0);
                 //we need to change this code so that the arm moves, not the robot
                 if (color_sensor.blue() < color_sensor.red()) {
-                       //no. for testing purposes only
-                       //make it so arm will move forward, hitting red jewel in front
+                    //no. for testing purposes only
+                    //make it so arm will move forward, hitting red jewel in front
                     moveJewel.setPosition(0.1);
-                    
+
                     ballArm.setPosition(1.0);
                     detected = true;
 
                 } else if (color_sensor.red() < color_sensor.blue()) {
-                //again, no. for testing purposes only
+                    //again, no. for testing purposes only
                     moveJewel.setPosition(-0.1);
-                    
+
                     ballArm.setPosition(1.0);
                     detected = true;
                 }
@@ -157,29 +157,29 @@ public class AutoBlueW extends LinearOpMode {
             }
             if (cryptoSensor.red() > cryptoSensor.blue() && cryptoSensor.red() > cryptoSensor.green()) {
                 //strafe strafe
-               rightStrafe(leftFront, leftBack, rightFront, rightBack);
+                rightStrafe(leftFront, leftBack, rightFront, rightBack);
 
-                    if (cryptoSensor.red() > cryptoSensor.blue() && cryptoSensor.red() > cryptoSensor.green()) {
-                        stopDatMovement(leftFront, leftBack, rightFront, rightBack);
-                        //RELEASE YOUR GLYPH INTO THE BOX
-                        leftIntake.setPower(-1.0);
-                        rightIntake.setPower(-1.0);
-                        //moves robot forward a little
-                        // the sleep time is probs inacccurate
-                        moveForward(leftFront, leftBack, rightFront, rightBack);
-                        sleep(20);
-                        //no. to be changed in testing. duh
-                        leftOut.setPosition(0.2);
-                        rightOut.setPosition(0.2);
-                    }
+                if (cryptoSensor.red() > cryptoSensor.blue() && cryptoSensor.red() > cryptoSensor.green()) {
+                    stopDatMovement(leftFront, leftBack, rightFront, rightBack);
+                    //RELEASE YOUR GLYPH INTO THE BOX
+                    leftIntake.setPower(-1.0);
+                    rightIntake.setPower(-1.0);
+                    //moves robot forward a little
+                    // the sleep time is probs inacccurate
+                    moveForward(leftFront, leftBack, rightFront, rightBack);
+                    sleep(20);
+                    //no. to be changed in testing. duh
+                    leftOut.setPosition(0.2);
+                    rightOut.setPosition(0.2);
                 }
+            }
             else {
                 rightStrafe(leftFront, leftBack, rightFront, rightBack);
             }
-            }
-
-
         }
+
+
+    }
 
     public static void stopDatMovement(DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4)
     {
