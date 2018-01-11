@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
-@TeleOp(name="complete tele op2", group="Tele Op")
+@TeleOp(name="lift tesrtrrrr", group="Tele Op")
 public class LifterTest extends OpMode {
 
     DcMotor lift;
