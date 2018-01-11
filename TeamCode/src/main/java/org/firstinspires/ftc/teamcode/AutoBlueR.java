@@ -1,3 +1,4 @@
+
 package org.firstinspires.ftc.teamcode;
 
         import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -56,6 +57,7 @@ public class AutoBlueR extends LinearOpMode {
     public boolean detected = false;
     public boolean runner = false;
     public boolean turner = false;
+    public boolean sensi = false;
     private ColorSensor cryptoSensor;
     //gyro stuff
     IntegratingGyroscope gyro;
@@ -107,10 +109,9 @@ public class AutoBlueR extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-            stopDatMovement(leftFront, leftBack, rightFront, rightBack);
             double ballposition = 1;
             color_sensor = hardwareMap.colorSensor.get("color");
-
+            cryptoSensor = hardwareMap.colorSensor.get("color");
             //for storing raw data
             //dunno if needed
             int rawX = MRGyro.rawX();
@@ -120,12 +121,13 @@ public class AutoBlueR extends LinearOpMode {
 
             //all of this needs to be fixe
             if (!detected) {
-                ballArm.setPosition(-1.0);
+                moveJewel.setPosition(0.0);
+                ballArm.setPosition(0.1);
                 //we need to change this code so that the arm moves, not the robot
                 if (color_sensor.blue() < color_sensor.red()) {
                     //no. for testing purposes only
                     //make it so arm will move forward, hitting red jewel in front
-                    moveJewel.setPosition(0.1);
+                    moveJewel.setPosition(0.5);
 
                     ballArm.setPosition(1.0);
                     detected = true;
@@ -133,7 +135,7 @@ public class AutoBlueR extends LinearOpMode {
                 } else if (color_sensor.red() < color_sensor.blue()) {
                     //again, no. for testing purposes only
                     moveJewel.setPosition(-0.1);
-
+                    sleep(1000);
                     ballArm.setPosition(1.0);
                     detected = true;
                     runner = true;
@@ -144,7 +146,7 @@ public class AutoBlueR extends LinearOpMode {
             if (runner) {
                 //hard code for moving off balancing stone
                 moveBackwards(leftFront, leftBack, rightFront, rightBack);
-                sleep(300);
+                sleep(1000);
 
                 turner = true;
             }
@@ -157,20 +159,30 @@ public class AutoBlueR extends LinearOpMode {
             }
             lastResetState = resetState;
 
+            /*
             if (turner) {
                 //x is the left-right direction if the wire is at the bottom
-                while (heading != targetHeading) {
+                heading = MRGyro.getHeading();
+                if (heading != targetHeading) {
                     //turns, hopefully
                     //also, we don't know on winterbreak which way color_sensor is facing, so we're assuming it's facing the back
                     leftFront.setPower(-move);
                     leftBack.setPower(-move);
                     rightFront.setPower(-move);
                     rightBack.setPower(-move);
+
+                    sensi = true;
+                }
+                else {
+                    stopDatMovement(leftFront, leftBack, rightFront, rightBack);
                 }
             }
-            if (cryptoSensor.red() > cryptoSensor.blue() && cryptoSensor.red() > cryptoSensor.green()) {
-                //strafe strafe
-               rightStrafe(leftFront, leftBack, rightFront, rightBack);
+
+*/
+            if (sensi) {
+                if (cryptoSensor.blue() > cryptoSensor.red() && cryptoSensor.blue() > cryptoSensor.green()) {
+                    //strafe strafe
+                    rightStrafe(leftFront, leftBack, rightFront, rightBack);
 
                     if (cryptoSensor.blue() > cryptoSensor.red() && cryptoSensor.blue() > cryptoSensor.green()) {
                         stopDatMovement(leftFront, leftBack, rightFront, rightBack);
@@ -182,11 +194,10 @@ public class AutoBlueR extends LinearOpMode {
                         moveForward(leftFront, leftBack, rightFront, rightBack);
                         sleep(20);
                     }
+                } else {
+                    rightStrafe(leftFront, leftBack, rightFront, rightBack);
                 }
-            else {
-                rightStrafe(leftFront, leftBack, rightFront, rightBack);
             }
-
         }
     }
     public static void stopDatMovement(DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4)
@@ -227,5 +238,7 @@ public class AutoBlueR extends LinearOpMode {
     }
 
 }
+
+
 
 
