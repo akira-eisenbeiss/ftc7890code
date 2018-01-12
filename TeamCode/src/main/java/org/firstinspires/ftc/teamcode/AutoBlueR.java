@@ -1,27 +1,26 @@
-
 package org.firstinspires.ftc.teamcode;
 
-        import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-        import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-        import com.qualcomm.robotcore.hardware.ColorSensor;
-        import com.qualcomm.robotcore.hardware.DcMotor;
-        import com.qualcomm.robotcore.hardware.Servo;
-        import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
-        import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
-        import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-        import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
-        import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-        import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-        import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-        import com.qualcomm.robotcore.hardware.Gyroscope;
-        import com.qualcomm.robotcore.hardware.IntegratingGyroscope;
-        import com.qualcomm.robotcore.util.ElapsedTime;
+import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.Gyroscope;
+import com.qualcomm.robotcore.hardware.IntegratingGyroscope;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
-        import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-        import org.firstinspires.ftc.robotcore.external.navigation.AngularVelocity;
-        import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-        import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AngularVelocity;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 
 
 @Autonomous(name="autonomous blue relic side", group="Linear Opmode")
@@ -58,6 +57,7 @@ public class AutoBlueR extends LinearOpMode {
     public boolean runner = false;
     public boolean turner = false;
     public boolean sensi = false;
+    public boolean sense2 = false;
     private ColorSensor cryptoSensor;
     //gyro stuff
     IntegratingGyroscope gyro;
@@ -146,7 +146,7 @@ public class AutoBlueR extends LinearOpMode {
             if (runner) {
                 //hard code for moving off balancing stone
                 moveBackwards(leftFront, leftBack, rightFront, rightBack);
-                sleep(500);
+                sleep(1000);
                 stopDatMovement(leftFront, leftBack, rightFront, rightBack);
 
                 turner = true;
@@ -176,25 +176,30 @@ public class AutoBlueR extends LinearOpMode {
                 }
             }
 
-            if (sensi) {
-                if (cryptoSensor.blue() > cryptoSensor.red() && cryptoSensor.blue() > cryptoSensor.green()) {
-                    //strafe strafe
-                    rightStrafe(leftFront, leftBack, rightFront, rightBack);
 
-                    if (cryptoSensor.blue() > cryptoSensor.red() && cryptoSensor.blue() > cryptoSensor.green()) {
-                        stopDatMovement(leftFront, leftBack, rightFront, rightBack);
-                        //RELEASE YOUR GLYPH INTO THE BOX
-                        leftIntake.setPower(-1.0);
-                        rightIntake.setPower(-1.0);
-                        //moves robot forward a little
-                        // the sleep time is probs inacccurate
-                        moveForward(leftFront, leftBack, rightFront, rightBack);
-                        sleep(20);
-                    }
-                } else {
-                    rightStrafe(leftFront, leftBack, rightFront, rightBack);
+            while (sensi) {
+
+                rightStrafe(leftFront, leftBack, rightFront, rightBack);
+
+                if (cryptoSensor.blue() > cryptoSensor.red() && sense2) {
+                    stopDatMovement(leftFront, leftBack, rightFront, rightBack);
+                    //sleep is for testing and the weak
+                    moveForward(leftFront, leftBack, rightFront, rightBack);
+                    sleep(100);
+                    //RELEASE YOUR GLYPH INTO THE BOX
+                    leftIntake.setPower(-1.0);
+                    rightIntake.setPower(-1.0);
+                    //moves robot forward a little
+                    //the sleep time is probs inacccurate
+
+                    sensi = false;
+                }
+
+                else if (cryptoSensor.blue() > cryptoSensor.red()) {
+                    sense2 = true;
                 }
             }
+
         }
     }
     public static void stopDatMovement(DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4)
