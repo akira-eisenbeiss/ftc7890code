@@ -190,7 +190,8 @@ public class AutoBlueR extends LinearOpMode {
                 rightBack.setPower(0.7);
                 //rightStrafe(leftFront, leftBack, rightFront, rightBack);
 
-                if (cryptoSensor.blue() > cryptoSensor.red() && sense2) {
+                //the red and blue comparison thingys are just for day before comp b/c we have a red crypto box
+                if (cryptoSensor.red() > cryptoSensor.blue() && sense2) {
                     stopDatMovement(leftFront, leftBack, rightFront, rightBack);
                     //sleep is for testing and the weak
                     moveForward(leftFront, leftBack, rightFront, rightBack);
@@ -204,7 +205,7 @@ public class AutoBlueR extends LinearOpMode {
                     sensi = false;
                 }
 
-                else if (cryptoSensor.blue() > cryptoSensor.red()) {
+                else if (cryptoSensor.red() > cryptoSensor.blue()) {
                     sense2 = true;
                 }
             }
