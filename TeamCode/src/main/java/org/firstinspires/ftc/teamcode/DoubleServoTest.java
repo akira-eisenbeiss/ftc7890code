@@ -45,10 +45,12 @@ public class DoubleServoTest extends LinearOpMode {
             sleep(1000);
             two.setPosition(0);
             sleep(1000);
+            telemetry.addData("Status", "set to zero");
             one.setPosition(1);
             sleep(1000);
             two.setPosition(1);
             sleep(1000);
+            telemetry.addData("Status", "set to one");
         }
     }
 }

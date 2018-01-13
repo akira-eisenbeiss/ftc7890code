@@ -117,7 +117,6 @@ public class AutoBlueR extends LinearOpMode {
             int rawX = MRGyro.rawX();
             int rawY = MRGyro.rawY();
             //heading variable
-            int heading = MRGyro.getHeading();
 
             moveJewel.setPosition(0.0);
             //all of this needs to be fixe
@@ -127,14 +126,14 @@ public class AutoBlueR extends LinearOpMode {
                 if (color_sensor.blue() < color_sensor.red()) {
                     //no. for testing purposes only
                     //make it so arm will move forward, hitting red jewel in front
-
+                    moveJewel.setPosition(0);
                     //the problem coud beb/c
                     ballArm.setPosition(1.0);
                     detected = true;
                     runner = true;
                 } else if (color_sensor.red() < color_sensor.blue()) {
                     //again, no. for testing purposes only
-
+                    moveJewel.setPosition(0);
                     ballArm.setPosition(1.0);
                     detected = true;
 
@@ -152,6 +151,7 @@ public class AutoBlueR extends LinearOpMode {
                 turner = true;
                 telemetry.addData("STATUS", "moving to cryptobox");
                 telemetry.update();
+                runner = false;
             }
 
             //resets the z heading but only once when buttons pressed
@@ -161,27 +161,34 @@ public class AutoBlueR extends LinearOpMode {
                 MRGyro.resetZAxisIntegrator();
             }
             lastResetState = resetState;
+            int heading = MRGyro.getHeading();
 
             if (turner) {
                 //x is the left-right direction if the wire is at the bottom
                 heading = MRGyro.getHeading();
-                while (heading < targetHeading) {
+                while (heading < targetHeading ) {
                     //turns, hopefully
-                    leftFront.setPower(-move);
-                    leftBack.setPower(-move);
-                    rightFront.setPower(-move);
-                    rightBack.setPower(-move);
+                    leftFront.setPower(0.5);
+                    leftBack.setPower(0.5);
+                    rightFront.setPower(0.5);
+                    rightBack.setPower(0.5);
 
                     heading = MRGyro.getHeading();
 
                     sensi = true;
+                    turner = false;
                 }
+                stopDatMovement(leftFront, leftBack, rightFront, rightBack);
             }
 
 
-            while (sensi) {
+            if (sensi) {
 
-                rightStrafe(leftFront, leftBack, rightFront, rightBack);
+                leftFront.setPower(0.7);
+                leftBack.setPower(0.7);
+                rightFront.setPower(0.7);
+                rightBack.setPower(0.7);
+                //rightStrafe(leftFront, leftBack, rightFront, rightBack);
 
                 if (cryptoSensor.blue() > cryptoSensor.red() && sense2) {
                     stopDatMovement(leftFront, leftBack, rightFront, rightBack);
@@ -239,6 +246,13 @@ public class AutoBlueR extends LinearOpMode {
         motor2.setPower(move);
         motor3.setPower(-move);
         motor4.setPower(-move);
+    }
+
+    public static void rotateCCW(DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4) {
+        motor1.setPower(move);
+        motor2.setPower(move);
+        motor3.setPower(move);
+        motor4.setPower(move);
     }
 
 }
