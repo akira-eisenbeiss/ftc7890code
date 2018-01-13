@@ -24,7 +24,6 @@ public class TurnTest extends LinearOpMode {
             leftBack.setPower(0.5);
             rightFront.setPower(0.5);
             rightBack.setPower(0.5);
-
         }
     }
 }
