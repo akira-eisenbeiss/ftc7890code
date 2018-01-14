@@ -1,3 +1,5 @@
+//hey, just so you know, the strafing sleep is experimental as is the runner moving forwards
+
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
