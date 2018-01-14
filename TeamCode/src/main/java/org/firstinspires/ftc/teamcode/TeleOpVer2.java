@@ -23,8 +23,6 @@ public class TeleOpVer2 extends OpMode {
     //  public final static String CLAMPSERVO = "clampServo";
     // public final static String VERTSERVO = "vertServo";
     public final static String BALLARM = "ballArm";
-    public final static String LEFTCLAMP = "leftClamp";
-    public final static String RIGHTCLAMP = "rightClamp";
     //scissor
     // public final static String SCISSOR = "scissor";
     //directions
@@ -45,8 +43,6 @@ public class TeleOpVer2 extends OpMode {
     // private Servo clampServo;
     //   private Servo vertServo;
     private Servo ballArm;
-    private Servo leftClamp;
-    private Servo rightClamp;
     //scissor
     private DcMotor scissor;
 
@@ -69,8 +65,6 @@ public class TeleOpVer2 extends OpMode {
         liftMotor = hardwareMap.get(DcMotor.class, LIFTMOTOR);
         //servos
         ballArm = hardwareMap.get(Servo.class, BALLARM);
-        leftClamp = hardwareMap.get(Servo.class, LEFTCLAMP);
-        rightClamp = hardwareMap.get(Servo.class, RIGHTCLAMP);
 
         /* clampServo = hardwareMap.get(Servo.class, CLAMPSERVO);
         //vertServo = hardwareMap.get(Servo.class, VERTSERVO);
@@ -85,8 +79,6 @@ public class TeleOpVer2 extends OpMode {
         //intake and lift
         leftIntake.setDirection(LEFTDIRECTION);
         rightIntake.setDirection(RIGHTDIRECTION);
-        liftMotor.setDirection(LEFTDIRECTION);
-        //]  scissor.setDirection(LEFTDIRECTION);
     }
 
     //Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
@@ -106,24 +98,21 @@ public class TeleOpVer2 extends OpMode {
         double rbDrive = Range.clip(drive - turn - strafe, -1.0, 1.0);
 
         //wheel lift and intake mechanism controls
-        float leftTrigger2 = gamepad2.left_trigger;
-        float rightTrigger2 = gamepad2.right_trigger;
-            //intake wheels
-        boolean gamepad1A = gamepad1.a;
-        boolean gamepad1B = gamepad1.b;
-            //intake clamps
+      //  float leftTrigger2 = gamepad2.left_trigger;
+       // float rightTrigger2 = gamepad2.right_trigger;
+        //intake wheels
         boolean gamepad2A = gamepad2.a;
         boolean gamepad2B = gamepad2.b;
-        double liftRaise = Range.clip(-leftTrigger2, -1.0, 0.0);
-        double liftLower = Range.clip(rightTrigger2, 0.0, 1.0);
+     //   double liftRaise = Range.clip(-leftTrigger2, -1.0, 0.0);
+      //  double liftLower = Range.clip(rightTrigger2, 0.0, 1.0);
         //relic mech
-        float leftTrigger1 = gamepad1.left_trigger;
-        float rightTrigger1 = gamepad1.right_trigger;
-        double scissorOut = Range.clip(leftTrigger1, -1.0, 0.0);
-        double scissorIn = Range.clip(rightTrigger1, 0.0, 1.0);
+      //  float leftTrigger1 = gamepad1.left_trigger;
+      //  float rightTrigger1 = gamepad1.right_trigger;
+       // double scissorOut = Range.clip(leftTrigger1, -1.0, 0.0);
+       // double scissorIn = Range.clip(rightTrigger1, 0.0, 1.0);
         //clamp
-        //    float leftStick2 = -gamepad2.left_stick_y;
-        //      float rightStick2 = gamepad2.right_stick_y;
+       // float leftStick2 = -gamepad2.left_stick_y;
+        float rightStick2 = gamepad2.right_stick_y;
 
         //just the servo arm up so it doesn't break
         ballArm.setPosition(1.0);
@@ -134,6 +123,10 @@ public class TeleOpVer2 extends OpMode {
         rightFront.setPower(rfDrive);
         rightBack.setPower(rbDrive);
 
+        float leftsticky = gamepad2.left_stick_y;
+        liftMotor.setPower(leftsticky);
+
+        /*
         //lift mechanism
         if (leftTrigger2 > 0) {
             liftMotor.setPower(liftRaise);
@@ -145,35 +138,28 @@ public class TeleOpVer2 extends OpMode {
         } else {
             liftMotor.setPower(0.0);
         }
+        */
+
         // hoot897 @arden
 
-        if(gamepad1A && intakePower == 0) // in
+        if(gamepad2A && intakePower == 0) // in
         {
             leftIntake.setPower(1.0);
             rightIntake.setPower(1.0);
             intakePower ^= 1;
         }
-        else if(gamepad1A && intakePower == 1)// out
+        else if(gamepad2A && intakePower == 1)// out
         {
             leftIntake.setPower(-1.0);
             rightIntake.setPower(-1.0);
             intakePower ^= 1;
         }
-        else if(gamepad1B)
+        else if(gamepad2B)
         {
             leftIntake.setPower(0);
             rightIntake.setPower(0);
         }
-        //intake clampss
-        if (gamepad2A){
-            leftClamp.setPosition(1.0);
-            rightClamp.setPosition(-1.0);
-        }
-        if (gamepad2B){
-            leftClamp.setPosition(0.0);
-            rightClamp.setPosition(0.0);
-        }
-
+//dab skrahh - erin
 
 /*
         //servo clamp that grabs the relic
@@ -184,7 +170,6 @@ public class TeleOpVer2 extends OpMode {
         if (rightStick2 != 0.0) {
         vertServo.setPosition(rightStick2);
         }
-
         //scissor
         if (leftTrigger1 > 0) {
             liftMotor.setPower(scissorOut);
