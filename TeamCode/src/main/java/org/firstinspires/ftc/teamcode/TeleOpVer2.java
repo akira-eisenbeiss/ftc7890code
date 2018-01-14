@@ -126,22 +126,6 @@ public class TeleOpVer2 extends OpMode {
         float leftsticky = gamepad2.left_stick_y;
         liftMotor.setPower(leftsticky);
 
-        /*
-        //lift mechanism
-        if (leftTrigger2 > 0) {
-            liftMotor.setPower(liftRaise);
-        } else {
-            liftMotor.setPower(0.0);
-        }
-        if (rightTrigger2 > 0) {
-            liftMotor.setPower(liftLower);
-        } else {
-            liftMotor.setPower(0.0);
-        }
-        */
-
-        // hoot897 @arden
-
         if(gamepad2A && intakePower == 0) // in
         {
             leftIntake.setPower(1.0);
@@ -159,8 +143,6 @@ public class TeleOpVer2 extends OpMode {
             leftIntake.setPower(0);
             rightIntake.setPower(0);
         }
-//dab skrahh - erin
-
 /*
         //servo clamp that grabs the relic
         if (leftStick2 != 0.0) {
