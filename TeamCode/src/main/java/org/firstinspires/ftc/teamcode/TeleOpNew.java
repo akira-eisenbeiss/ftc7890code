@@ -74,11 +74,11 @@ public class TeleOpNew extends OpMode {
         if (gamepad2Y && intakeServo == 0) {
             //negatives and positives are for testin
             lInServo.setPower(-1.0);
-            lInServo.setPower(1.0);
+            rInServo.setPower(1.0);
             intakeServo ^= 1;
         } else if (gamepad2Y && intakeServo == 1) {
             lInServo.setPower(0);
-            lInServo.setPower(0);
+            rInServo.setPower(0);
             intakeServo ^= 1;
         }
 
