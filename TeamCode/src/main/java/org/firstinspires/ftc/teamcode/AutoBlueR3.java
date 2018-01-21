@@ -31,9 +31,9 @@ public class AutoBlueR3 extends LinearOpMode {
   DcMotor rightBack = hardwareMap.dcMotor.get("right back");
   DcMotor leftIntake = hardwareMap.dcMotor.get("left intake");
   DcMotor rightIntake = hardwareMap.dcMotor.get("right intake");
-  CRServo lInServo = hardwareMap.crsevo.get("left intake servo");
+  CRServo lInServo = hardwareMap.crservo.get("left intake servo");
   CRServo rInServo = hardwareMap.crservo.get("right intake servo");
-  DcMotor drawbridge = hardwareMap.dcMotor.get("drawbridge");
+  CRServo ballArm = hardwareMap.crservo.get("ball arm");
   
   
 }
