@@ -38,7 +38,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefau
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 
-@Autonomous(name="auto blue r 3", group="LinearOpMode")
+@Autonomous(name="auto blue r 2", group="LinearOpMode")
 public class AutoBlueR2 extends LinearOpMode {
 
     //motors
@@ -59,7 +59,7 @@ public class AutoBlueR2 extends LinearOpMode {
     ColorSensor jewelSensorR = hardwareMap.colorSensor.get("ball sensor right");
     ColorSensor cryptoSensor = hardwareMap.colorSensor.get("crypto sensor");
     //vuforia 
-  
+
     private final static double move = 0.5;
     int balanceMove = 250;
     int targetHeading = 270;
@@ -70,21 +70,21 @@ public class AutoBlueR2 extends LinearOpMode {
         parameters.vuforiaLicenseKey = "AcoS+YP/////AAAAGTq922ywuU6FquBqcm2CeatGNf2voKamgXI1KwF7yLiQKP+RqBNrI4ND0i98TsuYnBytFG0YYUz2+4wvHBN5pz+/CacheTAG6upbc95Ts0UJgGRg0aTLaVzdYUQUI5dRlAh50DsGYdPkabTZmPO+5EYj79XDDHhok7wTZDb6ZyiCLlzXtM5EZ9nyiWQxz6XJ3M7Q+m4nVuaAdvWN+qwkQsqohSoxB8TNI4dDYlSMQbbO6d3SkCgfXy4K8y/lBNDF8suTeSgNY0YGs/N5FIYTLa+eyu+r3kbf2ig0EsL1Er+AhLZkVDpksvMp+MMBdDVyi6JDjr4E+P2D82ztt8Ex0aoR+h0n4RyRnkS+G4FB4wRD";
         parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
         this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
-      
+
         VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
         VuforiaTrackable relicTemplate = relicTrackables.get(0);
         relicTemplate.setName("relicVuMarkTemplate");
-        
+
         waitForStart();
-      
+
         MRGyro.calibrate;
         relicTrackables.activate;
     }
-  
+
     //methods for different parts of autonomous
-    public static void jewel() {
+    public  void jewel() {
         ballArm.setPower(0.3);
-      //sleep for testing
+        //sleep for testing
         sleep(1000);
         if (jewelSensorL.red() > jewelSensorL.blue() || jewelSensorR.blue() > jewelSensorR.red()) {
             leftStrafe(leftFront, leftBack, rightFront, rightBack);
@@ -97,20 +97,20 @@ public class AutoBlueR2 extends LinearOpMode {
             sleep(balanceMove);
         }
     }
-    
-    public static void vumark() {
-        
-        
-    } 
-    public static void scoreGlyph(Dcmotor motor1){
-        motor.setPower(-1.0);
+
+    public void vumark() {
+
+
+    }
+    public void scoreGlyph(DcMotor motor1){
+        motor1.setPower(-1.0);
         /* we need to move back a little bit
          * otherwise the glyph will get stuck
          */
         moveBackwards(leftFront, leftBack, rightFront, rightBack);
         sleep(20);
         stopDatMovement(leftFront, leftBack, rightFront, rightBack);
-        
+
     }
     //methods for specific actions
     public static void stopDatMovement(DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4)
@@ -161,5 +161,5 @@ public class AutoBlueR2 extends LinearOpMode {
         motor3.setPower(move);
         motor4.setPower(move);
     }
-    
+
 }
