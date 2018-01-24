@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
-@TeleOp(name="complete tele op2", group="Tele Op")
+@TeleOp(name="complete tele op3", group="Tele Op")
 public class TeleOpNew extends OpMode {
 
     int intakePower = 0;
@@ -55,7 +55,7 @@ public class TeleOpNew extends OpMode {
         rightFront.setPower(rfDrive);
         rightBack.setPower(rbDrive);
         //TODO: fix negs and pos
-        drawbridge.setPower(-leftStick2);
+        drawbridge.setPower(-leftStick2/2);
 
         if (gamepad2A && intakePower == 0) // in
         {
