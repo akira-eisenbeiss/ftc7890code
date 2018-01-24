@@ -64,6 +64,7 @@ public class AutoBlueR2 extends LinearOpMode {
     int balanceMove = 250;
     int targetHeading = 270;
     VuforiaLocalizer.Parameters parameters;
+    VuforiaLocalizer vuforia;
 
     @Override
     public void runOpMode() {
