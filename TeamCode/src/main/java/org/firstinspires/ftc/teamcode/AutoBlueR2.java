@@ -77,8 +77,8 @@ public class AutoBlueR2 extends LinearOpMode {
 
         waitForStart();
 
-        MRGyro.calibrate;
-        relicTrackables.activate;
+        MRGyro.calibrate();
+        relicTrackables.activate();
     }
 
     //methods for different parts of autonomous
