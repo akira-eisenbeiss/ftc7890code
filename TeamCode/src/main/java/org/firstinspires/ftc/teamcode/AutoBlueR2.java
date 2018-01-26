@@ -48,6 +48,7 @@ public class AutoBlueR2 extends LinearOpMode {
     DcMotor rightBack = hardwareMap.dcMotor.get("right back");
     DcMotor leftIntake = hardwareMap.dcMotor.get("left intake");
     DcMotor rightIntake = hardwareMap.dcMotor.get("right intake");
+    DcMotor drawbridge = hardwareMap.dcMotor.get("drawbridge");
     //servoes
     CRServo lInServo = hardwareMap.crservo.get("left intake servo");
     CRServo rInServo = hardwareMap.crservo.get("right intake servo");
@@ -58,13 +59,18 @@ public class AutoBlueR2 extends LinearOpMode {
     ColorSensor jewelSensorL = hardwareMap.colorSensor.get("ball sensor left");
     ColorSensor jewelSensorR = hardwareMap.colorSensor.get("ball sensor right");
     ColorSensor cryptoSensor = hardwareMap.colorSensor.get("crypto sensor");
-    //vuforia 
+    //vuforia
 
+    boolean sensed = false;
+    int counter = 1;
     private final static double move = 0.5;
     int balanceMove = 250;
     int targetHeading = 270;
     VuforiaLocalizer.Parameters parameters;
     VuforiaLocalizer vuforia;
+
+    VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
+    VuforiaTrackable relicTemplate = relicTrackables.get(0);
 
     @Override
     public void runOpMode() {
@@ -72,19 +78,24 @@ public class AutoBlueR2 extends LinearOpMode {
         parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
         this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
 
-        VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
-        VuforiaTrackable relicTemplate = relicTrackables.get(0);
         relicTemplate.setName("relicVuMarkTemplate");
 
         waitForStart();
 
         MRGyro.calibrate();
         relicTrackables.activate();
+        
+        while (opModeIsActive()) {
+            
+            jewel(ballArm);
+            
+            vumark();
+        }
     }
 
     //methods for different parts of autonomous
-    public  void jewel() {
-        ballArm.setPower(0.3);
+    public void jewel(CRServo CRServo1) {
+        CRServo1.setPower(0.3);
         //sleep for testing
         sleep(1000);
         if (jewelSensorL.red() > jewelSensorL.blue() || jewelSensorR.blue() > jewelSensorR.red()) {
@@ -100,10 +111,87 @@ public class AutoBlueR2 extends LinearOpMode {
     }
 
     public void vumark() {
+        //should we split this into multiple methods?
+        RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
+        while (vuMark == RelicRecoveryVuMark.UNKNOWN && !sensed){
+            leftStrafe(leftFront, leftBack, rightFront, rightBack);
+            break;
+        }
+
+        if (vuMark == RelicRecoveryVuMark.LEFT) {
+            sensed = true;
+
+            if (cryptoSensor.blue() > cryptoSensor.red() && counter == 1) {
+                stopDatMovement(leftFront, leftBack, rightFront, rightBack);
+                scoreGlyph(drawbridge);
+                counter ++;
+            }
+
+            else if (cryptoSensor.blue() > cryptoSensor.red() && counter == 2) {
+                stopDatMovement(leftFront, leftBack, rightFront, rightBack);
+
+            }
+
+            else {
+                rightStrafe(leftFront, leftBack, rightFront, rightBack);
+            }
+
+        }
+
+        if (vuMark == RelicRecoveryVuMark.CENTER) {
+            sensed = true;
+
+            if (cryptoSensor.blue() > cryptoSensor.red() && counter == 1) {
+                counter ++;
+                rightStrafe(leftFront, leftBack, rightFront, rightBack);
+            }
+
+            else if (cryptoSensor.blue() > cryptoSensor.red() && counter == 2) {
+                stopDatMovement(leftFront, leftBack, rightFront, rightBack);
+                scoreGlyph(drawbridge);
+            }
+
+            else {
+                rightStrafe(leftFront, leftBack, rightFront, rightBack);
+            }
+        }
+
+        if (vuMark == RelicRecoveryVuMark.RIGHT){
+            sensed = true;
+
+            if (cryptoSensor.blue() > cryptoSensor.red() && counter == 1) {
+                counter ++;
+                rightStrafe(leftFront, leftBack, rightFront, rightBack);
+            }
+
+            else if (cryptoSensor.blue() > cryptoSensor.red() && counter == 2) {
+                counter ++;
+                rightStrafe(leftFront, leftBack, rightFront, rightBack);
+            }
+
+            else if (cryptoSensor.blue() > cryptoSensor.red() && counter == 3) {
+                stopDatMovement(leftFront, leftBack, rightFront, rightBack);
+                scoreGlyph(drawbridge);
+
+                while (cryptoSensor.blue() <= cryptoSensor.red()) {
+                    leftStrafe(leftFront, leftBack, rightFront, rightBack);
+                }
+
+                if (cryptoSensor.blue() > cryptoSensor.red()) {
+                    stopDatMovement(leftFront, leftBack, rightFront, rightBack);
+                }
+            }
+
+            else {
+                rightStrafe(leftFront, leftBack, rightFront, rightBack);
+            }
+        }
 
 
     }
     public void scoreGlyph(DcMotor motor1){
+
+        //use the encoders
         motor1.setPower(-1.0);
         /* we need to move back a little bit
          * otherwise the glyph will get stuck
