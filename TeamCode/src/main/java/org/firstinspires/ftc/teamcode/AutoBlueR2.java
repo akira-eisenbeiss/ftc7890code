@@ -38,7 +38,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefau
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 
-@Autonomous(name="auto blue r 2", group="LinearOpMode")
+@Autonomous(name="auto blue r2", group="LinearOpMode")
 public class AutoBlueR2 extends LinearOpMode {
 
     //motors
@@ -62,6 +62,7 @@ public class AutoBlueR2 extends LinearOpMode {
     //vuforia
 
     boolean sensed = false;
+    boolean detected = false;
     int counter = 1;
     private final static double move = 0.5;
     int balanceMove = 250;
@@ -95,7 +96,16 @@ public class AutoBlueR2 extends LinearOpMode {
 
     //methods for different parts of autonomous
     public void jewel(CRServo CRServo1) {
-        CRServo1.setPower(0.3);
+        while (detected == false) {
+            CRServo1.setPower(0.3);
+            if (jewelSensorL.red() > jewelSensorL.blue() || jewelSensorR.blue() > jewelSensorR.red() ||jewelSensorL.blue() > jewelSensorL.red() || jewelSensorR.red() > jewelSensorR.blue()){
+                CRServo1.setPower(0.1);
+                sleep(100);
+                CRServo1.setPower(0.0);
+                sleep(1000);
+                detected = true;
+            }
+        }
         //sleep for testing
         sleep(1000);
         if (jewelSensorL.red() > jewelSensorL.blue() || jewelSensorR.blue() > jewelSensorR.red()) {
@@ -108,10 +118,12 @@ public class AutoBlueR2 extends LinearOpMode {
             leftStrafe(leftFront, leftBack, rightFront, rightBack);
             sleep(balanceMove);
         }
+        CRServo1.setPower(-0.5);
+        sleep(900);
+        CRServo1.setPower(0.0);
     }
 
     public void vumark() {
-        //should we split this into multiple methods?
         RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
         while (vuMark == RelicRecoveryVuMark.UNKNOWN && !sensed){
             leftStrafe(leftFront, leftBack, rightFront, rightBack);
@@ -124,7 +136,7 @@ public class AutoBlueR2 extends LinearOpMode {
             if (cryptoSensor.blue() > cryptoSensor.red() && counter == 1) {
                 stopDatMovement(leftFront, leftBack, rightFront, rightBack);
                 scoreGlyph(drawbridge);
-                counter ++;
+                counter++;
             }
 
             else if (cryptoSensor.blue() > cryptoSensor.red() && counter == 2) {
@@ -142,7 +154,7 @@ public class AutoBlueR2 extends LinearOpMode {
             sensed = true;
 
             if (cryptoSensor.blue() > cryptoSensor.red() && counter == 1) {
-                counter ++;
+                counter++;
                 rightStrafe(leftFront, leftBack, rightFront, rightBack);
             }
 
@@ -186,8 +198,6 @@ public class AutoBlueR2 extends LinearOpMode {
                 rightStrafe(leftFront, leftBack, rightFront, rightBack);
             }
         }
-
-
     }
     public void scoreGlyph(DcMotor motor1){
 
