@@ -96,31 +96,30 @@ public class AutoBlueR2 extends LinearOpMode {
 
     //methods for different parts of autonomous
     public void jewel(CRServo CRServo1) {
-        while (detected == false) {
-            CRServo1.setPower(0.3);
-            if (jewelSensorL.red() > jewelSensorL.blue() || jewelSensorR.blue() > jewelSensorR.red() ||jewelSensorL.blue() > jewelSensorL.red() || jewelSensorR.red() > jewelSensorR.blue()){
-                CRServo1.setPower(0.1);
-                sleep(100);
-                CRServo1.setPower(0.0);
-                sleep(1000);
-                detected = true;
-            }
+        CRServo1.setPower(0.3);
+        if (jewelSensorL.red() > jewelSensorL.blue() || jewelSensorR.blue() > jewelSensorR.red() || jewelSensorL.blue() > jewelSensorL.red() || jewelSensorR.red() > jewelSensorR.blue()) {
+            CRServo1.setPower(0.1);
+            sleep(100);
+            CRServo1.setPower(0.0);
+            sleep(1000);
+            detected = true;
         }
         //sleep for testing
         sleep(1000);
-        if (jewelSensorL.red() > jewelSensorL.blue() || jewelSensorR.blue() > jewelSensorR.red()) {
-            leftStrafe(leftFront, leftBack, rightFront, rightBack);
-            sleep(balanceMove * 2);
+        if (detected) {
+            if (jewelSensorL.red() > jewelSensorL.blue() || jewelSensorR.blue() > jewelSensorR.red()) {
+                leftStrafe(leftFront, leftBack, rightFront, rightBack);
+                sleep(balanceMove * 2);
+            } else if (jewelSensorL.blue() > jewelSensorL.red() || jewelSensorR.red() > jewelSensorR.blue()) {
+                rightStrafe(leftFront, leftBack, rightFront, rightBack);
+                sleep(balanceMove);
+                leftStrafe(leftFront, leftBack, rightFront, rightBack);
+                sleep(balanceMove);
+            }
+            CRServo1.setPower(-0.5);
+            sleep(900);
+            CRServo1.setPower(0.0);
         }
-        else if (jewelSensorL.blue() > jewelSensorL.red() || jewelSensorR.red() > jewelSensorR.blue()) {
-            rightStrafe(leftFront, leftBack, rightFront, rightBack);
-            sleep(balanceMove);
-            leftStrafe(leftFront, leftBack, rightFront, rightBack);
-            sleep(balanceMove);
-        }
-        CRServo1.setPower(-0.5);
-        sleep(900);
-        CRServo1.setPower(0.0);
     }
 
     public void vumark() {

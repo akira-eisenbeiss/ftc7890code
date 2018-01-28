@@ -57,20 +57,22 @@ public class TeleOpNew extends OpMode {
         //TODO: fix negs and pos
         drawbridge.setPower(-leftStick2/2);
 
+        double treadPower = -0.2;
         if (gamepad2A && intakePower == 0) // in
         {
-            leftIntake.setPower(1.0);
-            rightIntake.setPower(1.0);
+            leftIntake.setPower(treadPower);
+            rightIntake.setPower(treadPower);
             intakePower ^= 1;
         } else if (gamepad2A && intakePower == 1)// out
         {
-            leftIntake.setPower(-1.0);
-            rightIntake.setPower(-1.0);
+            leftIntake.setPower(-treadPower);
+            rightIntake.setPower(-treadPower);
             intakePower ^= 1;
         } else if (gamepad2B) {
             leftIntake.setPower(0);
             rightIntake.setPower(0);
         }
+        /*
         if (gamepad2Y && intakeServo == 0) {
             //negatives and positives are for testin
             lInServo.setPower(-1.0);
@@ -81,6 +83,7 @@ public class TeleOpNew extends OpMode {
             rInServo.setPower(0);
             intakeServo ^= 1;
         }
+        */
 
         // Telemetry
         telemetry.addData("Status", "Run Time: " + runtime.toString());
