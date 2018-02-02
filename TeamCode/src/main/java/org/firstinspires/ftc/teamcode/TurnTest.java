@@ -3,8 +3,10 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
-@Autonomous(name="TurnTest", group="Linear Op")
+//@Autonomous(name="TurnTest", group="Linear Op")
+@Disabled
 public class TurnTest extends LinearOpMode {
 
     DcMotor leftFront, leftBack, rightFront, rightBack;

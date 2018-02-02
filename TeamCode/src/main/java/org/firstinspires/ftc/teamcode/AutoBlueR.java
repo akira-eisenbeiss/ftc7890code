@@ -23,7 +23,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 
 
-@Autonomous(name="autonomous blue relic side", group="Linear Opmode")
+//@Autonomous(name="autonomous blue relic side", group="Linear Opmode")
+@Disabled
 public class AutoBlueR extends LinearOpMode {
 
     //sorry about these strings, btw

@@ -27,7 +27,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 /**
  * Created by wenhuizhao on 1/12/18.
  */
-@Autonomous(name="strafe test", group="Linear Opmode")
+@Disabled
+//@Autonomous(name="strafe test", group="Linear Opmode")
 public class StrafeTest extends LinearOpMode {
 
     DcMotor leftFront, leftBack, rightFront, rightBack;

@@ -38,7 +38,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefau
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 
-@Autonomous(name="auto blue r2", group="LinearOpMode")
+//@Autonomous(name="auto blue r2", group="LinearOpMode")
+@Disabled
 public class AutoBlueR2 extends LinearOpMode {
 
     //motors

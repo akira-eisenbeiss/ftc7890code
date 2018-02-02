@@ -8,7 +8,8 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
-@TeleOp(name="complete tele op3", group="Tele Op")
+// @TeleOp(name="complete tele op3", group="Tele Op")
+@Disabled
 public class TeleOpNew extends OpMode {
 
     int intakePower = 0;
@@ -17,8 +18,8 @@ public class TeleOpNew extends OpMode {
     DcMotor leftBack = hardwareMap.dcMotor.get("left back");
     DcMotor rightFront = hardwareMap.dcMotor.get("right front");
     DcMotor rightBack = hardwareMap.dcMotor.get("right back");
-    //DcMotor leftIntake = hardwareMap.dcMotor.get("left intake");
-   // DcMotor rightIntake = hardwareMap.dcMotor.get("right intake");
+    DcMotor leftIntake = hardwareMap.dcMotor.get("left intake");
+    DcMotor rightIntake = hardwareMap.dcMotor.get("right intake");
     //CRServo lInServo = hardwareMap.crservo.get("left intake servo");
     //CRServo rInServo = hardwareMap.crservo.get("right intake servo");
     DcMotor drawbridge = hardwareMap.dcMotor.get("drawbridge");
@@ -46,8 +47,6 @@ public class TeleOpNew extends OpMode {
 
         boolean gamepad2A = gamepad2.a;
         boolean gamepad2B = gamepad2.b;
-        boolean gamepad2X = gamepad2.x;//not in use
-        boolean gamepad2Y = gamepad2.y;
         float leftStick2 = gamepad2.left_stick_y;
 
         //wheel
@@ -55,11 +54,11 @@ public class TeleOpNew extends OpMode {
         leftBack.setPower(lbDrive);
         rightFront.setPower(rfDrive);
         rightBack.setPower(rbDrive);
-        //TODO: fix negs and pos
+//        TODO: fix negs and pos
         drawbridge.setPower(-leftStick2/2);
 
         double treadPower = -0.2;
-        /* if (gamepad2A && intakePower == 0) // in
+        if (gamepad2A && intakePower == 0) // in
         {
             leftIntake.setPower(treadPower);
             rightIntake.setPower(treadPower);

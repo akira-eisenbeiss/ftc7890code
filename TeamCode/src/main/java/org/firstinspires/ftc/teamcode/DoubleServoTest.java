@@ -27,7 +27,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 /**
  * Created by wenhuizhao on 1/12/18.
  */
-@Autonomous(name="double servo test", group="Linear Opmode")
+//@Autonomous(name="double servo test", group="Linear Opmode")
+@Disabled
 public class DoubleServoTest extends LinearOpMode {
 
     Servo one, two;

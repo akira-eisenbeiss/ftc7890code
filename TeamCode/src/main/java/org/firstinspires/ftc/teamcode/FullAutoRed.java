@@ -23,8 +23,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 
 
-@Autonomous(name="autonomous red JEWEL", group="Linear Opmode")
-public class FULLAUTORED extends LinearOpMode {
+//@Autonomous(name="autonomous red JEWEL", group="Linear Opmode")
+@Disabled
+public class FullAutoRed extends LinearOpMode {
 
     //sorry about these strings, btw
     public final static String LEFTFRONT = "leftFront";

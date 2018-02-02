@@ -24,7 +24,8 @@ package org.firstinspires.ftc.teamcode;
         import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 
 
-@Autonomous(name="autonomous red relic side", group="Linear Opmode")
+//@Autonomous(name="autonomous red relic side", group="Linear Opmode")
+@Disabled
 public class AutoRedR extends LinearOpMode {
 
     //vuforia

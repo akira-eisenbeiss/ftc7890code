@@ -7,7 +7,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
-@TeleOp(name="complete tele op2", group="Tele Op")
+//@TeleOp(name="complete tele op2", group="Tele Op")
+@Disabled
 public class TeleOpVer2 extends OpMode {
     //sorry about these strings, btw
     public final static String LEFTFRONT = "leftFront";

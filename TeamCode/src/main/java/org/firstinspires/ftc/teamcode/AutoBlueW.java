@@ -24,7 +24,8 @@ package org.firstinspires.ftc.teamcode;
         import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 
 
-@Autonomous(name="autonomous blue window side", group="Linear Opmode")
+//@Autonomous(name="autonomous blue window side", group="Linear Opmode")
+@Disabled
 public class AutoBlueW extends LinearOpMode {
 
     //sorry about these strings, btw

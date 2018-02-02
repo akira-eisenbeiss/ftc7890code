@@ -25,7 +25,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefau
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 
-@Autonomous(name="autonomeme", group="Linear Opmode")
+//@Autonomous(name="autonomeme", group="Linear Opmode")
+@Disabled
 public class ServoTest extends LinearOpMode {
     public final static String BALLARM = "ballArm";
 
