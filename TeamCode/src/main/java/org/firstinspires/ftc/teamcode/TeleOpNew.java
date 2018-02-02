@@ -17,10 +17,10 @@ public class TeleOpNew extends OpMode {
     DcMotor leftBack = hardwareMap.dcMotor.get("left back");
     DcMotor rightFront = hardwareMap.dcMotor.get("right front");
     DcMotor rightBack = hardwareMap.dcMotor.get("right back");
-    DcMotor leftIntake = hardwareMap.dcMotor.get("left intake");
-    DcMotor rightIntake = hardwareMap.dcMotor.get("right intake");
-    CRServo lInServo = hardwareMap.crservo.get("left intake servo");
-    CRServo rInServo = hardwareMap.crservo.get("right intake servo");
+    //DcMotor leftIntake = hardwareMap.dcMotor.get("left intake");
+   // DcMotor rightIntake = hardwareMap.dcMotor.get("right intake");
+    //CRServo lInServo = hardwareMap.crservo.get("left intake servo");
+    //CRServo rInServo = hardwareMap.crservo.get("right intake servo");
     DcMotor drawbridge = hardwareMap.dcMotor.get("drawbridge");
 
     private ElapsedTime runtime = new ElapsedTime();
@@ -59,7 +59,7 @@ public class TeleOpNew extends OpMode {
         drawbridge.setPower(-leftStick2/2);
 
         double treadPower = -0.2;
-        if (gamepad2A && intakePower == 0) // in
+        /* if (gamepad2A && intakePower == 0) // in
         {
             leftIntake.setPower(treadPower);
             rightIntake.setPower(treadPower);
