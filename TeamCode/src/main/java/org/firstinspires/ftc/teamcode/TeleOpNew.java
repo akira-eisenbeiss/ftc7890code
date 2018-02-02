@@ -8,27 +8,31 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
-// @TeleOp(name="complete tele op3", group="Tele Op")
-@Disabled
+@TeleOp(name="complete tele op3", group="Tele Op")
 public class TeleOpNew extends OpMode {
 
     int intakePower = 0;
-    int intakeServo = 0;
-    DcMotor leftFront = hardwareMap.dcMotor.get("left front");
-    DcMotor leftBack = hardwareMap.dcMotor.get("left back");
-    DcMotor rightFront = hardwareMap.dcMotor.get("right front");
-    DcMotor rightBack = hardwareMap.dcMotor.get("right back");
-    DcMotor leftIntake = hardwareMap.dcMotor.get("left intake");
-    DcMotor rightIntake = hardwareMap.dcMotor.get("right intake");
-    //CRServo lInServo = hardwareMap.crservo.get("left intake servo");
-    //CRServo rInServo = hardwareMap.crservo.get("right intake servo");
-    DcMotor drawbridge = hardwareMap.dcMotor.get("drawbridge");
+    DcMotor leftFront;
+    DcMotor rightFront;
+    DcMotor leftBack;
+    DcMotor rightBack;
+    DcMotor leftIntake;
+    DcMotor rightIntake;
+    DcMotor drawbridge;
 
     private ElapsedTime runtime = new ElapsedTime();
 
     @Override
     public void init() {
-
+        leftFront = hardwareMap.dcMotor.get("left front");
+        leftBack = hardwareMap.dcMotor.get("left back");
+        rightFront = hardwareMap.dcMotor.get("right front");
+        rightBack = hardwareMap.dcMotor.get("right back");
+        leftIntake = hardwareMap.dcMotor.get("left intake");
+        rightIntake = hardwareMap.dcMotor.get("right intake");
+        //CRServo lInServo = hardwareMap.crservo.get("left intake servo");
+        //CRServo rInServo = hardwareMap.crservo.get("right intake servo");
+        drawbridge = hardwareMap.dcMotor.get("drawbridge");
     }
 
     @Override
@@ -37,9 +41,9 @@ public class TeleOpNew extends OpMode {
         float turn = gamepad1.right_stick_x;
         float strafe = gamepad1.left_stick_x;
         double lfDrive = Range.clip(drive + turn - strafe, -1.0, 1.0);
-        double lbDrive = Range.clip(drive + turn + strafe, -1.0, 1.0);
+        double rbDrive = Range.clip(drive + turn + strafe, -1.0, 1.0);
         double rfDrive = Range.clip(drive - turn + strafe, -1.0, 1.0);
-        double rbDrive = Range.clip(drive - turn - strafe, -1.0, 1.0);
+        double lbDrive = Range.clip(drive - turn - strafe, -1.0, 1.0);
         leftFront.setPower(lfDrive);
         leftBack.setPower(lbDrive);
         rightFront.setPower(rfDrive);
@@ -61,12 +65,12 @@ public class TeleOpNew extends OpMode {
         if (gamepad2A && intakePower == 0) // in
         {
             leftIntake.setPower(treadPower);
-            rightIntake.setPower(treadPower);
+            rightIntake.setPower(-treadPower);
             intakePower ^= 1;
         } else if (gamepad2A && intakePower == 1)// out
         {
             leftIntake.setPower(-treadPower);
-            rightIntake.setPower(-treadPower);
+            rightIntake.setPower(treadPower);
             intakePower ^= 1;
         } else if (gamepad2B) {
             leftIntake.setPower(0);
