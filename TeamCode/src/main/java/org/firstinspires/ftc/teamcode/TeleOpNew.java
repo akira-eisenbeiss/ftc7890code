@@ -50,7 +50,7 @@ public class TeleOpNew extends OpMode {
     public void loop() {
         float drive = -gamepad1.left_stick_y;
         float turn = gamepad1.right_stick_x;
-        float strafe = gamepad1.left_stick_x;
+        float strafe = -gamepad1.left_stick_x;
         double lfDrive = Range.clip(drive + turn - strafe, -1.0, 1.0);
         double lbDrive = Range.clip(drive + turn + strafe, -1.0, 1.0);
         double rfDrive = Range.clip(drive - turn + strafe, -1.0, 1.0);
@@ -72,7 +72,7 @@ public class TeleOpNew extends OpMode {
 //        TODO: fix negs and pos
         drawbridge.setPower(-leftStick2/2);
 
-        double treadPower = -0.2;
+        double treadPower = -0.7;
         if (gamepad2A && intakePower == 0) // in
         {
             leftIntake.setPower(treadPower);
