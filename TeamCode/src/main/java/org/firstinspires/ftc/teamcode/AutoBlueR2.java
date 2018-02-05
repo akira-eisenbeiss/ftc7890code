@@ -67,7 +67,7 @@ public class AutoBlueR2 extends LinearOpMode {
     int counter = 1;
     private final static double move = 0.5;
     int balanceMove = 250;
-    int targetHeading = 270;
+    int targetHeadingGlyph = 180;
     VuforiaLocalizer.Parameters parameters;
     VuforiaLocalizer vuforia;
 
@@ -86,11 +86,11 @@ public class AutoBlueR2 extends LinearOpMode {
 
         MRGyro.calibrate();
         relicTrackables.activate();
-        
+
         while (opModeIsActive()) {
-            
+
             jewel(ballArm);
-            
+
             vumark();
         }
     }
@@ -135,7 +135,7 @@ public class AutoBlueR2 extends LinearOpMode {
 
             if (cryptoSensor.blue() > cryptoSensor.red() && counter == 1) {
                 stopDatMovement(leftFront, leftBack, rightFront, rightBack);
-                scoreGlyph(drawbridge);
+                scoreGlyph(leftIntake, rightIntake);
                 counter++;
             }
 
@@ -160,7 +160,7 @@ public class AutoBlueR2 extends LinearOpMode {
 
             else if (cryptoSensor.blue() > cryptoSensor.red() && counter == 2) {
                 stopDatMovement(leftFront, leftBack, rightFront, rightBack);
-                scoreGlyph(drawbridge);
+                scoreGlyph(leftIntake, rightIntake);
             }
 
             else {
@@ -183,7 +183,7 @@ public class AutoBlueR2 extends LinearOpMode {
 
             else if (cryptoSensor.blue() > cryptoSensor.red() && counter == 3) {
                 stopDatMovement(leftFront, leftBack, rightFront, rightBack);
-                scoreGlyph(drawbridge);
+                scoreGlyph(leftIntake, rightIntake);
 
                 while (cryptoSensor.blue() <= cryptoSensor.red()) {
                     leftStrafe(leftFront, leftBack, rightFront, rightBack);
@@ -199,16 +199,25 @@ public class AutoBlueR2 extends LinearOpMode {
             }
         }
     }
-    public void scoreGlyph(DcMotor motor1){
-
-        //use the encoders
-        motor1.setPower(-1.0);
+    public void scoreGlyph(DcMotor motor1, DcMotor motor2){
         /* we need to move back a little bit
          * otherwise the glyph will get stuck
          */
         moveBackwards(leftFront, leftBack, rightFront, rightBack);
         sleep(20);
-        stopDatMovement(leftFront, leftBack, rightFront, rightBack);
+
+        int heading = MRGyro.getHeading();
+        //turns, hopefully
+        leftFront.setPower(-0.5);
+        leftBack.setPower(-0.5);
+        rightFront.setPower(-0.5);
+        rightBack.setPower(-0.5);
+
+        if (heading > targetHeadingGlyph - 10 && heading < targetHeadingGlyph + 10) {
+            stopDatMovement(leftFront, leftBack, rightFront, rightBack);
+            motor1.setPower(0.7);
+            motor2.setPower(-0.7);
+        }
 
     }
     //methods for specific actions
@@ -240,7 +249,6 @@ public class AutoBlueR2 extends LinearOpMode {
         motor3.setPower(move);
         motor4.setPower(move);
     }
-
     //move backwards method. Also, always put the left motors first, dumbo
     public static void moveBackwards(DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4) {
         motor1.setPower(move);
