@@ -21,12 +21,12 @@ public class TeleOpNew extends OpMode {
     DcMotor drawbridge;
 
     private ElapsedTime runtime = new ElapsedTime();
-  
+
     //directions
-  
+
     private DcMotor.Direction LEFTDIRECTION = DcMotor.Direction.REVERSE;
     private DcMotor.Direction RIGHTDIRECTION = DcMotor.Direction.FORWARD;
-  
+
     @Override
     public void init() {
         leftFront = hardwareMap.dcMotor.get("left front");
@@ -38,7 +38,7 @@ public class TeleOpNew extends OpMode {
         //CRServo lInServo = hardwareMap.crservo.get("left intake servo");
         //CRServo rInServo = hardwareMap.crservo.get("right intake servo");
         drawbridge = hardwareMap.dcMotor.get("drawbridge");
-      
+
         //setting directions to the wheels
         leftFront.setDirection(LEFTDIRECTION);
         leftBack.setDirection(LEFTDIRECTION);
@@ -48,9 +48,23 @@ public class TeleOpNew extends OpMode {
 
     @Override
     public void loop() {
-        float drive = gamepad1.left_stick_y;
-        float turn = -gamepad1.right_stick_x;
-        float strafe = -gamepad1.left_stick_x;
+
+        float drive;
+        float turn;
+        float strafe;
+
+        float rightTrigger1 = gamepad1.right_trigger;
+        if (rightTrigger1 <= 0.4){
+            drive = -gamepad1.left_stick_y;
+            turn = gamepad1.right_stick_x;
+            strafe = gamepad1.left_stick_x;
+        }
+        else {
+            drive = gamepad1.left_stick_y;
+            turn = -gamepad1.right_stick_x;
+            strafe = -gamepad1.left_stick_x;
+        }
+
         double lfDrive = Range.clip(drive + turn - strafe, -1.0, 1.0);
         double lbDrive = Range.clip(drive + turn + strafe, -1.0, 1.0);
         double rfDrive = Range.clip(drive - turn + strafe, -1.0, 1.0);
@@ -59,6 +73,7 @@ public class TeleOpNew extends OpMode {
         leftBack.setPower(lbDrive);
         rightFront.setPower(rfDrive);
         rightBack.setPower(rbDrive);
+
 
         boolean gamepad2A = gamepad2.a;
         boolean gamepad2B = gamepad2.b;
