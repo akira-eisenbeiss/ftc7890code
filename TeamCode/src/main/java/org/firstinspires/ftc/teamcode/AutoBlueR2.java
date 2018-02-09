@@ -67,10 +67,10 @@ public class AutoBlueR2 extends LinearOpMode {
     int counter = 1;
     private final static double move = 0.5;
     int balanceMove = 250;
+    int targetHeadingGlyph = 180;
     int targetHeading = 270;
     VuforiaLocalizer.Parameters parameters;
     VuforiaLocalizer vuforia;
-
     VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
     VuforiaTrackable relicTemplate = relicTrackables.get(0);
 
@@ -86,11 +86,11 @@ public class AutoBlueR2 extends LinearOpMode {
 
         MRGyro.calibrate();
         relicTrackables.activate();
-        
+
         while (opModeIsActive()) {
-            
+
             jewel(ballArm);
-            
+
             vumark();
         }
     }
@@ -111,11 +111,14 @@ public class AutoBlueR2 extends LinearOpMode {
             if (jewelSensorL.red() > jewelSensorL.blue() || jewelSensorR.blue() > jewelSensorR.red()) {
                 leftStrafe(leftFront, leftBack, rightFront, rightBack);
                 sleep(balanceMove * 2);
-            } else if (jewelSensorL.blue() > jewelSensorL.red() || jewelSensorR.red() > jewelSensorR.blue()) {
+                detected = false;
+            }
+            else if (jewelSensorL.blue() > jewelSensorL.red() || jewelSensorR.red() > jewelSensorR.blue()) {
                 rightStrafe(leftFront, leftBack, rightFront, rightBack);
                 sleep(balanceMove);
                 leftStrafe(leftFront, leftBack, rightFront, rightBack);
                 sleep(balanceMove);
+                detected = false;
             }
             CRServo1.setPower(-0.5);
             sleep(900);
@@ -127,7 +130,6 @@ public class AutoBlueR2 extends LinearOpMode {
         RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
         while (vuMark == RelicRecoveryVuMark.UNKNOWN && !sensed){
             leftStrafe(leftFront, leftBack, rightFront, rightBack);
-            break;
         }
 
         if (vuMark == RelicRecoveryVuMark.LEFT) {
@@ -135,16 +137,11 @@ public class AutoBlueR2 extends LinearOpMode {
 
             if (cryptoSensor.blue() > cryptoSensor.red() && counter == 1) {
                 stopDatMovement(leftFront, leftBack, rightFront, rightBack);
-                scoreGlyph(drawbridge);
-                counter++;
+                scoreGlyph(leftIntake, rightIntake);
+                counter += 3;
             }
 
-            else if (cryptoSensor.blue() > cryptoSensor.red() && counter == 2) {
-                stopDatMovement(leftFront, leftBack, rightFront, rightBack);
-
-            }
-
-            else {
+            else if (counter == 1) {
                 rightStrafe(leftFront, leftBack, rightFront, rightBack);
             }
 
@@ -160,10 +157,11 @@ public class AutoBlueR2 extends LinearOpMode {
 
             else if (cryptoSensor.blue() > cryptoSensor.red() && counter == 2) {
                 stopDatMovement(leftFront, leftBack, rightFront, rightBack);
-                scoreGlyph(drawbridge);
+                scoreGlyph(leftIntake, rightIntake);
+                counter += 2;
             }
 
-            else {
+            else if (counter == 1) {
                 rightStrafe(leftFront, leftBack, rightFront, rightBack);
             }
         }
@@ -183,34 +181,37 @@ public class AutoBlueR2 extends LinearOpMode {
 
             else if (cryptoSensor.blue() > cryptoSensor.red() && counter == 3) {
                 stopDatMovement(leftFront, leftBack, rightFront, rightBack);
-                scoreGlyph(drawbridge);
-
-                while (cryptoSensor.blue() <= cryptoSensor.red()) {
-                    leftStrafe(leftFront, leftBack, rightFront, rightBack);
-                }
-
-                if (cryptoSensor.blue() > cryptoSensor.red()) {
-                    stopDatMovement(leftFront, leftBack, rightFront, rightBack);
-                }
+                scoreGlyph(leftIntake, rightIntake);
             }
 
-            else {
+            else if (counter == 1) {
                 rightStrafe(leftFront, leftBack, rightFront, rightBack);
             }
         }
     }
-    public void scoreGlyph(DcMotor motor1){
 
-        //use the encoders
-        motor1.setPower(-1.0);
+    public void scoreGlyph(DcMotor motor1, DcMotor motor2){
         /* we need to move back a little bit
          * otherwise the glyph will get stuck
          */
         moveBackwards(leftFront, leftBack, rightFront, rightBack);
         sleep(20);
-        stopDatMovement(leftFront, leftBack, rightFront, rightBack);
 
+        //turning stuff
+        int heading = MRGyro.getHeading();
+
+        leftFront.setPower(-0.5);
+        leftBack.setPower(-0.5);
+        rightFront.setPower(-0.5);
+        rightBack.setPower(-0.5);
+
+        if (heading > targetHeadingGlyph - 10 && heading < targetHeadingGlyph + 10) {
+            stopDatMovement(leftFront, leftBack, rightFront, rightBack);
+            motor1.setPower(0.7);
+            motor2.setPower(-0.7);
+        }
     }
+
     //methods for specific actions
     public static void stopDatMovement(DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4)
     {
@@ -240,7 +241,6 @@ public class AutoBlueR2 extends LinearOpMode {
         motor3.setPower(move);
         motor4.setPower(move);
     }
-
     //move backwards method. Also, always put the left motors first, dumbo
     public static void moveBackwards(DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4) {
         motor1.setPower(move);
