@@ -49,20 +49,17 @@ public class TeleOpNew extends OpMode {
     @Override
     public void loop() {
 
-        float drive;
-        float turn;
-        float strafe;
-
         float rightTrigger1 = gamepad1.right_trigger;
         if (rightTrigger1 <= 0.4){
-            drive = -gamepad1.left_stick_y;
-            turn = gamepad1.right_stick_x;
-            strafe = gamepad1.left_stick_x;
+            float drive = -gamepad1.left_stick_y;
+            float turn = gamepad1.right_stick_x;
+            float strafe = gamepad1.left_stick_x;
         }
+
         else {
-            drive = gamepad1.left_stick_y;
-            turn = -gamepad1.right_stick_x;
-            strafe = -gamepad1.left_stick_x;
+            float drive = gamepad1.left_stick_y;
+            float turn = -gamepad1.right_stick_x;
+            float strafe = -gamepad1.left_stick_x;
         }
 
         double lfDrive = Range.clip(drive + turn - strafe, -1.0, 1.0);
@@ -101,19 +98,8 @@ public class TeleOpNew extends OpMode {
         } else if (gamepad2B) {
             leftIntake.setPower(0);
             rightIntake.setPower(0);
+            intakePower = 0;
         }
-        /*
-        if (gamepad2Y && intakeServo == 0) {
-            //negatives and positives are for testin
-            lInServo.setPower(-1.0);
-            rInServo.setPower(1.0);
-            intakeServo ^= 1;
-        } else if (gamepad2Y && intakeServo == 1) {
-            lInServo.setPower(0);
-            rInServo.setPower(0);
-            intakeServo ^= 1;
-        }
-        */
 
         // Telemetry
         telemetry.addData("Status", "Run Time: " + runtime.toString());
