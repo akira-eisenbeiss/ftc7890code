@@ -35,8 +35,6 @@ public class TeleOpNew extends OpMode {
         rightBack = hardwareMap.dcMotor.get("right back");
         leftIntake = hardwareMap.dcMotor.get("left intake");
         rightIntake = hardwareMap.dcMotor.get("right intake");
-        //CRServo lInServo = hardwareMap.crservo.get("left intake servo");
-        //CRServo rInServo = hardwareMap.crservo.get("right intake servo");
         drawbridge = hardwareMap.dcMotor.get("drawbridge");
 
         //setting directions to the wheels
