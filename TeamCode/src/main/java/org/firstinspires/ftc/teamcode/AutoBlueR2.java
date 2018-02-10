@@ -39,7 +39,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 
 //@Autonomous(name="auto blue r2", group="LinearOpMode")
-@Disabled
 public class AutoBlueR2 extends LinearOpMode {
 
     //motors
@@ -50,7 +49,7 @@ public class AutoBlueR2 extends LinearOpMode {
     DcMotor leftIntake = hardwareMap.dcMotor.get("left intake");
     DcMotor rightIntake = hardwareMap.dcMotor.get("right intake");
     DcMotor drawbridge = hardwareMap.dcMotor.get("drawbridge");
-    //servoes
+    //servos
     CRServo lInServo = hardwareMap.crservo.get("left intake servo");
     CRServo rInServo = hardwareMap.crservo.get("right intake servo");
     CRServo ballArm = hardwareMap.crservo.get("ball arm");
@@ -60,8 +59,8 @@ public class AutoBlueR2 extends LinearOpMode {
     ColorSensor jewelSensorL = hardwareMap.colorSensor.get("ball sensor left");
     ColorSensor jewelSensorR = hardwareMap.colorSensor.get("ball sensor right");
     ColorSensor cryptoSensor = hardwareMap.colorSensor.get("crypto sensor");
-    //vuforia
 
+    //vuforia
     boolean sensed = false;
     boolean detected = false;
     int counter = 1;
@@ -88,9 +87,7 @@ public class AutoBlueR2 extends LinearOpMode {
         relicTrackables.activate();
 
         while (opModeIsActive()) {
-
             jewel(ballArm);
-
             vumark();
         }
     }
@@ -170,12 +167,12 @@ public class AutoBlueR2 extends LinearOpMode {
             sensed = true;
 
             if (cryptoSensor.blue() > cryptoSensor.red() && counter == 1) {
-                counter ++;
+                counter++;
                 rightStrafe(leftFront, leftBack, rightFront, rightBack);
             }
 
             else if (cryptoSensor.blue() > cryptoSensor.red() && counter == 2) {
-                counter ++;
+                counter++;
                 rightStrafe(leftFront, leftBack, rightFront, rightBack);
             }
 

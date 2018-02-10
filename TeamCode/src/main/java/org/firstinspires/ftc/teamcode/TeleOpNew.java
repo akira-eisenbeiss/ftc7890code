@@ -54,7 +54,7 @@ public class TeleOpNew extends OpMode {
         float rightTrigger1 = gamepad1.right_trigger;
         if (rightTrigger1 <= 0.4){
             drive = gamepad1.left_stick_y;
-            turn = -gamepad1.right_stick_x;
+            turn = gamepad1.right_stick_x;
             strafe = gamepad1.left_stick_x;
         }
 
