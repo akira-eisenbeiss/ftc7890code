@@ -20,6 +20,7 @@ public class TeleOpNew extends OpMode {
     DcMotor rightIntake;
     DcMotor drawbridge;
 
+
     private ElapsedTime runtime = new ElapsedTime();
 
     //directions
@@ -47,17 +48,20 @@ public class TeleOpNew extends OpMode {
     @Override
     public void loop() {
 
+        float drive;
+        float turn;
+        float strafe;
         float rightTrigger1 = gamepad1.right_trigger;
         if (rightTrigger1 <= 0.4){
-            float drive = -gamepad1.left_stick_y;
-            float turn = gamepad1.right_stick_x;
-            float strafe = gamepad1.left_stick_x;
+            drive = gamepad1.left_stick_y;
+            turn = -gamepad1.right_stick_x;
+            strafe = gamepad1.left_stick_x;
         }
 
         else {
-            float drive = gamepad1.left_stick_y;
-            float turn = -gamepad1.right_stick_x;
-            float strafe = -gamepad1.left_stick_x;
+            drive = -gamepad1.left_stick_y;
+            turn = gamepad1.right_stick_x;
+            strafe = -gamepad1.left_stick_x;
         }
 
         double lfDrive = Range.clip(drive + turn - strafe, -1.0, 1.0);
