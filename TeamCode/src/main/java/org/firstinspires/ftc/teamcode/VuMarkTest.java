@@ -49,7 +49,7 @@ public class VuMarkTest extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        parameters.vuforiaLicenseKey = "AcoS+YP/////AAAAGTq922ywuU6FquBqcm2CeatGNf2voKamgXI1KwF7yLiQKP+RqBNrI4ND0i98TsuYnBytFG0YYUz2+4wvHBN5pz+/CacheTAG6upbc95Ts0UJgGRg0aTLaVzdYUQUI5dRlAh50DsGYdPkabTZmPO+5EYj79XDDHhok7wTZDb6ZyiCLlzXtM5EZ9nyiWQxz6XJ3M7Q+m4nVuaAdvWN+qwkQsqohSoxB8TNI4dDYlSMQbbO6d3SkCgfXy4K8y/lBNDF8suTeSgNY0YGs/N5FIYTLa+eyu+r3kbf2ig0EsL1Er+AhLZkVDpksvMp+MMBdDVyi6JDjr4E+P2D82ztt8Ex0aoR+h0n4RyRnkS+G4FB4wRD";
+        parameters.vuforiaLicenseKey = "AYvh06j/////AAAAmbygSYf3jk52rJ+QebMiuY+KBW8AuYZAvwG7yH+LzSrVKE/bD6Xhi3ksUHXEagcXs9z59YKe9ihnuvgO9Wk5gl/E8sGjKKiY9Por4JQZk7aTe0G0FcL6SLIjn5PHRdJNkFp8oLyPhhK2W/b2zM4+OqMRJjex2Q8jFOJNqFGr1HroVBnhNU+6JXZhBNhP+gw6KPwui7TEVgGiDSz2FiYMzER9D27szSZsTx2LWy6XjAJjSbKQ1WnXCs5EQh2uEE0hFjqw3DrVyXjG731O1RzGPUMkKgviF6JyZS8k3VM20NSBf+FBCJbXe5gfHE5wqfC+G51ZUQTzUbaXSmdC2vcuOQ3hVN+Irbh8tZG2hWbaOKu8";
         parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
         this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
 
