@@ -50,9 +50,8 @@ public class AutoBlueR2 extends LinearOpMode {
     DcMotor leftIntake = hardwareMap.dcMotor.get("left intake");
     DcMotor rightIntake = hardwareMap.dcMotor.get("right intake");
     DcMotor drawbridge = hardwareMap.dcMotor.get("drawbridge");
+    
     //servoes
-    CRServo lInServo = hardwareMap.crservo.get("left intake servo");
-    CRServo rInServo = hardwareMap.crservo.get("right intake servo");
     CRServo ballArm = hardwareMap.crservo.get("ball arm");
     //sensors
     ModernRoboticsI2cGyro MRGyro = hardwareMap.get(ModernRoboticsI2cGyro.class, "gyro");
