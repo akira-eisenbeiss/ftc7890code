@@ -42,28 +42,27 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 @Disabled
 public class AutoBlueR2 extends LinearOpMode {
 
-    //motors
-    DcMotor leftFront = hardwareMap.dcMotor.get("left front");
-    DcMotor leftBack = hardwareMap.dcMotor.get("left back");
-    DcMotor rightFront = hardwareMap.dcMotor.get("right front");
-    DcMotor rightBack = hardwareMap.dcMotor.get("right back");
-    DcMotor leftIntake = hardwareMap.dcMotor.get("left intake");
-    DcMotor rightIntake = hardwareMap.dcMotor.get("right intake");
-    DcMotor drawbridge = hardwareMap.dcMotor.get("drawbridge");
+    DcMotor leftFront;
+    DcMotor leftBack;
+    DcMotor rightFront;
+    DcMotor rightBack;
+    DcMotor leftIntake;
+    DcMotor rightIntake;
+    DcMotor drawbridge;
     
-    //servoes
-    CRServo ballArm = hardwareMap.crservo.get("ball arm");
+    //servos
+    CRServo ballArm;
     //sensors
-    ModernRoboticsI2cGyro MRGyro = hardwareMap.get(ModernRoboticsI2cGyro.class, "gyro");
-    IntegratingGyroscope gyro = (IntegratingGyroscope) MRGyro;
-    ColorSensor jewelSensorL = hardwareMap.colorSensor.get("ball sensor left");
-    ColorSensor jewelSensorR = hardwareMap.colorSensor.get("ball sensor right");
-    ColorSensor cryptoSensor = hardwareMap.colorSensor.get("crypto sensor");
+    ModernRoboticsI2cGyro MRGyro;
+    IntegratingGyroscope gyro;
+    ColorSensor jewelSensor;
+    ColorSensor cryptoSensor;
     //vuforia
 
     boolean sensed = false;
     boolean detected = false;
     int counter = 1;
+    int targetCount = 0;
     private final static double move = 0.5;
     int balanceMove = 250;
     int targetHeadingGlyph = 180;
@@ -75,6 +74,27 @@ public class AutoBlueR2 extends LinearOpMode {
 
     @Override
     public void runOpMode() {
+      
+        //motors
+        leftFront = hardwareMap.dcMotor.get("left front");
+        leftBack = hardwareMap.dcMotor.get("left back");
+        rightFront = hardwareMap.dcMotor.get("right front");
+        rightBack = hardwareMap.dcMotor.get("right back");
+        leftIntake = hardwareMap.dcMotor.get("left intake");
+        rightIntake = hardwareMap.dcMotor.get("right intake");
+        drawbridge = hardwareMap.dcMotor.get("drawbridge");  
+      
+        //sensors
+        jewelSensor = hardwareMap.colorSensor.get("jewel sensor");
+        cryptoSensor = hardwareMap.colorSensor.get("crypto sensor");
+      
+        MRGyro = hardwareMap.get(ModernRoboticsI2cGyro.class, "gyro");
+        gyro = (IntegratingGyroscope) MRGyro;
+      
+        //servos without an 'e'
+        ballArm = hardwareMap.crservo.get("ball arm");
+      
+        //vuforia
         parameters.vuforiaLicenseKey = "AcoS+YP/////AAAAGTq922ywuU6FquBqcm2CeatGNf2voKamgXI1KwF7yLiQKP+RqBNrI4ND0i98TsuYnBytFG0YYUz2+4wvHBN5pz+/CacheTAG6upbc95Ts0UJgGRg0aTLaVzdYUQUI5dRlAh50DsGYdPkabTZmPO+5EYj79XDDHhok7wTZDb6ZyiCLlzXtM5EZ9nyiWQxz6XJ3M7Q+m4nVuaAdvWN+qwkQsqohSoxB8TNI4dDYlSMQbbO6d3SkCgfXy4K8y/lBNDF8suTeSgNY0YGs/N5FIYTLa+eyu+r3kbf2ig0EsL1Er+AhLZkVDpksvMp+MMBdDVyi6JDjr4E+P2D82ztt8Ex0aoR+h0n4RyRnkS+G4FB4wRD";
         parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
         this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
@@ -138,62 +158,32 @@ public class AutoBlueR2 extends LinearOpMode {
 
     public void vumark() {
         RelicRecoveryVuMark vuMark = acquireVuMark(relicTemplate);
-
-        if (vuMark == RelicRecoveryVuMark.LEFT) {
+        
+        switch (vuMark) {
+          case RelicRecoveryVuMark.LEFT:
+            targetCount = 2;
             sensed = true;
-
-            if (cryptoSensor.blue() > cryptoSensor.red() && counter == 1) {
-                stopDatMovement(leftFront, leftBack, rightFront, rightBack);
-                scoreGlyph(leftIntake, rightIntake);
-                counter += 3;
-            }
-
-            else if (counter == 1) {
-                rightStrafe(leftFront, leftBack, rightFront, rightBack);
-            }
-
+            break;
+          case RelicRecoveryVuMark.CENTER:
+            targetCount = 3;
+            sensed = true;
+            break;
+          case RelicRecoveryVuMark.RIGHT:
+            targetCount = 4;
+            sensed = true;
+            break;
         }
-
-        if (vuMark == RelicRecoveryVuMark.CENTER) {
-            sensed = true;
-
-            if (cryptoSensor.blue() > cryptoSensor.red() && counter == 1) {
-                counter++;
-                rightStrafe(leftFront, leftBack, rightFront, rightBack);
-            }
-
-            else if (cryptoSensor.blue() > cryptoSensor.red() && counter == 2) {
-                stopDatMovement(leftFront, leftBack, rightFront, rightBack);
-                scoreGlyph(leftIntake, rightIntake);
-                counter += 2;
-            }
-
-            else if (counter == 1) {
-                rightStrafe(leftFront, leftBack, rightFront, rightBack);
-            }
+        
+        while (targetCount > counter) {
+          rightStrafe(leftFront, leftBack, rightFront, rightBack)
+            if (cryptoSensor.blue() > cryptoSensor.red()) {
+              counter ++;
+            } 
         }
-
-        if (vuMark == RelicRecoveryVuMark.RIGHT){
-            sensed = true;
-
-            if (cryptoSensor.blue() > cryptoSensor.red() && counter == 1) {
-                counter ++;
-                rightStrafe(leftFront, leftBack, rightFront, rightBack);
-            }
-
-            else if (cryptoSensor.blue() > cryptoSensor.red() && counter == 2) {
-                counter ++;
-                rightStrafe(leftFront, leftBack, rightFront, rightBack);
-            }
-
-            else if (cryptoSensor.blue() > cryptoSensor.red() && counter == 3) {
-                stopDatMovement(leftFront, leftBack, rightFront, rightBack);
-                scoreGlyph(leftIntake, rightIntake);
-            }
-
-            else if (counter == 1) {
-                rightStrafe(leftFront, leftBack, rightFront, rightBack);
-            }
+      
+        if (targetCount == counter){
+            moveForward(leftFront, leftBack, rightFront, rightBack);
+            scoreGlyph(leftIntake, rightIntake);
         }
     }
 
