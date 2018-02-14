@@ -1,3 +1,5 @@
+//test target heading glyph turning
+
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -18,6 +20,7 @@ import com.qualcomm.robotcore.hardware.Gyroscope;
 import com.qualcomm.robotcore.hardware.IntegratingGyroscope;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+/*
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AngularVelocity;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -36,12 +39,11 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
-
+*/
 import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 
 
 @Autonomous(name="auto blue r2", group="LinearOpMode")
-@Disabled
 public class AutoBlueR2 extends LinearOpMode {
 
     DcMotor leftFront;
@@ -58,7 +60,7 @@ public class AutoBlueR2 extends LinearOpMode {
     ModernRoboticsI2cGyro MRGyro;
     IntegratingGyroscope gyro;
     ColorSensor jewelSensor;
-    ColorSensor cryptoSensor;
+   // ColorSensor cryptoSensor;
     OpticalDistanceSensor odsSensor;
     //vuforia
 
@@ -71,11 +73,11 @@ public class AutoBlueR2 extends LinearOpMode {
     int balanceMove = 250;
     int targetHeadingGlyph = 180;
     int targetHeading = 270;
-    VuforiaLocalizer.Parameters parameters;
+   /* VuforiaLocalizer.Parameters parameters;
     VuforiaLocalizer vuforia;
     VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
     VuforiaTrackable relicTemplate = relicTrackables.get(0);
-
+*/
     @Override
     public void runOpMode() {
 
@@ -90,31 +92,32 @@ public class AutoBlueR2 extends LinearOpMode {
 
         //sensors
         jewelSensor = hardwareMap.colorSensor.get("jewel sensor");
-        cryptoSensor = hardwareMap.colorSensor.get("crypto sensor");
+        //cryptoSensor = hardwareMap.colorSensor.get("crypto sensor");
 
         MRGyro = hardwareMap.get(ModernRoboticsI2cGyro.class, "gyro");
         gyro = (IntegratingGyroscope) MRGyro;
         odsSensor = hardwareMap.opticalDistanceSensor.get("ods");
         //servos without an 'e'
         ballArm = hardwareMap.crservo.get("ball arm");
-
+/*
         //vuforia
         parameters.vuforiaLicenseKey = "AcoS+YP/////AAAAGTq922ywuU6FquBqcm2CeatGNf2voKamgXI1KwF7yLiQKP+RqBNrI4ND0i98TsuYnBytFG0YYUz2+4wvHBN5pz+/CacheTAG6upbc95Ts0UJgGRg0aTLaVzdYUQUI5dRlAh50DsGYdPkabTZmPO+5EYj79XDDHhok7wTZDb6ZyiCLlzXtM5EZ9nyiWQxz6XJ3M7Q+m4nVuaAdvWN+qwkQsqohSoxB8TNI4dDYlSMQbbO6d3SkCgfXy4K8y/lBNDF8suTeSgNY0YGs/N5FIYTLa+eyu+r3kbf2ig0EsL1Er+AhLZkVDpksvMp+MMBdDVyi6JDjr4E+P2D82ztt8Ex0aoR+h0n4RyRnkS+G4FB4wRD";
         parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
         this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
-
-        relicTemplate.setName("relicVuMarkTemplate");
+*/
+       // relicTemplate.setName("relicVuMarkTemplate");
 
         waitForStart();
 
-        MRGyro.calibrate();
-        relicTrackables.activate();
+       // relicTrackables.activate();
 
         while (opModeIsActive()) {
 
             jewel(ballArm);
 
-            moveTestWithout();
+            if (sensed) {
+                moveTestWithout();
+            }
         }
     }
 
@@ -124,15 +127,13 @@ public class AutoBlueR2 extends LinearOpMode {
         if (jewelSensor.red() > jewelSensor.blue() || jewelSensor.blue() > jewelSensor.red()) {
             detected = 1;
         }
-        //sleep for testing
-        sleep(1000);
         if (detected == 1) {
-            if (jewelSensor.red() > jewelSensor.blue()) {
+            if (jewelSensor.blue() > jewelSensor.red()) {
                 leftStrafe(leftFront, leftBack, rightFront, rightBack);
                 sleep(balanceMove);
                 detected = 2;
             }
-            else if (jewelSensor.blue() > jewelSensor.red()) {
+            else if (jewelSensor.red() > jewelSensor.blue()) {
                 rightStrafe(leftFront, leftBack, rightFront, rightBack);
                 sleep(balanceMove);
                 leftStrafe(leftFront, leftBack, rightFront, rightBack);
@@ -144,6 +145,7 @@ public class AutoBlueR2 extends LinearOpMode {
             CRServo1.setPower(-0.3);
             sleep(900);
             CRServo1.setPower(0.0);
+            sensed = true;
         }
     }
 
@@ -210,11 +212,11 @@ public class AutoBlueR2 extends LinearOpMode {
             motor2.setPower(-0.7);
         }
     }
-
+/*
     public void moveTest(){
         moveForward(leftFront, leftBack, rightFront, rightBack);
         sleep(20);
-        //this target count is for autonomous without vuforia 
+        //this target count is for autonomous without vuforia
         targetCount = 3;
         while (targetCount > counter) {
             rightStrafe(leftFront, leftBack, rightFront, rightBack);
@@ -227,15 +229,16 @@ public class AutoBlueR2 extends LinearOpMode {
             scoreGlyph(leftIntake, rightIntake);
         }
     }
-    
+*/
     public void moveTestWithout() {
+        //if distance / strafing is off, it's probs the sleep value or the ods.getLightDetected thingy
         moveForward(leftFront, leftBack, rightFront, rightBack);
         sleep(20);
-        //this target count is for autonomous without vuforia 
+        //this target count is for autonomous without vuforia
         targetCount = 3;
         while (targetCount > counter) {
             rightStrafe(leftFront, leftBack, rightFront, rightBack);
-            if (odsSensor.getLightDetected() > 0.2 && odsSensor.getLightDetected() < 0.3) {
+            if (odsSensor.getLightDetected() > 0.01 && odsSensor.getLightDetected() < 0.2) {
                 counter ++;
             }
         }
