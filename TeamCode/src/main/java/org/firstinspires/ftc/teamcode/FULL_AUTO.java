@@ -42,7 +42,7 @@ import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 
 
 @Autonomous(name="FULL AUTO FINAL", group="LinearOpMode")
-public class AutoBlueRTestWithout extends LinearOpMode {
+public class FULL_AUTO extends LinearOpMode {
 
     //MOTORS
     DcMotor leftFront;
@@ -67,7 +67,12 @@ public class AutoBlueRTestWithout extends LinearOpMode {
         USED TO SEE IF THE BALLARM SHOULD KEEP GOING
         used in[jewel, extendBallArm]
          */
-
+    //speeds
+    double out = 0.3;
+        /*
+        THE POWER SET TO MOVE THE BALLARM OUT AND IN
+        used in[jewel, extendBallArm]
+         */
 
     int detected = 0;
     int counter = 1;
@@ -123,41 +128,56 @@ public class AutoBlueRTestWithout extends LinearOpMode {
     public void jewel(){
         while(!sensed) {
             extendBallArm();
-            if (isColor()){
+            if (isColor().equals("RED")){
+                telemetry.addData("DETECTED COLOR", "RED");
+                telemetry.update();
                 leftStrafe(leftFront, leftBack, rightFront, rightBack);
+                sleep(250);
+                stopDatMovement(leftFront, leftBack, rightFront, rightBack);
+                ballArm.setPower(-out);
             }
-            else if (!isColor()) {
+            else if (isColor().equals("BLUE")) {
+                telemetry.addData("DETECTED COLOR", "BLUE");
+                telemetry.update();
                 rightStrafe(leftFront, leftBack, rightFront, rightBack);
+                sleep(100);
+                stopDatMovement(leftFront, leftBack, rightFront, rightBack);
+                ballArm.setPower(-out);
+            }
+            else if (isColor().equals("SKIP")){
+                telemetry.addData("DETECTED COLOR", "SKIP");
+                telemetry.update();
+                ballArm.setPower(-out);
             }
         }
     }
 
     public void extendBallArm(){
         if(jewelSensor.blue() > jewelSensor.red() || jewelSensor.red() > jewelSensor.blue()){
-            ballArm.setPower(0); //TODO: fix this value!
+            ballArm.setPower(0);
             sensed = true;
         }
         else {
-            ballArm.setPower(0.3);
+            ballArm.setPower(out); //TODO: fix this value!
         }
 
     }
 
-    public boolean isColor(){
+    public String isColor(){
         if (jewelSensor.blue() > jewelSensor.red())
-            return true;
+            return "BLUE";
 
         else if (jewelSensor.blue() < jewelSensor.red()){
-            return false;
+            return "RED";
         }
+        return "SKIP";
     }
 
     public static void crypto(){
 
     }
 
-
-    //methods for specific actions
+    //methods for basic movements
     public static void stopDatMovement(DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4) {
         motor1.setPower(0);
         motor2.setPower(0);

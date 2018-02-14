@@ -113,138 +113,39 @@ public class AutoBlueR2 extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-            jewel(ballArm);
-
-            if (sensed) {
-                moveTestWithout();
-            }
+            jewel();
         }
     }
 
     //methods for different parts of autonomous
-    public void jewel(CRServo CRServo1) {
-        CRServo1.setPower(0.3);
-        if (jewelSensor.red() > jewelSensor.blue() || jewelSensor.blue() > jewelSensor.red()) {
-            detected = 1;
-        }
-        if (detected == 1) {
-            if (jewelSensor.blue() > jewelSensor.red()) {
+    public void jewel(){
+        while(!sensed) {
+            extendBallArm();
+            if (isColor()){
                 leftStrafe(leftFront, leftBack, rightFront, rightBack);
-                sleep(balanceMove);
-                detected = 2;
             }
-            else if (jewelSensor.red() > jewelSensor.blue()) {
+            else if (!isColor()) {
                 rightStrafe(leftFront, leftBack, rightFront, rightBack);
-                sleep(balanceMove);
-                leftStrafe(leftFront, leftBack, rightFront, rightBack);
-                sleep(balanceMove * 2);
-                detected = 2;
             }
         }
-        if (detected == 2) {
-            CRServo1.setPower(-0.3);
-            sleep(900);
-            CRServo1.setPower(0.0);
+    }
+
+    public void extendBallArm(){
+        if(jewelSensor.blue() > jewelSensor.red() || jewelSensor.red() > jewelSensor.blue()){
+            ballArm.setPower(0); //TODO: fix this value!
             sensed = true;
         }
-    }
-
-/*
-    public RelicRecoveryVuMark acquireVuMark(VuforiaTrackable relicTemplate) {
-        RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
-        while (vuMark == RelicRecoveryVuMark.UNKNOWN && !sensed){
-            leftStrafe(leftFront, leftBack, rightFront, rightBack);
-            vuMark = RelicRecoveryVuMark.from(relicTemplate);
-        }
-
-        return vuMark;
-    }
-
-    public void vumark() {
-        RelicRecoveryVuMark vuMark = acquireVuMark(relicTemplate);
-        RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
-        switch (vuMark) {
-            case RelicRecoveryVuMark.LEFT:
-                targetCount = 2;
-                sensed = true;
-                break;
-            case vuMark == RelicRecoveryVuMark.CENTER:
-                targetCount = 3;
-                sensed = true;
-                break;
-            case vuMark == RelicRecoveryVuMark.RIGHT:
-                targetCount = 4;
-                sensed = true;
-                break;
-        }
-
-        while (targetCount > counter) {
-            rightStrafe(leftFront, leftBack, rightFront, rightBack)
-            if (cryptoSensor.blue() > cryptoSensor.red()) {
-                counter ++;
-            }
-        }
-
-        if (targetCount == counter){
-            scoreGlyph(leftIntake, rightIntake);
+        else {
+            ballArm.setPower(0.3);
         }
     }
-    */
 
-    public void scoreGlyph(DcMotor motor1, DcMotor motor2){
-        /* we need to move back a little bit
-         * otherwise the glyph will get stuck
-         */
-        moveBackwards(leftFront, leftBack, rightFront, rightBack);
-        sleep(20);
-
-        //turning stuff
-        int heading = MRGyro.getHeading();
-
-        leftFront.setPower(-0.5);
-        leftBack.setPower(-0.5);
-        rightFront.setPower(-0.5);
-        rightBack.setPower(-0.5);
-
-        if (heading > targetHeadingGlyph - 10 && heading < targetHeadingGlyph + 10) {
-            stopDatMovement(leftFront, leftBack, rightFront, rightBack);
-            motor1.setPower(0.7);
-            motor2.setPower(-0.7);
-        }
-    }
-/*
-    public void moveTest(){
-        moveForward(leftFront, leftBack, rightFront, rightBack);
-        sleep(20);
-        //this target count is for autonomous without vuforia
-        targetCount = 3;
-        while (targetCount > counter) {
-            rightStrafe(leftFront, leftBack, rightFront, rightBack);
-            if (cryptoSensor.blue() > cryptoSensor.red()) {
-                counter ++;
-            }
-        }
-
-        if (targetCount == counter){
-            scoreGlyph(leftIntake, rightIntake);
-        }
-    }
-*/
-    public void moveTestWithout() {
-        //if distance / strafing is off, it's probs the sleep value or the ods.getLightDetected thingy
-        moveForward(leftFront, leftBack, rightFront, rightBack);
-        sleep(20);
-        //this target count is for autonomous without vuforia
-        targetCount = 3;
-        while (targetCount > counter) {
-            rightStrafe(leftFront, leftBack, rightFront, rightBack);
-            if (odsSensor.getLightDetected() > 0.01 && odsSensor.getLightDetected() < 0.2) {
-                counter ++;
-            }
-        }
-
-        if (targetCount == counter){
-            scoreGlyph(leftIntake, rightIntake);
+    public boolean isColor() {
+        if (jewelSensor.blue() > jewelSensor.red()){
+            return true;
+          }
+        else if (jewelSensor.blue() < jewelSensor.red()){
+            return false;
         }
     }
 
