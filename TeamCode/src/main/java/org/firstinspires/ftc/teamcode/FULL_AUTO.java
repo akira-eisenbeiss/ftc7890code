@@ -60,14 +60,13 @@ public class FULL_AUTO extends LinearOpMode {
     ColorSensor jewelSensor; //attached to ballArm
     // ColorSensor cryptoSensor;
     OpticalDistanceSensor odsSensor;
-
-    //booleans
+    //BOOLEANS
     boolean sensed = false;
         /*
         USED TO SEE IF THE BALLARM SHOULD KEEP GOING
         used in[jewel, extendBallArm]
          */
-    //speeds
+    //SPEEDS
     double out = 0.3;
         /*
         THE POWER SET TO MOVE THE BALLARM OUT AND IN
