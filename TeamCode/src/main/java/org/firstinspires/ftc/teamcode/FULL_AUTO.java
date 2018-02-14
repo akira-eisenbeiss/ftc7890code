@@ -58,26 +58,41 @@ public class FULL_AUTO extends LinearOpMode {
     ModernRoboticsI2cGyro MRGyro;
     IntegratingGyroscope gyro;
     ColorSensor jewelSensor; //attached to ballArm
-    // ColorSensor cryptoSensor;
+    ColorSensor cryptoSensor;
     OpticalDistanceSensor odsSensor;
-    //BOOLEANS
+
+    //COUNTERS AND BOOLEANS
     boolean sensed = false;
-        /*
-        USED TO SEE IF THE BALLARM SHOULD KEEP GOING
-        used in[jewel, extendBallArm]
-         */
+    /*
+    USED TO SEE IF THE BALLARM SHOULD KEEP GOING
+    used in[jewel, extendBallArm]
+     */
+    boolean turned = false;
+    /*
+    USED TO MAKE SURE ROBOT CONTINUOSLY TURNS
+    used in [scoreTurning]
+     */
+    int cntr = 0;
+    /*
+    USED TO COUNT THE DIVIDERS THAT WE PASS
+    used in [cryptoCheck, dividerCount]
+     */
+    int targetCount = 3;
+    /*
+    THE DESIRED AMOUNT OF DIVIDERS DETECTED
+    used in [cryptoCheck, dividerCount]
+     */
     //SPEEDS
     double out = 0.3;
-        /*
-        THE POWER SET TO MOVE THE BALLARM OUT AND IN
-        used in[jewel, extendBallArm]
-         */
-
-    int detected = 0;
-    int counter = 1;
-    int targetCount;
-    //int targetCount = 0;
+    /*
+    THE POWER SET TO MOVE THE BALLARM OUT AND IN
+    used in[jewel, extendBallArm]
+     */
     private final static double move = 0.5;
+        /*
+        USED IN MOVEMENT METHODS
+        */
+
     int balanceMove = 250;
     int targetHeadingGlyph = 180;
     int targetHeading = 270;
@@ -90,7 +105,7 @@ public class FULL_AUTO extends LinearOpMode {
     @Override
     public void runOpMode() {
 
-        //motors
+        //MOTORS
         leftFront = hardwareMap.dcMotor.get("left front");
         leftBack = hardwareMap.dcMotor.get("left back");
         rightFront = hardwareMap.dcMotor.get("right front");
@@ -98,18 +113,16 @@ public class FULL_AUTO extends LinearOpMode {
         leftIntake = hardwareMap.dcMotor.get("left intake");
         rightIntake = hardwareMap.dcMotor.get("right intake");
         drawbridge = hardwareMap.dcMotor.get("drawbridge");
-
-        //sensors
+        //SENSORS
         jewelSensor = hardwareMap.colorSensor.get("jewel sensor");
-        //cryptoSensor = hardwareMap.colorSensor.get("crypto sensor");
-
+        cryptoSensor = hardwareMap.colorSensor.get("crypto sensor");
         MRGyro = hardwareMap.get(ModernRoboticsI2cGyro.class, "gyro");
         gyro = (IntegratingGyroscope) MRGyro;
         odsSensor = hardwareMap.opticalDistanceSensor.get("ods");
-        //servos without an 'e'
+        //SERVOS
         ballArm = hardwareMap.crservo.get("ball arm");
 /*
-        //vuforia
+        //VUFORIA
         parameters.vuforiaLicenseKey = "AcoS+YP/////AAAAGTq922ywuU6FquBqcm2CeatGNf2voKamgXI1KwF7yLiQKP+RqBNrI4ND0i98TsuYnBytFG0YYUz2+4wvHBN5pz+/CacheTAG6upbc95Ts0UJgGRg0aTLaVzdYUQUI5dRlAh50DsGYdPkabTZmPO+5EYj79XDDHhok7wTZDb6ZyiCLlzXtM5EZ9nyiWQxz6XJ3M7Q+m4nVuaAdvWN+qwkQsqohSoxB8TNI4dDYlSMQbbO6d3SkCgfXy4K8y/lBNDF8suTeSgNY0YGs/N5FIYTLa+eyu+r3kbf2ig0EsL1Er+AhLZkVDpksvMp+MMBdDVyi6JDjr4E+P2D82ztt8Ex0aoR+h0n4RyRnkS+G4FB4wRD";
         parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
         this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
@@ -122,6 +135,9 @@ public class FULL_AUTO extends LinearOpMode {
 
         while (opModeIsActive()) {
             jewel();
+            dividerCount();
+            scoreTurning();
+            scoreGlyph();
         }
     }
     public void jewel(){
@@ -159,7 +175,6 @@ public class FULL_AUTO extends LinearOpMode {
         else {
             ballArm.setPower(out); //TODO: fix this value!
         }
-
     }
 
     public String isColor(){
@@ -172,9 +187,49 @@ public class FULL_AUTO extends LinearOpMode {
         return "SKIP";
     }
 
-    public static void crypto(){
-
+    //POSITIONS ROBOT AT CIPHER
+    public void dividerCount(){
+        //moving forward so that cryptoSensor can sense cipher
+        moveForward(leftFront, leftBack, rightFront, rightBack);
+        sleep(20);
+        while (targetCount > cntr) {
+            rightStrafe(leftFront, leftBack, rightFront, rightBack);
+            if (cryptoSensor.blue() > cryptoSensor.red()) {
+                counter++;
+                sleep(50);
+                cryptoCheck();
+            }
+        }
     }
+
+    public void cryptoCheck(){
+        if (targetCount == cntr){
+            stopDatMovement(leftFront, leftBack, rightFront, rightBack);
+        }
+    }
+
+    public void scoreTurning() {
+        while (!turned) {
+            int heading = MRGyro.getHeading();
+
+            leftFront.setPower(-0.5);
+            leftBack.setPower(-0.5);
+            rightFront.setPower(-0.5);
+            rightBack.setPower(-0.5);
+
+            if (heading > targetHeadingGlyph - 10 && heading < targetHeadingGlyph + 10) {
+                stopDatMovement(leftFront, leftBack, rightFront, rightBack);
+
+                turned = true;
+            }
+        }
+    }
+
+    public void scoreGlyph(){
+        leftIntake.setPower(0.7);
+        rightIntake.setPower(-0.7);
+    }
+
 
     //methods for basic movements
     public static void stopDatMovement(DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4) {
