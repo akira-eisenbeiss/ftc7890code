@@ -23,7 +23,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AngularVelocity;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
@@ -140,6 +139,7 @@ public class FULL_AUTO extends LinearOpMode {
             scoreGlyph();
         }
     }
+    //HITS JEWEL
     public void jewel(){
         while(!sensed) {
             extendBallArm();
@@ -166,7 +166,6 @@ public class FULL_AUTO extends LinearOpMode {
             }
         }
     }
-
     public void extendBallArm(){
         if(jewelSensor.blue() > jewelSensor.red() || jewelSensor.red() > jewelSensor.blue()){
             ballArm.setPower(0);
@@ -176,7 +175,6 @@ public class FULL_AUTO extends LinearOpMode {
             ballArm.setPower(out); //TODO: fix this value!
         }
     }
-
     public String isColor(){
         if (jewelSensor.blue() > jewelSensor.red())
             return "BLUE";
@@ -184,7 +182,9 @@ public class FULL_AUTO extends LinearOpMode {
         else if (jewelSensor.blue() < jewelSensor.red()){
             return "RED";
         }
-        return "SKIP";
+        else {
+            return "SKIP";
+        }
     }
 
     //POSITIONS ROBOT AT CIPHER
@@ -195,19 +195,18 @@ public class FULL_AUTO extends LinearOpMode {
         while (targetCount > cntr) {
             rightStrafe(leftFront, leftBack, rightFront, rightBack);
             if (cryptoSensor.blue() > cryptoSensor.red()) {
-                counter++;
+                cntr++;
                 sleep(50);
                 cryptoCheck();
             }
         }
     }
-
     public void cryptoCheck(){
         if (targetCount == cntr){
             stopDatMovement(leftFront, leftBack, rightFront, rightBack);
         }
     }
-
+    //TURNS ROBOT AT CIPHER
     public void scoreTurning() {
         while (!turned) {
             int heading = MRGyro.getHeading();
@@ -224,7 +223,7 @@ public class FULL_AUTO extends LinearOpMode {
             }
         }
     }
-
+    //SCORES GLYPH
     public void scoreGlyph(){
         leftIntake.setPower(0.7);
         rightIntake.setPower(-0.7);
@@ -283,5 +282,4 @@ public class FULL_AUTO extends LinearOpMode {
         motor3.setPower(move);
         motor4.setPower(move);
     }
-
 }
