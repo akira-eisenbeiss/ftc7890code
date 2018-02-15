@@ -103,7 +103,6 @@ public class FULL_AUTO extends LinearOpMode {
  */
     @Override
     public void runOpMode() {
-
         //MOTORS
         leftFront = hardwareMap.dcMotor.get("left front");
         leftBack = hardwareMap.dcMotor.get("left back");
@@ -150,6 +149,7 @@ public class FULL_AUTO extends LinearOpMode {
                 sleep(250);
                 stopDatMovement(leftFront, leftBack, rightFront, rightBack);
                 ballArm.setPower(-out);
+                sensed = true;
             }
             else if (isColor().equals("BLUE")) {
                 telemetry.addData("DETECTED COLOR", "BLUE");
@@ -158,27 +158,29 @@ public class FULL_AUTO extends LinearOpMode {
                 sleep(100);
                 stopDatMovement(leftFront, leftBack, rightFront, rightBack);
                 ballArm.setPower(-out);
+                sensed = true;
             }
             else if (isColor().equals("SKIP")){
                 telemetry.addData("DETECTED COLOR", "SKIP");
                 telemetry.update();
                 ballArm.setPower(-out);
+                sensed = true;
             }
         }
     }
     public void extendBallArm(){
         if(jewelSensor.blue() > jewelSensor.red() || jewelSensor.red() > jewelSensor.blue()){
+            //unsure about this logic
             ballArm.setPower(0);
-            sensed = true;
         }
         else {
             ballArm.setPower(out); //TODO: fix this value!
         }
     }
     public String isColor(){
-        if (jewelSensor.blue() > jewelSensor.red())
+        if (jewelSensor.blue() > jewelSensor.red()) {
             return "BLUE";
-
+        }
         else if (jewelSensor.blue() < jewelSensor.red()){
             return "RED";
         }
@@ -218,7 +220,6 @@ public class FULL_AUTO extends LinearOpMode {
 
             if (heading > targetHeadingGlyph - 10 && heading < targetHeadingGlyph + 10) {
                 stopDatMovement(leftFront, leftBack, rightFront, rightBack);
-
                 turned = true;
             }
         }
@@ -228,7 +229,6 @@ public class FULL_AUTO extends LinearOpMode {
         leftIntake.setPower(0.7);
         rightIntake.setPower(-0.7);
     }
-
 
     //methods for basic movements
     public static void stopDatMovement(DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4) {
