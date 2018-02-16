@@ -46,20 +46,15 @@ import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 public class FULL_AUTO extends LinearOpMode {
 
     //MOTORS
-    DcMotor leftFront;
-    DcMotor leftBack;
-    DcMotor rightFront;
-    DcMotor rightBack;
-    DcMotor leftIntake;
-    DcMotor rightIntake;
+    DcMotor leftFront, leftBack, rightFront, rightBack;
+    DcMotor leftIntake, rightIntake;
     DcMotor drawbridge;
     //SERVOS
     CRServo ballArm;
     //SENSORS
     ModernRoboticsI2cGyro MRGyro;
     IntegratingGyroscope gyro;
-    ColorSensor jewelSensor; //attached to ballArm
-    ColorSensor cryptoSensor;
+    ColorSensor jewelSensor, cryptoSensor; //attached to ballArm
     OpticalDistanceSensor odsSensor;
     ModernRoboticsI2cRangeSensor rangeSensor;
     //COUNTERS AND BOOLEANS
@@ -78,6 +73,10 @@ public class FULL_AUTO extends LinearOpMode {
     MAKES SURE JEWEL ARM CONTINUES TO EXTEND UNTIL COLOR IS SENSED
     used in [extendBallArm]
     */
+    boolean scoring = false;
+    /*
+
+     */
     int forwards = 1;
     /*
     USED TO MAKE SURE ROBOT MOVES TO RIGHT DISTANCE FROM WALL
@@ -88,7 +87,7 @@ public class FULL_AUTO extends LinearOpMode {
     USED TO COUNT THE DIVIDERS THAT WE PASS
     used in [cryptoCheck, dividerCount]
      */
-    int targetCount = 3;
+    int targetCount = 2;
     /*
     THE DESIRED AMOUNT OF DIVIDERS DETECTED
     used in [cryptoCheck, dividerCount]
@@ -99,6 +98,8 @@ public class FULL_AUTO extends LinearOpMode {
     THE POWER SET TO MOVE THE BALLARM OUT AND IN
     used in[jewel, extendBallArm]
      */
+    int extendArm = 4750;
+
     private final static double move = 0.4;
         /*
         USED IN MOVEMENT METHODS
@@ -222,39 +223,29 @@ public class FULL_AUTO extends LinearOpMode {
     public void dividerCount(){
         telemetry.addLine("divider count activated");
         telemetry.update();
-        /*
-        while (forwards > 0) {
-            if (rangeSensor.getDistance(DistanceUnit.CM) > 20 && forwards == 2) {
-                //moving forward so that cryptoSensor can sense cipher
-                moveForward(leftFront, leftBack, rightFront, rightBack);
-                telemetry.addLine("moving forward");
-                telemetry.update();
-            }
-            else if (forwards == 1) {
-                rightStrafe(leftFront, leftBack, rightFront, rightBack);
-                sleep(3000);
-                telemetry.addLine("going right to clear balance board");
-                telemetry.update();
-                forwards = 2;
-            }
-            else {
-                stopDatMovement(leftFront, leftBack, rightFront, rightBack);
-                telemetry.addLine("arrived at distance");
-                telemetry.update();
-                forwards = 0;
-            }
-        }
-        */
+        ballArm.setPower(0.5);
+        sleep(extendArm);
         while (targetCount > cntr) {
             rightStrafe(leftFront, leftBack, rightFront, rightBack);
             telemetry.addLine("strafing to cypher");
             telemetry.update();
-            if (cryptoSensor.blue() > cryptoSensor.red()) {
+            if (cntr == 1) {
+                ballArm.setPower(0.5);
+                sleep(extendArm);
+            }
+            else if (jewelSensor.blue() > jewelSensor.red()) {
+                stopDatMovement(leftFront, leftBack, rightFront, rightBack);
+                ballArm.setPower(-0.5);
+                sleep(extendArm);
                 cntr++;
                 sleep(50);
                 cryptoCheck();
             }
         }
+        rightStrafe(leftFront, leftBack, rightFront, rightBack);
+        sleep(3000);
+        telemetry.addLine("got to cypjer");
+        telemetry.update();
     }
     public void cryptoCheck(){
         if (targetCount == cntr){
@@ -286,8 +277,12 @@ public class FULL_AUTO extends LinearOpMode {
     }
     //SCORES GLYPH
     public void scoreGlyph(){
-        leftIntake.setPower(0.7);
-        rightIntake.setPower(-0.7);
+        while(!scoring) {
+            telemetry.addLine("outtaking glyph");
+            telemetry.update();
+            leftIntake.setPower(0.7);
+            rightIntake.setPower(-0.7);
+        }
     }
 
     //methods for basic movements
@@ -298,21 +293,19 @@ public class FULL_AUTO extends LinearOpMode {
         motor4.setPower(0);
     }
 
-    //strafe method. Once again, always put left motors first!!
+    //strafe method
     public void leftStrafe(DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4) {
         motor1.setPower(move);
         motor2.setPower(-move);
         motor3.setPower(move);
         motor4.setPower(-move);
     }
-
     public void rightStrafe(DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4) {
         motor1.setPower(-move);
         motor2.setPower(move);
         motor3.setPower(-move);
         motor4.setPower(move);
     }
-
     //move forward method
     public void moveForward(DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4) {
         motor1.setPower(-move);
@@ -320,22 +313,20 @@ public class FULL_AUTO extends LinearOpMode {
         motor3.setPower(move);
         motor4.setPower(move);
     }
-
-    //move backwards method. Also, always put the left motors first, dumbo
+    //move backwards method
     public void moveBackwards(DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4) {
         motor1.setPower(move);
         motor2.setPower(move);
         motor3.setPower(-move);
         motor4.setPower(-move);
     }
-
+    //rotating methods
     public static void rotateCW(DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4) {
         motor1.setPower(-move);
         motor2.setPower(-move);
         motor3.setPower(-move);
         motor4.setPower(-move);
     }
-
     public static void rotateCCW(DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4) {
         motor1.setPower(move);
         motor2.setPower(move);
