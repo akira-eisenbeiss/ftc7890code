@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
@@ -9,6 +10,7 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -59,7 +61,7 @@ public class FULL_AUTO extends LinearOpMode {
     ColorSensor jewelSensor; //attached to ballArm
     ColorSensor cryptoSensor;
     OpticalDistanceSensor odsSensor;
-
+    ModernRoboticsI2cRangeSensor rangeSensor;
     //COUNTERS AND BOOLEANS
     boolean sensed = false;
     /*
@@ -71,6 +73,16 @@ public class FULL_AUTO extends LinearOpMode {
     USED TO MAKE SURE ROBOT CONTINUOSLY TURNS
     used in [scoreTurning]
      */
+    boolean stopArm = false;
+    /*
+    MAKES SURE JEWEL ARM CONTINUES TO EXTEND UNTIL COLOR IS SENSED
+    used in [extendBallArm]
+    */
+    int forwards = 1;
+    /*
+    USED TO MAKE SURE ROBOT MOVES TO RIGHT DISTANCE FROM WALL
+    used in [dividerCount]
+    */
     int cntr = 0;
     /*
     USED TO COUNT THE DIVIDERS THAT WE PASS
@@ -87,7 +99,7 @@ public class FULL_AUTO extends LinearOpMode {
     THE POWER SET TO MOVE THE BALLARM OUT AND IN
     used in[jewel, extendBallArm]
      */
-    private final static double move = 0.5;
+    private final static double move = 0.4;
         /*
         USED IN MOVEMENT METHODS
         */
@@ -117,6 +129,7 @@ public class FULL_AUTO extends LinearOpMode {
         MRGyro = hardwareMap.get(ModernRoboticsI2cGyro.class, "gyro");
         gyro = (IntegratingGyroscope) MRGyro;
         odsSensor = hardwareMap.opticalDistanceSensor.get("ods");
+        rangeSensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "ultrasound range");
         //SERVOS
         ballArm = hardwareMap.crservo.get("ball arm");
 /*
@@ -136,6 +149,7 @@ public class FULL_AUTO extends LinearOpMode {
             dividerCount();
             scoreTurning();
             scoreGlyph();
+            break;
         }
     }
     //HITS JEWEL
@@ -145,19 +159,23 @@ public class FULL_AUTO extends LinearOpMode {
             if (isColor().equals("RED")){
                 telemetry.addData("DETECTED COLOR", "RED");
                 telemetry.update();
-                leftStrafe(leftFront, leftBack, rightFront, rightBack);
+                rightStrafe(leftFront, leftBack, rightFront, rightBack);
                 sleep(250);
                 stopDatMovement(leftFront, leftBack, rightFront, rightBack);
+                sleep(5000);
                 ballArm.setPower(-out);
+                sleep(1000);
                 sensed = true;
             }
             else if (isColor().equals("BLUE")) {
                 telemetry.addData("DETECTED COLOR", "BLUE");
                 telemetry.update();
-                rightStrafe(leftFront, leftBack, rightFront, rightBack);
-                sleep(100);
+                leftStrafe(leftFront, leftBack, rightFront, rightBack);
+                sleep(250);
                 stopDatMovement(leftFront, leftBack, rightFront, rightBack);
+                sleep(5000);
                 ballArm.setPower(-out);
+                sleep(1000);
                 sensed = true;
             }
             else if (isColor().equals("SKIP")){
@@ -168,34 +186,69 @@ public class FULL_AUTO extends LinearOpMode {
             }
         }
     }
+    //EXTENDS JEWEL ARM UNTIL IT SENSES JEWEL
     public void extendBallArm(){
-        if(jewelSensor.blue() > jewelSensor.red() || jewelSensor.red() > jewelSensor.blue()){
-            //unsure about this logic
-            ballArm.setPower(0);
-        }
-        else {
-            ballArm.setPower(out); //TODO: fix this value!
+        while (!stopArm) {
+            if (jewelSensor.blue() > jewelSensor.red() || jewelSensor.red() > jewelSensor.blue()) {
+                //unsure about this logic
+                ballArm.setPower(0);
+                stopArm = true;
+            } else {
+                ballArm.setPower(out); //TODO: fix this value!
+                telemetry.addLine("extending ball arm");
+                telemetry.update();
+            }
         }
     }
+    //DETECTS COLOR
     public String isColor(){
         if (jewelSensor.blue() > jewelSensor.red()) {
+            telemetry.addLine("DETECTED BLUE");
+            telemetry.update();
             return "BLUE";
         }
         else if (jewelSensor.blue() < jewelSensor.red()){
+            telemetry.addLine("DETECTED RED");
+            telemetry.update();
             return "RED";
         }
         else {
+            telemetry.addLine("DETECTED NOTHING");
+            telemetry.update();
             return "SKIP";
         }
     }
-
     //POSITIONS ROBOT AT CIPHER
     public void dividerCount(){
-        //moving forward so that cryptoSensor can sense cipher
-        moveForward(leftFront, leftBack, rightFront, rightBack);
-        sleep(20);
+        telemetry.addLine("divider count activated");
+        telemetry.update();
+        /*
+        while (forwards > 0) {
+            if (rangeSensor.getDistance(DistanceUnit.CM) > 20 && forwards == 2) {
+                //moving forward so that cryptoSensor can sense cipher
+                moveForward(leftFront, leftBack, rightFront, rightBack);
+                telemetry.addLine("moving forward");
+                telemetry.update();
+            }
+            else if (forwards == 1) {
+                rightStrafe(leftFront, leftBack, rightFront, rightBack);
+                sleep(3000);
+                telemetry.addLine("going right to clear balance board");
+                telemetry.update();
+                forwards = 2;
+            }
+            else {
+                stopDatMovement(leftFront, leftBack, rightFront, rightBack);
+                telemetry.addLine("arrived at distance");
+                telemetry.update();
+                forwards = 0;
+            }
+        }
+        */
         while (targetCount > cntr) {
             rightStrafe(leftFront, leftBack, rightFront, rightBack);
+            telemetry.addLine("strafing to cypher");
+            telemetry.update();
             if (cryptoSensor.blue() > cryptoSensor.red()) {
                 cntr++;
                 sleep(50);
@@ -205,6 +258,8 @@ public class FULL_AUTO extends LinearOpMode {
     }
     public void cryptoCheck(){
         if (targetCount == cntr){
+            telemetry.addLine("at cipher");
+            telemetry.update();
             stopDatMovement(leftFront, leftBack, rightFront, rightBack);
         }
     }
@@ -217,10 +272,15 @@ public class FULL_AUTO extends LinearOpMode {
             leftBack.setPower(-0.5);
             rightFront.setPower(-0.5);
             rightBack.setPower(-0.5);
+            telemetry.addLine("turning");
+            telemetry.update();
 
             if (heading > targetHeadingGlyph - 10 && heading < targetHeadingGlyph + 10) {
                 stopDatMovement(leftFront, leftBack, rightFront, rightBack);
                 turned = true;
+                telemetry.addLine("turned and ready");
+                telemetry.update();
+                sleep(1000);
             }
         }
     }
@@ -239,14 +299,14 @@ public class FULL_AUTO extends LinearOpMode {
     }
 
     //strafe method. Once again, always put left motors first!!
-    public static void leftStrafe(DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4) {
+    public void leftStrafe(DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4) {
         motor1.setPower(move);
         motor2.setPower(-move);
         motor3.setPower(move);
         motor4.setPower(-move);
     }
 
-    public static void rightStrafe(DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4) {
+    public void rightStrafe(DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4) {
         motor1.setPower(-move);
         motor2.setPower(move);
         motor3.setPower(-move);
@@ -254,7 +314,7 @@ public class FULL_AUTO extends LinearOpMode {
     }
 
     //move forward method
-    public static void moveForward(DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4) {
+    public void moveForward(DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4) {
         motor1.setPower(-move);
         motor2.setPower(-move);
         motor3.setPower(move);
@@ -262,7 +322,7 @@ public class FULL_AUTO extends LinearOpMode {
     }
 
     //move backwards method. Also, always put the left motors first, dumbo
-    public static void moveBackwards(DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4) {
+    public void moveBackwards(DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4) {
         motor1.setPower(move);
         motor2.setPower(move);
         motor3.setPower(-move);
