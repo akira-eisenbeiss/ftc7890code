@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
-@TeleOp(name="complete tele op3", group="Tele Op")
+@TeleOp(name="FULL TELEOP FINAL", group="Tele Op")
 public class FULL_TELEOP extends OpMode {
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -29,8 +29,12 @@ public class FULL_TELEOP extends OpMode {
     private DcMotor.Direction LEFTDIRECTION = DcMotor.Direction.REVERSE;
     private DcMotor.Direction RIGHTDIRECTION = DcMotor.Direction.FORWARD;
 
+    //SERVOS (only really used to make sure we can fix autonomous-generated problems)
+    CRServo ballArm;
+
     @Override
     public void init() {
+
         //HARDWARE MAP
         leftFront = hardwareMap.dcMotor.get("left front");
         leftBack = hardwareMap.dcMotor.get("left back");
@@ -39,6 +43,7 @@ public class FULL_TELEOP extends OpMode {
         leftIntake = hardwareMap.dcMotor.get("left intake");
         rightIntake = hardwareMap.dcMotor.get("right intake");
         drawbridge = hardwareMap.dcMotor.get("drawbridge");
+        ballArm = hardwareMap.crservo.get("ball arm");
 
         //SETTING DIRECTIONS
         leftFront.setDirection(LEFTDIRECTION);
@@ -80,8 +85,13 @@ public class FULL_TELEOP extends OpMode {
         rightBack.setPower(rbDrive);
 
         //DRAWBRIDGE
-        float leftStick2 = gamepad2.left_stick_y;
-        drawbridge.setPower(leftStick2/4);
+        float dbSpeed = gamepad2.left_stick_y / 3;
+        float dbSpeedSlow = gamepad2.left_stick_y / 6;
+
+        if (gamepad2.right_trigger >= 0.3){
+            drawbridge.setPower(dbSpeed);
+        }
+        drawbridge.setPower(dbSpeedSlow);
 
         //INTAKE CODE
         boolean gamepad2A = gamepad2.a;
@@ -100,6 +110,17 @@ public class FULL_TELEOP extends OpMode {
             leftIntake.setPower(0);
             rightIntake.setPower(0);
             intakePower = 0;
+        }
+
+        //SAFETY CODE FOR BALLARM
+        if (gamepad2.left_trigger > 0.6){
+            ballArm.setPower(-0.6);
+            /*
+            This code is so that if our autonomous breaks
+            and our ballArm is stuck outwards, we can
+            pull it back in without touching the robot
+            and getting penalties.
+             */
         }
 
         // TELEMETRY
