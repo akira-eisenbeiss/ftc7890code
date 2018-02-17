@@ -85,8 +85,8 @@ public class FULL_TELEOP extends OpMode {
         rightBack.setPower(rbDrive);
 
         //DRAWBRIDGE
-        float dbSpeed = gamepad2.left_stick_y / 3;
-        float dbSpeedSlow = gamepad2.left_stick_y / 6;
+        float dbSpeed = gamepad2.left_stick_y / 2;
+        float dbSpeedSlow = gamepad2.left_stick_y / 4;
 
         if (gamepad2.right_trigger >= 0.3){
             drawbridge.setPower(dbSpeed);
