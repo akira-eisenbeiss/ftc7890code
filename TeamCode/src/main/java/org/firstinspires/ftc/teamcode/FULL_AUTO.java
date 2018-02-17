@@ -160,7 +160,7 @@ public class FULL_AUTO extends LinearOpMode {
             if (isColor().equals("RED")){
                 telemetry.addData("DETECTED COLOR", "RED");
                 telemetry.update();
-                rightStrafe(leftFront, leftBack, rightFront, rightBack);
+                leftStrafe(leftFront, leftBack, rightFront, rightBack);
                 sleep(250);
                 stopDatMovement(leftFront, leftBack, rightFront, rightBack);
                 sleep(5000);
@@ -171,7 +171,7 @@ public class FULL_AUTO extends LinearOpMode {
             else if (isColor().equals("BLUE")) {
                 telemetry.addData("DETECTED COLOR", "BLUE");
                 telemetry.update();
-                leftStrafe(leftFront, leftBack, rightFront, rightBack);
+                rightStrafe(leftFront, leftBack, rightFront, rightBack);
                 sleep(250);
                 stopDatMovement(leftFront, leftBack, rightFront, rightBack);
                 sleep(5000);
@@ -190,7 +190,7 @@ public class FULL_AUTO extends LinearOpMode {
     //EXTENDS JEWEL ARM UNTIL IT SENSES JEWEL
     public void extendBallArm(){
         while (!stopArm) {
-            if (jewelSensor.blue() > jewelSensor.red() || jewelSensor.red() > jewelSensor.blue()) {
+            if (jewelSensor.blue() > jewelSensor.red() || jewelSensor.red() > jewelSensor.blue() || cryptoSensor.red() > cryptoSensor.blue() || cryptoSensor.blue() > cryptoSensor.red() ) {
                 //unsure about this logic
                 ballArm.setPower(0);
                 stopArm = true;
@@ -213,6 +213,16 @@ public class FULL_AUTO extends LinearOpMode {
             telemetry.update();
             return "RED";
         }
+        else if (cryptoSensor.blue() < cryptoSensor.red()) {
+            telemetry.addLine("DETECTED RED");
+            telemetry.update();
+            return "RED";
+        }
+        else if (cryptoSensor.blue() > cryptoSensor.red()) {
+            telemetry.addLine("DETECTED BLUE");
+            telemetry.update();
+            return "BLUE";
+        }
         else {
             telemetry.addLine("DETECTED NOTHING");
             telemetry.update();
@@ -223,6 +233,7 @@ public class FULL_AUTO extends LinearOpMode {
     public void dividerCount(){
         telemetry.addLine("divider count activated");
         telemetry.update();
+        stopDatMovement(leftFront, leftBack, rightFront, rightBack);
         ballArm.setPower(0.5);
         sleep(extendArm);
         while (targetCount > cntr) {
@@ -230,10 +241,11 @@ public class FULL_AUTO extends LinearOpMode {
             telemetry.addLine("strafing to cypher");
             telemetry.update();
             if (cntr == 1) {
+                stopDatMovement(leftFront, leftBack, rightFront, rightBack);
                 ballArm.setPower(0.5);
                 sleep(extendArm);
             }
-            else if (jewelSensor.blue() > jewelSensor.red()) {
+            else if (cryptoSensor.blue() > cryptoSensor.red()) {
                 stopDatMovement(leftFront, leftBack, rightFront, rightBack);
                 ballArm.setPower(-0.5);
                 sleep(extendArm);
@@ -251,6 +263,8 @@ public class FULL_AUTO extends LinearOpMode {
         if (targetCount == cntr){
             telemetry.addLine("at cipher");
             telemetry.update();
+            ballArm.setPower(-0.5);
+            sleep(extendArm);
             stopDatMovement(leftFront, leftBack, rightFront, rightBack);
         }
     }
