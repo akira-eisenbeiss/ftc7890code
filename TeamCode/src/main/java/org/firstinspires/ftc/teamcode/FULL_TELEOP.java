@@ -62,13 +62,11 @@ public class FULL_TELEOP extends OpMode {
 
         //CONTROL INVERSION
         float rightTrigger1 = gamepad1.right_trigger;
-        if (rightTrigger1 <= 0.4){
+        if (rightTrigger1 <= 0.4) {
             drive = gamepad1.left_stick_y;
             turn = gamepad1.right_stick_x;
             strafe = gamepad1.left_stick_x;
-        }
-
-        else {
+        } else {
             drive = -gamepad1.left_stick_y;
             turn = gamepad1.right_stick_x;
             strafe = -gamepad1.left_stick_x;
@@ -88,7 +86,7 @@ public class FULL_TELEOP extends OpMode {
         float dbSpeed = gamepad2.left_stick_y / 3;
         float dbSpeedSlow = gamepad2.left_stick_y / 6;
 
-        if (gamepad2.right_trigger >= 0.3){
+        if (gamepad2.right_trigger >= 0.3) {
             drawbridge.setPower(dbSpeed);
         }
         drawbridge.setPower(dbSpeedSlow);
@@ -113,7 +111,7 @@ public class FULL_TELEOP extends OpMode {
         }
 
         //SAFETY CODE FOR BALLARM
-        if (gamepad2.left_trigger > 0.6){
+        if (gamepad2.left_trigger > 0.6) {
             ballArm.setPower(-0.6);
             /*
             This code is so that if our autonomous breaks
@@ -121,6 +119,8 @@ public class FULL_TELEOP extends OpMode {
             pull it back in without touching the robot
             and getting penalties.
              */
+        } else {
+            ballArm.setPower(0);
         }
 
         // TELEMETRY

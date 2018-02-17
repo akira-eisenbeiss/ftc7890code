@@ -19,27 +19,9 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gyroscope;
 import com.qualcomm.robotcore.hardware.IntegratingGyroscope;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
-/*
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AngularVelocity;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.ClassFactory;
-import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
-import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
-import org.firstinspires.ftc.robotcore.external.navigation.VuMarkInstanceId;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
-*/
 import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
+
+import java.util.zip.Adler32;
 
 
 @Autonomous(name="FULL AUTO FINAL", group="LinearOpMode")
@@ -112,15 +94,9 @@ public class FULL_AUTO extends LinearOpMode {
     int targetHeadingGlyph = 180;
     int targetHeading = 270;
 
-    //VUFORIA
-    /* VuforiaLocalizer.Parameters parameters;
-     VuforiaLocalizer vuforia;
-     VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
-     VuforiaTrackable relicTemplate = relicTrackables.get(0);
-    */
-
     @Override
     public void runOpMode() {
+
         //MOTORS
         leftFront = hardwareMap.dcMotor.get("left front");
         leftBack = hardwareMap.dcMotor.get("left back");
@@ -129,6 +105,7 @@ public class FULL_AUTO extends LinearOpMode {
         leftIntake = hardwareMap.dcMotor.get("left intake");
         rightIntake = hardwareMap.dcMotor.get("right intake");
         drawbridge = hardwareMap.dcMotor.get("drawbridge");
+
         //SENSORS
         jewelSensorL = hardwareMap.colorSensor.get("jewel sensor L");
         jewelSensorR = hardwareMap.colorSensor.get("jewel sensor R");
@@ -136,176 +113,165 @@ public class FULL_AUTO extends LinearOpMode {
         gyro = (IntegratingGyroscope) MRGyro;
         odsSensor = hardwareMap.opticalDistanceSensor.get("ods");
         rangeSensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "ultrasound range");
+
         //SERVOS
         ballArm = hardwareMap.crservo.get("ball arm");
 
-        /*
-        //VUFORIA
-        parameters.vuforiaLicenseKey = "AcoS+YP/////AAAAGTq922ywuU6FquBqcm2CeatGNf2voKamgXI1KwF7yLiQKP+RqBNrI4ND0i98TsuYnBytFG0YYUz2+4wvHBN5pz+/CacheTAG6upbc95Ts0UJgGRg0aTLaVzdYUQUI5dRlAh50DsGYdPkabTZmPO+5EYj79XDDHhok7wTZDb6ZyiCLlzXtM5EZ9nyiWQxz6XJ3M7Q+m4nVuaAdvWN+qwkQsqohSoxB8TNI4dDYlSMQbbO6d3SkCgfXy4K8y/lBNDF8suTeSgNY0YGs/N5FIYTLa+eyu+r3kbf2ig0EsL1Er+AhLZkVDpksvMp+MMBdDVyi6JDjr4E+P2D82ztt8Ex0aoR+h0n4RyRnkS+G4FB4wRD";
-        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
-        this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
-        */
-        // relicTemplate.setName("relicVuMarkTemplate");
-
         waitForStart();
-
-        // relicTrackables.activate();
 
         jewel();
         dividerCount();
         scoreTurning();
         scoreGlyph();
-
+        extendBallArm();
     }
     //KNOCKS OFF THE CORRECT JEWEL
     public void jewel(){
-        if (opModeIsActive()) {
-            while(!sensed) {
-                extendBallArm();
-                if (isColor().equals("RED")){
-                    telemetry.addData("DETECTED COLOR", "RED");
-                    telemetry.update();
-                    leftStrafe(leftFront, leftBack, rightFront, rightBack);
-                    sleep(250);
-                    stopDatMovement(leftFront, leftBack, rightFront, rightBack);
-                    sleep(5000);
-                    ballArm.setPower(-out);
-                    sleep(1000);
-                    sensed = true;
-                }
-                else if (isColor().equals("BLUE")) {
-                    telemetry.addData("DETECTED COLOR", "BLUE");
-                    telemetry.update();
-                    rightStrafe(leftFront, leftBack, rightFront, rightBack);
-                    sleep(250);
-                    stopDatMovement(leftFront, leftBack, rightFront, rightBack);
-                    sleep(5000);
-                    ballArm.setPower(-out);
-                    sleep(1000);
-                    sensed = true;
-                }
-                else if (isColor().equals("SKIP")){
-                    telemetry.addData("DETECTED COLOR", "SKIP");
-                    telemetry.update();
-                    ballArm.setPower(-out);
-                    sensed = true;
-                }
+        while(!sensed) {
+            extendBallArm();
+            String color = isColor();
+            if (color.equals("RED")){
+                telemetry.addData("DETECTED COLOR", "RED");
+                telemetry.update();
+                leftStrafe(leftFront, leftBack, rightFront, rightBack);
+                sleep(250);
+                stopDatMovement(leftFront, leftBack, rightFront, rightBack);
+                sleep(5000);
+                ballArm.setPower(-out);
+                sleep(1000);
+                sensed = true;
+                break;
+            }
+            else if (color.equals("BLUE")) {
+                telemetry.addData("DETECTED COLOR", "BLUE");
+                telemetry.update();
+                rightStrafe(leftFront, leftBack, rightFront, rightBack);
+                sleep(250);
+                stopDatMovement(leftFront, leftBack, rightFront, rightBack);
+                sleep(5000);
+                ballArm.setPower(-out);
+                sleep(1000);
+                sensed = true;
+                break;
+            }
+            else if (color.equals("SKIP")){
+                telemetry.addData("DETECTED COLOR", "SKIP");
+                telemetry.update();
+                ballArm.setPower(-out);
+                sensed = true;
+                break;
+            }
+            else{
+                telemetry.addData("DETECTED COLOR", "NONE");
+                telemetry.update();
+                //This shouldn't happen...
             }
         }
     }
+
     //EXTENDS JEWEL ARM UNTIL IT SENSES JEWEL
     public void extendBallArm(){
-        if(opModeIsActive()) {
-            while (!stopArm) {
-                if (jewelSensorL.blue() > jewelSensorL.red() || jewelSensorL.red() > jewelSensorL.blue() || jewelSensorR.red() > jewelSensorR.blue() || jewelSensorR.blue() > jewelSensorR.red() ) {
-                    ballArm.setPower(0);
-                    stopArm = true;
-                } else {
-                    ballArm.setPower(out); //TODO: fix this value!
-                    telemetry.addLine("extending ball arm");
-                    telemetry.update();
-                }
+        while (!stopArm) {
+            if (jewelSensorL.blue() > jewelSensorL.red() || jewelSensorL.red() > jewelSensorL.blue() || jewelSensorR.red() > jewelSensorR.blue() || jewelSensorR.blue() > jewelSensorR.red() ) {
+                ballArm.setPower(0);
+                stopArm = true;
+                break;
+            } else {
+                ballArm.setPower(out); //TODO: fix this value!
+                telemetry.addLine("extending ball arm");
+                telemetry.update();
             }
         }
     }
+
     //DETECTS COLOR
     String colorDetected;
     public String isColor(){
-        if (opModeIsActive()) {
-            if (jewelSensorL.blue() > jewelSensorL.red() || jewelSensorR.blue() > jewelSensorR.red()) {
-                telemetry.addLine("DETECTED BLUE");
-                telemetry.update();
-                colorDetected = "BLUE";
-            }
-            else if (jewelSensorL.blue() < jewelSensorL.red() ||jewelSensorR.blue() < jewelSensorR.red()){
-                telemetry.addLine("DETECTED RED");
-                telemetry.update();
-                colorDetected = "RED";
-            }
-            else {
-                telemetry.addLine("DETECTED NOTHING");
-                telemetry.update();
-                return "SKIP";
-            }
+        if (jewelSensorL.blue() > jewelSensorL.red() || jewelSensorR.blue() > jewelSensorR.red()) {
+            telemetry.addLine("DETECTED BLUE");
+            telemetry.update();
+            colorDetected = "BLUE";
+        }
+        else if (jewelSensorL.blue() < jewelSensorL.red() ||jewelSensorR.blue() < jewelSensorR.red()){
+            telemetry.addLine("DETECTED RED");
+            telemetry.update();
+            colorDetected = "RED";
+        }
+        else {
+            telemetry.addLine("DETECTED NOTHING");
+            telemetry.update();
+            colorDetected = "SKIP";
         }
         return colorDetected;
     }
     //POSITIONS ROBOT AT CIPHER
     public void dividerCount(){
-        if (opModeIsActive()) {
-            telemetry.addLine("divider count activated");
-            telemetry.update();
-            stopDatMovement(leftFront, leftBack, rightFront, rightBack);
-            ballArm.setPower(0.5);
-            sleep(extendArm);
-            while (targetCount > cntr) {
-                rightStrafe(leftFront, leftBack, rightFront, rightBack);
-                telemetry.addLine("strafing to cypher");
-                telemetry.update();
-                if (cntr == 1) {
-                    stopDatMovement(leftFront, leftBack, rightFront, rightBack);
-                    ballArm.setPower(0.5);
-                    sleep(extendArm);
-                }
-                else if (jewelSensorR.blue() > jewelSensorR.red()) {
-                    stopDatMovement(leftFront, leftBack, rightFront, rightBack);
-                    ballArm.setPower(-0.5);
-                    sleep(extendArm);
-                    cntr++;
-                    sleep(50);
-                    cryptoCheck();
-                }
-            }
+        telemetry.addLine("divider count activated");
+        telemetry.update();
+        stopDatMovement(leftFront, leftBack, rightFront, rightBack);
+        ballArm.setPower(0.5);
+        sleep(extendArm);
+        while (targetCount > cntr) {
             rightStrafe(leftFront, leftBack, rightFront, rightBack);
-            sleep(3000);
-            telemetry.addLine("got to cypjer");
+            telemetry.addLine("strafing to cypher");
             telemetry.update();
+            if (cntr == 1) {
+                stopDatMovement(leftFront, leftBack, rightFront, rightBack);
+                ballArm.setPower(0.5);
+                sleep(extendArm);
+            }
+            else if (jewelSensorR.blue() > jewelSensorR.red()) {
+                stopDatMovement(leftFront, leftBack, rightFront, rightBack);
+                ballArm.setPower(-0.5);
+                sleep(extendArm);
+                cntr++;
+                sleep(50);
+                cryptoCheck();
+            }
         }
+        rightStrafe(leftFront, leftBack, rightFront, rightBack);
+        sleep(3000);
+        telemetry.addLine("got to cypjer");
+        telemetry.update();
     }
     //DETERMINES POSITION CRYPTOBOX
     public void cryptoCheck(){
-        if (opModeIsActive()) {
-            if (targetCount == cntr){
-                telemetry.addLine("at cipher");
-                telemetry.update();
-                ballArm.setPower(-0.5);
-                sleep(extendArm);
-                stopDatMovement(leftFront, leftBack, rightFront, rightBack);
-            }
+        if (targetCount == cntr){
+            telemetry.addLine("at cipher");
+            telemetry.update();
+            ballArm.setPower(-0.5);
+            sleep(extendArm);
+            stopDatMovement(leftFront, leftBack, rightFront, rightBack);
         }
     }
     //TURNS ROBOT AT CIPHER
     public void scoreTurning() {
-        if (opModeIsActive()) {
-            while (!turned) {
-                int heading = MRGyro.getHeading();
+        while (!turned) {
+            int heading = MRGyro.getHeading();
 
-                leftFront.setPower(-0.5);
-                leftBack.setPower(-0.5);
-                rightFront.setPower(-0.5);
-                rightBack.setPower(-0.5);
-                telemetry.addLine("turning");
+            leftFront.setPower(-0.5);
+            leftBack.setPower(-0.5);
+            rightFront.setPower(-0.5);
+            rightBack.setPower(-0.5);
+            telemetry.addLine("turning");
+            telemetry.update();
+
+            if (heading > targetHeadingGlyph - 10 && heading < targetHeadingGlyph + 10) {
+                stopDatMovement(leftFront, leftBack, rightFront, rightBack);
+                turned = true;
+                telemetry.addLine("turned and ready");
                 telemetry.update();
-
-                if (heading > targetHeadingGlyph - 10 && heading < targetHeadingGlyph + 10) {
-                    stopDatMovement(leftFront, leftBack, rightFront, rightBack);
-                    turned = true;
-                    telemetry.addLine("turned and ready");
-                    telemetry.update();
-                    sleep(1000);
-                }
+                sleep(1000);
             }
         }
     }
     //SCORES GLYPH
     public void scoreGlyph(){
-        if (opModeIsActive()) {
-            while(!scoring) {
-                telemetry.addLine("outtaking glyph");
-                telemetry.update();
-                leftIntake.setPower(0.7);
-                rightIntake.setPower(-0.7);
-            }
+        while(!scoring) {
+            telemetry.addLine("outtaking glyph");
+            telemetry.update();
+            leftIntake.setPower(0.7);
+            rightIntake.setPower(-0.7);
         }
     }
 
