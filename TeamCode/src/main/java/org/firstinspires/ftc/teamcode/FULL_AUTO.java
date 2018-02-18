@@ -95,7 +95,7 @@ public class FULL_AUTO extends LinearOpMode {
     int targetHeading = 270;
 
     @Override
-    public void runOpMode() {
+    public void runOpMode() throws InterruptedException{
 
         //MOTORS
         leftFront = hardwareMap.dcMotor.get("left front");

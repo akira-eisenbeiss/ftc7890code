@@ -22,8 +22,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 
 
-@Autonomous(name="FULL AUTO FINAL", group="LinearOpMode")
-public class FULL_AUTO extends LinearOpMode {
+@Autonomous(name="jeweltestttterinoos", group="LinearOpMode")
+public class JewelBlue extends LinearOpMode {
 
     //MOTORS
     DcMotor leftFront, leftBack, rightFront, rightBack;
@@ -128,10 +128,12 @@ public class FULL_AUTO extends LinearOpMode {
             if (jewelSensorL.red() > jewelSensorL.blue() || jewelSensorR.blue() < jewelSensorR.red()) {
                 leftStrafe(leftFront, leftBack, rightFront, rightBack);
                 sleep(250);
+                ballArm.setPower(-out);
                 break;
             } else if (jewelSensorL.red() < jewelSensorR.blue() || jewelSensorR.blue() < jewelSensorR.red()) {
                 rightStrafe(leftFront, leftBack, rightFront, rightBack);
                 sleep(250);
+                ballArm.setPower(-out);
                 break;
             }
         }
