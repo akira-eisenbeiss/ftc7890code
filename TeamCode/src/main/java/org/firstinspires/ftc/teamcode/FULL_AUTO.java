@@ -74,7 +74,6 @@ public class FULL_AUTO extends LinearOpMode {
     */
     boolean scoring = false;
     /*
-
      */
     int forwards = 1;
     /*
@@ -161,7 +160,7 @@ public class FULL_AUTO extends LinearOpMode {
 
     //KNOCKS OFF THE CORRECT JEWEL
     public void jewel(){
-        while(!sensed) {
+        while(!sensed && opModeIsActive()) {
             extendBallArm();
             String color = isColor();
             if (color.equals("RED")){
@@ -205,7 +204,7 @@ public class FULL_AUTO extends LinearOpMode {
 
     //EXTENDS JEWEL ARM UNTIL IT SENSES JEWEL
     public void extendBallArm(){
-        while (!stopArm) {
+        while (!stopArm && opModeIsActive()) {
             if (jewelSensorL.blue() > jewelSensorL.red() || jewelSensorL.red() > jewelSensorL.blue() || jewelSensorR.red() > jewelSensorR.blue() || jewelSensorR.blue() > jewelSensorR.red() ) {
                 ballArm.setPower(0);
                 stopArm = true;
@@ -245,7 +244,7 @@ public class FULL_AUTO extends LinearOpMode {
         stopDatMovement(leftFront, leftBack, rightFront, rightBack);
         ballArm.setPower(0.5);
         sleep(extendArm);
-        while (targetCount > cntr) {
+        while (targetCount > cntr && opModeIsActive()) {
             rightStrafe(leftFront, leftBack, rightFront, rightBack);
             telemetry.addLine("strafing to cypher");
             telemetry.update();
@@ -268,7 +267,7 @@ public class FULL_AUTO extends LinearOpMode {
     }
     //TURNS ROBOT AT CIPHER
     public void scoreTurning() {
-        while (!turned) {
+        while (!turned && opModeIsActive()) {
             int heading = MRGyro.getHeading();
 
             leftFront.setPower(-0.5);
@@ -289,7 +288,7 @@ public class FULL_AUTO extends LinearOpMode {
     }
     //SCORES GLYPH
     public void scoreGlyph(){
-        while(!scoring) {
+        while(!scoring && opModeIsActive()) {
             telemetry.addLine("outtaking glyph");
             telemetry.update();
             leftIntake.setPower(0.7);
@@ -311,7 +310,7 @@ public class FULL_AUTO extends LinearOpMode {
         relicTrackables.activate();
         boolean detectedPicto = false;
         RelicRecoveryVuMark vuMark;
-        while(detectedPicto == false) {
+        while(detectedPicto == false && opModeIsActive()) {
             vuMark = RelicRecoveryVuMark.from(relicTemplate);
             telemetry.addData("VuMark", "%s visible", vuMark);
             if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
