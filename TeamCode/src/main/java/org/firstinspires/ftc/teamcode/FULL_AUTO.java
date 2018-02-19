@@ -60,7 +60,6 @@ public class FULL_AUTO extends LinearOpMode {
     */
     boolean scoring = false;
     /*
-
      */
     int forwards = 1;
     /*
@@ -95,7 +94,7 @@ public class FULL_AUTO extends LinearOpMode {
     int targetHeading = 270;
 
     @Override
-    public void runOpMode() throws InterruptedException{
+    public void runOpMode() throws InterruptedException {
 
         //MOTORS
         leftFront = hardwareMap.dcMotor.get("left front");
@@ -125,9 +124,11 @@ public class FULL_AUTO extends LinearOpMode {
         scoreGlyph();
         extendBallArm();
     }
+
+
     //KNOCKS OFF THE CORRECT JEWEL
     public void jewel(){
-        while(!sensed) {
+        while(sensed == false && opModeIsActive()) {
             extendBallArm();
             String color = isColor();
             if (color.equals("RED")){
@@ -171,7 +172,7 @@ public class FULL_AUTO extends LinearOpMode {
 
     //EXTENDS JEWEL ARM UNTIL IT SENSES JEWEL
     public void extendBallArm(){
-        while (!stopArm) {
+        while (stopArm == false && opModeIsActive()) {
             if (jewelSensorL.blue() > jewelSensorL.red() || jewelSensorL.red() > jewelSensorL.blue() || jewelSensorR.red() > jewelSensorR.blue() || jewelSensorR.blue() > jewelSensorR.red() ) {
                 ballArm.setPower(0);
                 stopArm = true;
@@ -209,6 +210,7 @@ public class FULL_AUTO extends LinearOpMode {
         telemetry.addLine("divider count activated");
         telemetry.update();
         stopDatMovement(leftFront, leftBack, rightFront, rightBack);
+        sleep(5000);
         ballArm.setPower(0.5);
         sleep(extendArm);
         while (targetCount > cntr) {
@@ -231,8 +233,9 @@ public class FULL_AUTO extends LinearOpMode {
         }
         rightStrafe(leftFront, leftBack, rightFront, rightBack);
         sleep(3000);
-        telemetry.addLine("got to cypjer");
+        telemetry.addLine("got to cypher");
         telemetry.update();
+
     }
     //DETERMINES POSITION CRYPTOBOX
     public void cryptoCheck(){
@@ -246,7 +249,7 @@ public class FULL_AUTO extends LinearOpMode {
     }
     //TURNS ROBOT AT CIPHER
     public void scoreTurning() {
-        while (!turned) {
+        while (turned == false && opModeIsActive()) {
             int heading = MRGyro.getHeading();
 
             leftFront.setPower(-0.5);
@@ -262,6 +265,7 @@ public class FULL_AUTO extends LinearOpMode {
                 telemetry.addLine("turned and ready");
                 telemetry.update();
                 sleep(1000);
+                break;
             }
         }
     }
@@ -272,6 +276,7 @@ public class FULL_AUTO extends LinearOpMode {
             telemetry.update();
             leftIntake.setPower(0.7);
             rightIntake.setPower(-0.7);
+            break;
         }
     }
 
