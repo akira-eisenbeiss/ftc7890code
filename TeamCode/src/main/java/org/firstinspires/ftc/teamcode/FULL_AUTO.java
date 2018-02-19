@@ -86,7 +86,7 @@ public class FULL_AUTO extends LinearOpMode {
     USED TO COUNT THE DIVIDERS THAT WE PASS
     used in [cryptoCheck, dividerCount]
      */
-    int targetCount = 2;
+    int targetCount;
     /*
     THE DESIRED AMOUNT OF DIVIDERS DETECTED
     used in [cryptoCheck, dividerCount]
@@ -157,7 +157,6 @@ public class FULL_AUTO extends LinearOpMode {
         vuMark();
         dividerCount();
         scoreTurning();
-        scoreGlyph();
     }
 
     //KNOCKS OFF THE CORRECT JEWEL
@@ -250,25 +249,13 @@ public class FULL_AUTO extends LinearOpMode {
             rightStrafe(leftFront, leftBack, rightFront, rightBack);
             telemetry.addLine("strafing to cypher");
             telemetry.update();
-            if (cntr == 1) {
-                stopDatMovement(leftFront, leftBack, rightFront, rightBack);
-                ballArm.setPower(0.5);
-                sleep(extendArm);
-            }
-            else if (jewelSensorR.blue() > jewelSensorR.red()) {
-                stopDatMovement(leftFront, leftBack, rightFront, rightBack);
-                ballArm.setPower(-0.5);
-                sleep(extendArm);
-                cntr++;
-                sleep(50);
-                cryptoCheck();
-            }
         }
-        rightStrafe(leftFront, leftBack, rightFront, rightBack);
-        sleep(3000);
-        telemetry.addLine("got to cypjer");
-        telemetry.update();
+        if (cntr == targetCount) {
+            stopDatMovement(leftFront, leftBack, rightFront, rightBack);
+            scoreGlyph();
+        }
     }
+
     //DETERMINES POSITION CRYPTOBOX
     public void cryptoCheck(){
         if (targetCount == cntr){
@@ -332,6 +319,15 @@ public class FULL_AUTO extends LinearOpMode {
                 stopDatMovement(leftFront,leftBack,rightFront,rightBack);
                 telemetry.addData("Vuforia", vuMark);
 
+                //CHANGING TARGET COUNT
+                if (vuMark == RelicRecoveryVuMark.LEFT)
+                    targetCount = 4;
+                else if(vuMark == RelicRecoveryVuMark.CENTER)
+                    targetCount = 3;
+                else if(vuMark == RelicRecoveryVuMark.RIGHT)
+                    targetCount = 4;
+                else if(vuMark == RelicRecoveryVuMark.UNKNOWN)
+                    targetCount = 3;
             }
             else {
                 telemetry.addData("Vuforia", "NOT DETECTED");
