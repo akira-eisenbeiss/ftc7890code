@@ -321,13 +321,13 @@ public class FULL_AUTO extends LinearOpMode {
 
                 //CHANGING TARGET COUNT
                 if (vuMark == RelicRecoveryVuMark.LEFT)
-                    targetCount = 4;
+                    targetCount = 1;
                 else if(vuMark == RelicRecoveryVuMark.CENTER)
-                    targetCount = 3;
+                    targetCount = 2;
                 else if(vuMark == RelicRecoveryVuMark.RIGHT)
-                    targetCount = 4;
-                else if(vuMark == RelicRecoveryVuMark.UNKNOWN)
                     targetCount = 3;
+                else if(vuMark == RelicRecoveryVuMark.UNKNOWN)
+                    targetCount = 2;
             }
             else {
                 telemetry.addData("Vuforia", "NOT DETECTED");
