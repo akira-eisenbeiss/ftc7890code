@@ -21,11 +21,25 @@ import com.qualcomm.robotcore.hardware.IntegratingGyroscope;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 
-import java.util.zip.Adler32;
-
+import java.util.Locale;
+import org.firstinspires.ftc.robotcontroller.external.samples.ConceptVuforiaNavigation;
+import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
+import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
+import org.firstinspires.ftc.robotcore.external.navigation.VuMarkInstanceId;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 @Autonomous(name="FULL AUTO FINAL", group="LinearOpMode")
 public class FULL_AUTO extends LinearOpMode {
+    private ElapsedTime     runtime = new ElapsedTime();
 
     //MOTORS
     DcMotor leftFront, leftBack, rightFront, rightBack;
@@ -60,6 +74,7 @@ public class FULL_AUTO extends LinearOpMode {
     */
     boolean scoring = false;
     /*
+
      */
     int forwards = 1;
     /*
@@ -83,18 +98,35 @@ public class FULL_AUTO extends LinearOpMode {
     used in[jewel, extendBallArm]
      */
     int extendArm = 4750;
-
+    /*
+    THE DURATION OF THE BALLARM EXTENDING
+    used TODO: ADD INFO ERIN
+     */
     private final static double move = 0.4;
-        /*
-        USED IN MOVEMENT METHODS
-        */
+    /*
+    SPEED OF THE WHEEL MOTORS
+    used in all movement methods
+    */
 
+    //GYRO SENSOR CODES
     int balanceMove = 250;
     int targetHeadingGlyph = 180;
     int targetHeading = 270;
 
+    //ENCODERS
+    static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
+    static final double     DRIVE_GEAR_REDUCTION    = 2.0 ;     // This is < 1.0 if geared UP
+    static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
+    static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
+            (WHEEL_DIAMETER_INCHES * 3.1415);
+    static final double     DRIVE_SPEED             = 0.6;
+    static final double     TURN_SPEED              = 0.5;
+
+    //VUFORIA
+    VuforiaLocalizer vuforia;
+
     @Override
-    public void runOpMode() throws InterruptedException {
+    public void runOpMode() throws InterruptedException{
 
         //MOTORS
         leftFront = hardwareMap.dcMotor.get("left front");
@@ -115,20 +147,22 @@ public class FULL_AUTO extends LinearOpMode {
 
         //SERVOS
         ballArm = hardwareMap.crservo.get("ball arm");
-
         waitForStart();
 
+        /*
+        Below are our actual methods for
+        autonomous...
+         */
         jewel();
+        vuMark();
         dividerCount();
         scoreTurning();
         scoreGlyph();
-        extendBallArm();
     }
-
 
     //KNOCKS OFF THE CORRECT JEWEL
     public void jewel(){
-        while(sensed == false && opModeIsActive()) {
+        while(!sensed) {
             extendBallArm();
             String color = isColor();
             if (color.equals("RED")){
@@ -172,7 +206,7 @@ public class FULL_AUTO extends LinearOpMode {
 
     //EXTENDS JEWEL ARM UNTIL IT SENSES JEWEL
     public void extendBallArm(){
-        while (stopArm == false && opModeIsActive()) {
+        while (!stopArm) {
             if (jewelSensorL.blue() > jewelSensorL.red() || jewelSensorL.red() > jewelSensorL.blue() || jewelSensorR.red() > jewelSensorR.blue() || jewelSensorR.blue() > jewelSensorR.red() ) {
                 ballArm.setPower(0);
                 stopArm = true;
@@ -210,7 +244,6 @@ public class FULL_AUTO extends LinearOpMode {
         telemetry.addLine("divider count activated");
         telemetry.update();
         stopDatMovement(leftFront, leftBack, rightFront, rightBack);
-        sleep(5000);
         ballArm.setPower(0.5);
         sleep(extendArm);
         while (targetCount > cntr) {
@@ -233,9 +266,8 @@ public class FULL_AUTO extends LinearOpMode {
         }
         rightStrafe(leftFront, leftBack, rightFront, rightBack);
         sleep(3000);
-        telemetry.addLine("got to cypher");
+        telemetry.addLine("got to cypjer");
         telemetry.update();
-
     }
     //DETERMINES POSITION CRYPTOBOX
     public void cryptoCheck(){
@@ -249,7 +281,7 @@ public class FULL_AUTO extends LinearOpMode {
     }
     //TURNS ROBOT AT CIPHER
     public void scoreTurning() {
-        while (turned == false && opModeIsActive()) {
+        while (!turned) {
             int heading = MRGyro.getHeading();
 
             leftFront.setPower(-0.5);
@@ -265,7 +297,6 @@ public class FULL_AUTO extends LinearOpMode {
                 telemetry.addLine("turned and ready");
                 telemetry.update();
                 sleep(1000);
-                break;
             }
         }
     }
@@ -276,7 +307,38 @@ public class FULL_AUTO extends LinearOpMode {
             telemetry.update();
             leftIntake.setPower(0.7);
             rightIntake.setPower(-0.7);
-            break;
+        }
+    }
+
+    //VUFORIA METHOD
+    public void vuMark(){
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
+        parameters.vuforiaLicenseKey = "AZD9V+f/////AAAAGZDj5Sa0JkeSohNtCSdf0T94R9bz9UlzQyuCIZuJ2d1ehAEqmbPYzprSq4hmd/9XUZYT088pUIzwl79q9h2ljFjUFD5p0RHKBx+ggMJ+qgCelvbeNf7Rd771vlduzibSBN6np49m6Z31Eyk0dYFZJbpdmw4P7mQ8LaeR6UOLgmiythqcCZga9VoEHPA2e8Z9/7At1SZVPiOBkVlEKz5AGhPhL5/A/R3sb30NSaiq5yquyJ+sOWvNQ5ovdVND6OrAQrc2DdQcCDyD8JQLOiVZYCPoNohKfuZ9N2jnZRSueEH4XV6i2DOqWxfJ5vmNf6jBcrOWLROO8KEoPa2Fvibxj7lPMp4JM/nMXK7TwEopU91v";
+        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
+        this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
+        VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
+        VuforiaTrackable relicTemplate = relicTrackables.get(0);
+        relicTemplate.setName("relicVuMarkTemplate");
+
+        relicTrackables.activate();
+        boolean detectedPicto = false;
+        RelicRecoveryVuMark vuMark;
+        while(detectedPicto == false) {
+            vuMark = RelicRecoveryVuMark.from(relicTemplate);
+            telemetry.addData("VuMark", "%s visible", vuMark);
+            if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
+                detectedPicto  = true;
+                stopDatMovement(leftFront,leftBack,rightFront,rightBack);
+                telemetry.addData("Vuforia", vuMark);
+
+            }
+            else {
+                telemetry.addData("Vuforia", "NOT DETECTED");
+                leftStrafe(leftFront,leftBack,rightFront,rightBack);
+                //TODO: FIX THE STRAFING DIRECTIONS!?
+            }
+            telemetry.update();
         }
     }
 
