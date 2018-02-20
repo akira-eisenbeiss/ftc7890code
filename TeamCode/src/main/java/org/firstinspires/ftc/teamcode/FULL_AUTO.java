@@ -114,7 +114,7 @@ public class FULL_AUTO extends LinearOpMode {
     int targetHeadingGlyph = 180;
     int targetHeading = 270;
 
-    //ENCODERS
+    //ENCODERS jyvjvjyjvvj
     static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
     static final double     DRIVE_GEAR_REDUCTION    = 2.0 ;     // This is < 1.0 if geared UP
     static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
