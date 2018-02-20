@@ -52,7 +52,7 @@ public class FULL_AUTO extends LinearOpMode {
     //SENSORS
     ModernRoboticsI2cGyro MRGyro;
     IntegratingGyroscope gyro;
-    ColorSensor jewelSensorL, jewelSensorR; //these two are mounted on the ballArm
+    ColorSensor jewelSensorL, cryptoSensor; //these two are mounted on the ballArm
     OpticalDistanceSensor odsSensor;
     ModernRoboticsI2cRangeSensor rangeSensor;
 
@@ -74,6 +74,8 @@ public class FULL_AUTO extends LinearOpMode {
     */
     boolean scoring = false;
     /*
+    USED TO MAKE THE ROBOT TURN TOWARDS CRYPTO BOX
+    used in [scoreTurning]
      */
     int forwards = 1;
     /*
@@ -138,7 +140,7 @@ public class FULL_AUTO extends LinearOpMode {
 
         //SENSORS
         jewelSensorL = hardwareMap.colorSensor.get("jewel sensor L");
-        jewelSensorR = hardwareMap.colorSensor.get("jewel sensor R");
+        cryptoSensor = hardwareMap.colorSensor.get("jewel sensor R");
         MRGyro = hardwareMap.get(ModernRoboticsI2cGyro.class, "gyro");
         gyro = (IntegratingGyroscope) MRGyro;
         odsSensor = hardwareMap.opticalDistanceSensor.get("ods");
@@ -154,8 +156,9 @@ public class FULL_AUTO extends LinearOpMode {
          */
         jewel();
         vuMark();
-        dividerCount();
         scoreTurning();
+        dividerCount();
+
     }
 
     //KNOCKS OFF THE CORRECT JEWEL
@@ -205,7 +208,7 @@ public class FULL_AUTO extends LinearOpMode {
     //EXTENDS JEWEL ARM UNTIL IT SENSES JEWEL
     public void extendBallArm(){
         while (!stopArm && opModeIsActive()) {
-            if (jewelSensorL.blue() > jewelSensorL.red() || jewelSensorL.red() > jewelSensorL.blue() || jewelSensorR.red() > jewelSensorR.blue() || jewelSensorR.blue() > jewelSensorR.red() ) {
+            if (jewelSensorL.blue() > jewelSensorL.red() || jewelSensorL.red() > jewelSensorL.blue()) {
                 ballArm.setPower(0);
                 stopArm = true;
                 break;
@@ -220,12 +223,12 @@ public class FULL_AUTO extends LinearOpMode {
     //DETECTS COLOR
     String colorDetected;
     public String isColor(){
-        if (jewelSensorL.blue() > jewelSensorL.red() || jewelSensorR.blue() > jewelSensorR.red()) {
+        if (jewelSensorL.blue() > jewelSensorL.red()) {
             telemetry.addLine("DETECTED BLUE");
             telemetry.update();
             colorDetected = "BLUE";
         }
-        else if (jewelSensorL.blue() < jewelSensorL.red() ||jewelSensorR.blue() < jewelSensorR.red()){
+        else if (jewelSensorL.blue() < jewelSensorL.red()){
             telemetry.addLine("DETECTED RED");
             telemetry.update();
             colorDetected = "RED";
@@ -239,30 +242,31 @@ public class FULL_AUTO extends LinearOpMode {
     }
     //POSITIONS ROBOT AT CIPHER
     public void dividerCount(){
-        telemetry.addLine("divider count activated");
+        telemetry.addLine("dividerCount ACTIVATED");
         telemetry.update();
-        stopDatMovement(leftFront, leftBack, rightFront, rightBack);
-        ballArm.setPower(0.5);
-        sleep(extendArm);
+        /*
+        WHILE THE AMOUNT OF DIVIDERS SENSED IS
+        LESS THAN THE AMOUNT OF DIVIDERS DESIRED,
+        WE KEEP STRAFING... this breaks when we
+        have passed the correct number of dividers.
+        */
         while (targetCount > cntr && opModeIsActive()) {
             rightStrafe(leftFront, leftBack, rightFront, rightBack);
             telemetry.addLine("strafing to cypher");
             telemetry.update();
+            if (cryptoSensor.blue() > cryptoSensor.red()) {
+                cntr++;
+            }
+            /*
+            SLEEP SO WE DON'T DETECT
+            THE SAME CRYPTOBOX TWICE
+            */
+            sleep(150); //TODO: fix this value!
         }
-        if (cntr == targetCount) {
-            stopDatMovement(leftFront, leftBack, rightFront, rightBack);
-            scoreGlyph();
-        }
-    }
-
-    //DETERMINES POSITION CRYPTOBOX
-    public void cryptoCheck(){
-        if (targetCount == cntr){
-            telemetry.addLine("at cipher");
+        if (targetCount == cntr) {
+            telemetry.addLine("READY TO SCORE");
             telemetry.update();
-            ballArm.setPower(-0.5);
-            sleep(extendArm);
-            stopDatMovement(leftFront, leftBack, rightFront, rightBack);
+            scoreGlyph();
         }
     }
     //TURNS ROBOT AT CIPHER
@@ -325,14 +329,13 @@ public class FULL_AUTO extends LinearOpMode {
                     targetCount = 2;
                 else if(vuMark == RelicRecoveryVuMark.RIGHT)
                     targetCount = 3;
-                else if(vuMark == RelicRecoveryVuMark.UNKNOWN)
-                    targetCount = 2;
             }
             else {
                 telemetry.addData("Vuforia", "NOT DETECTED");
                 leftStrafe(leftFront,leftBack,rightFront,rightBack);
                 //TODO: FIX THE STRAFING DIRECTIONS!?
             }
+
             telemetry.update();
         }
     }

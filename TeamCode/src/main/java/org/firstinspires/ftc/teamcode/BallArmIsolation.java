@@ -22,7 +22,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 
 @Autonomous(name="ball arm isolation", group="isolation")
-public class ballArmIsolation extends LinearOpMode{
+public class BallArmIsolation extends LinearOpMode{
 
     DcMotor leftFront, leftBack, rightFront, rightBack;
     DcMotor leftIntake, rightIntake;
