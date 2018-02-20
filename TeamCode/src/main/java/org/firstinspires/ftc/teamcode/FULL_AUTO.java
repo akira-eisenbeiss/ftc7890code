@@ -37,6 +37,11 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
+/*
+7890 Space Lions 2018 "FULL AUTO FINAL"
+GOALS: jewel, vuforia, glyph scoring, parking
+ */
+
 @Autonomous(name="FULL AUTO FINAL", group="LinearOpMode")
 public class FULL_AUTO extends LinearOpMode {
     private ElapsedTime     runtime = new ElapsedTime();
@@ -101,12 +106,12 @@ public class FULL_AUTO extends LinearOpMode {
     int extendArm = 4750;
     /*
     THE DURATION OF THE BALLARM EXTENDING
-    used TODO: ADD INFO ERIN
+    not currently used
      */
     private final static double move = 0.4;
     /*
     SPEED OF THE WHEEL MOTORS
-    used in all movement methods
+    used in all movement methods [end of the code]
     */
 
     //GYRO SENSOR CODES
@@ -154,10 +159,10 @@ public class FULL_AUTO extends LinearOpMode {
         Below are our actual methods for
         autonomous...
          */
-        jewel();
-        vuMark();
-        scoreTurning();
-        dividerCount();
+        jewel(); //detects enemy team's jewel and knocks it off
+        vuMark(); //scans the pictograph to decide which column to deposit glyph
+        scoreTurning(); //correts our orientation in prep. for depositing glyph
+        dividerCount(); //moves us to the correct column and deposits the glyph
 
     }
 
@@ -213,7 +218,7 @@ public class FULL_AUTO extends LinearOpMode {
                 stopArm = true;
                 break;
             } else {
-                ballArm.setPower(out); //TODO: fix this value!
+                ballArm.setPower(out);
                 telemetry.addLine("extending ball arm");
                 telemetry.update();
             }
@@ -278,13 +283,13 @@ public class FULL_AUTO extends LinearOpMode {
             leftBack.setPower(-0.5);
             rightFront.setPower(-0.5);
             rightBack.setPower(-0.5);
-            telemetry.addLine("turning");
+            telemetry.addLine("TURNING...");
             telemetry.update();
 
             if (heading > targetHeadingGlyph - 10 && heading < targetHeadingGlyph + 10) {
                 stopDatMovement(leftFront, leftBack, rightFront, rightBack);
                 turned = true;
-                telemetry.addLine("turned and ready");
+                telemetry.addLine("TURNING COMPLETE");
                 telemetry.update();
                 sleep(1000);
             }
@@ -293,7 +298,7 @@ public class FULL_AUTO extends LinearOpMode {
     //SCORES GLYPH
     public void scoreGlyph(){
         while(!scoring && opModeIsActive()) {
-            telemetry.addLine("outtaking glyph");
+            telemetry.addLine("RELEASING GLYPH...");
             telemetry.update();
             leftIntake.setPower(0.7);
             rightIntake.setPower(-0.7);

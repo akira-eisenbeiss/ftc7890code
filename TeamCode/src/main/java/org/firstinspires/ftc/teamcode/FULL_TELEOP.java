@@ -8,6 +8,11 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
+/*
+7890 Space Lions 2018 "FULL TELEOP FINAL"
+GOALS: depositing two glyphs at a time, balancing stone
+ */
+
 @TeleOp(name="FULL TELEOP FINAL", group="Tele Op")
 public class FULL_TELEOP extends OpMode {
     private ElapsedTime runtime = new ElapsedTime();
