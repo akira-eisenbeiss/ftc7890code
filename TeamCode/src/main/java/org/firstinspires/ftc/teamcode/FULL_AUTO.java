@@ -350,8 +350,7 @@ public class FULL_AUTO extends LinearOpMode {
         motor3.setPower(0);
         motor4.setPower(0);
     }
-
-    //strafe method
+    //strafe methods
     public void leftStrafe(DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4) {
         motor1.setPower(move);
         motor2.setPower(-move);
@@ -364,14 +363,13 @@ public class FULL_AUTO extends LinearOpMode {
         motor3.setPower(-move);
         motor4.setPower(move);
     }
-    //move forward method
+    //y-axis movement methods
     public void moveForward(DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4) {
         motor1.setPower(-move);
         motor2.setPower(-move);
         motor3.setPower(move);
         motor4.setPower(move);
     }
-    //move backwards method
     public void moveBackwards(DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4) {
         motor1.setPower(move);
         motor2.setPower(move);
