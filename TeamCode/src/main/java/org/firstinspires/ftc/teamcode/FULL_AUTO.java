@@ -174,8 +174,8 @@ public class FULL_AUTO extends LinearOpMode {
             if (color.equals("RED")){
                 telemetry.addData("DETECTED COLOR", "RED");
                 telemetry.update();
-                leftStrafe(leftFront, leftBack, rightFront, rightBack);
-                sleep(250);
+                //turning to the left (counter-clockwise
+                encoderDrive(0.5, 0.5, 0.5, -0.5, -0.5, 5);
                 stopDatMovement(leftFront, leftBack, rightFront, rightBack);
                 sleep(5000);
                 ballArm.setPower(-out);
@@ -186,8 +186,8 @@ public class FULL_AUTO extends LinearOpMode {
             else if (color.equals("BLUE")) {
                 telemetry.addData("DETECTED COLOR", "BLUE");
                 telemetry.update();
-                rightStrafe(leftFront, leftBack, rightFront, rightBack);
-                sleep(250);
+                //turning to the right (clockwise)
+                encoderDrive(0.5, -0.5, -0.5, 0.5, 0.5, 5);
                 stopDatMovement(leftFront, leftBack, rightFront, rightBack);
                 sleep(5000);
                 ballArm.setPower(-out);
@@ -256,7 +256,7 @@ public class FULL_AUTO extends LinearOpMode {
         have passed the correct number of dividers.
         */
         while (targetCount > cntr && opModeIsActive()) {
-            rightStrafe(leftFront, leftBack, rightFront, rightBack);
+            leftStrafe(leftFront, leftBack, rightFront, rightBack);
             telemetry.addLine("strafing to cypher");
             telemetry.update();
             if (cryptoSensor.blue() > cryptoSensor.red()) {
@@ -326,7 +326,7 @@ public class FULL_AUTO extends LinearOpMode {
                 detectedPicto  = true;
                 stopDatMovement(leftFront,leftBack,rightFront,rightBack);
                 telemetry.addData("Vuforia", vuMark);
-
+                sleep(1000);
                 //CHANGING TARGET COUNT
                 if (vuMark == RelicRecoveryVuMark.LEFT)
                     targetCount = 1;
@@ -343,6 +343,44 @@ public class FULL_AUTO extends LinearOpMode {
 
             telemetry.update();
         }
+    }
+
+    public void encoderDrive(double speed, double leftFrontInches, double leftBackInches, double rightFrontInches, double rightBackInches, double timeOut) {
+
+        //sets up target for wheels
+        int leftFrontTarget, leftBackTarget, rightFrontTarget, rightBackTarget;
+        leftFrontTarget = leftFront.getCurrentPosition() + (int) (leftFrontInches * COUNTS_PER_INCH);
+        leftBackTarget = leftBack.getCurrentPosition() + (int) (leftBackInches * COUNTS_PER_INCH);
+        rightFrontTarget = rightFront.getCurrentPosition() + (int) (rightFrontInches * COUNTS_PER_INCH);
+        rightBackTarget = rightBack.getCurrentPosition() + (int) (rightBackInches * COUNTS_PER_INCH);
+        //setting target
+        leftFront.setTargetPosition(leftFrontTarget);
+        leftBack.setTargetPosition(leftBackTarget);
+        rightFront.setTargetPosition(rightFrontTarget);
+        rightBack.setTargetPosition(rightBackTarget);
+        //turning on RUN_TO_POSITION
+        leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //reset timer, set motors to absolute value of speed(shown in method parameters)
+        runtime.reset();
+        leftFront.setPower(Math.abs(speed));
+        rightFront.setPower(Math.abs(speed));
+        leftBack.setPower(Math.abs(speed));
+        rightBack.setPower(Math.abs(speed));
+
+        while (runtime.seconds() < timeOut){
+            telemetry.addData("turn status", "timer has not run out");
+            telemetry.update();
+        }
+        stopDatMovement(leftFront, leftBack, rightFront, rightBack);
+        // Turn off RUN_TO_POSITION
+        leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
     }
 
     //---------------------------//
