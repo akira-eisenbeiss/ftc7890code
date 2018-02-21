@@ -248,6 +248,7 @@ public class FULL_AUTO extends LinearOpMode {
     public void dividerCount(){
         telemetry.addLine("dividerCount ACTIVATED");
         telemetry.update();
+        encoderDrive(0.5, -2, -2, 2, 2, 5);
         /*
         WHILE THE AMOUNT OF DIVIDERS SENSED IS
         LESS THAN THE AMOUNT OF DIVIDERS DESIRED,
@@ -287,7 +288,7 @@ public class FULL_AUTO extends LinearOpMode {
                 turned = true;
                 telemetry.addLine("TURNING COMPLETE");
                 telemetry.update();
-                //inches or testing
+                //
                 encoderDrive(0.5, -1, -1, 1, 1, 5);
                 scoreGlyph();
                 sleep(1000);
