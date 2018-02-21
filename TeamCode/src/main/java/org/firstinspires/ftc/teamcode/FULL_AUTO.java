@@ -161,9 +161,8 @@ public class FULL_AUTO extends LinearOpMode {
          */
         jewel(); //detects enemy team's jewel and knocks it off
         vuMark(); //scans the pictograph to decide which column to deposit glyph
-        scoreTurning(); //correts our orientation in prep. for depositing glyph
         dividerCount(); //moves us to the correct column and deposits the glyph
-
+        scoreTurning(); //correts our orientation in prep. for depositing glyph
     }
 
     //KNOCKS OFF THE CORRECT JEWEL
@@ -269,20 +268,17 @@ public class FULL_AUTO extends LinearOpMode {
             sleep(150); //TODO: fix this value!
         }
         if (targetCount == cntr) {
+            //BACKING UP TO AVOID HITTING THE CRYPTOBOX
+            encoderDrive(0.5, 5, 5, -5, -5, 5);
             telemetry.addLine("READY TO SCORE");
             telemetry.update();
-            scoreGlyph();
         }
     }
     //TURNS ROBOT AT CIPHER
     public void scoreTurning() {
         while (!turned && opModeIsActive()) {
             int heading = MRGyro.getHeading();
-
-            leftFront.setPower(-0.5);
-            leftBack.setPower(-0.5);
-            rightFront.setPower(-0.5);
-            rightBack.setPower(-0.5);
+            rotateCW(leftFront,leftBack,rightFront,rightBack);
             telemetry.addLine("TURNING...");
             telemetry.update();
 
@@ -291,6 +287,9 @@ public class FULL_AUTO extends LinearOpMode {
                 turned = true;
                 telemetry.addLine("TURNING COMPLETE");
                 telemetry.update();
+                //inches or testing
+                encoderDrive(0.5, -1, -1, 1, 1, 5);
+                scoreGlyph();
                 sleep(1000);
             }
         }
