@@ -21,7 +21,7 @@ import com.qualcomm.robotcore.hardware.IntegratingGyroscope;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 
-@Autonomous(name="ball arm isolation", group="isolation")
+@Autonomous(name="RENAME FILES ERIN  arm isolation", group="isolation")
 public class DividerCountIsolation extends LinearOpMode{
 
     DcMotor leftFront, leftBack, rightFront, rightBack;

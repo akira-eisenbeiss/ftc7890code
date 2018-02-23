@@ -28,7 +28,8 @@ public class FULL_TELEOP extends OpMode {
 
     //SPEEDS
     int intakePower = 0;
-    double treadPower = -0.7;
+    double treadPower = -1;
+    double treadPowerSlow = -17/23;
 
     //DIRECTIONS
     private DcMotor.Direction LEFTDIRECTION = DcMotor.Direction.REVERSE;
@@ -102,12 +103,12 @@ public class FULL_TELEOP extends OpMode {
         if (gamepad2A && intakePower == 0) // in
         {
             leftIntake.setPower(treadPower);
-            rightIntake.setPower(-treadPower);
+            rightIntake.setPower(-treadPowerSlow);
             intakePower ^= 1;
         } else if (gamepad2A && intakePower == 1)// out
         {
             leftIntake.setPower(-treadPower);
-            rightIntake.setPower(treadPower);
+            rightIntake.setPower(treadPowerSlow);
             intakePower ^= 1;
         } else if (gamepad2B) {
             leftIntake.setPower(0);
