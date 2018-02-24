@@ -83,10 +83,19 @@ public class FULL_TELEOP extends OpMode {
         double lbDrive = Range.clip(drive + turn + strafe, -1.0, 1.0);
         double rfDrive = Range.clip(drive - turn + strafe, -1.0, 1.0);
         double rbDrive = Range.clip(drive - turn - strafe, -1.0, 1.0);
-        leftFront.setPower(lfDrive);
-        leftBack.setPower(lbDrive);
-        rightFront.setPower(rfDrive);
-        rightBack.setPower(rbDrive);
+
+        if(gamepad1.left_trigger > 0.3){ //SLOW DRIVING
+            leftFront.setPower(lfDrive/3);
+            leftBack.setPower(lbDrive/3);
+            rightFront.setPower(rfDrive/3);
+            rightBack.setPower(rbDrive/3);
+
+        }else{ //NORMAL DRIVING
+            leftFront.setPower(lfDrive);
+            leftBack.setPower(lbDrive);
+            rightFront.setPower(rfDrive);
+            rightBack.setPower(rbDrive);
+        }
 
         //DRAWBRIDGE
         float dbSpeed = gamepad2.left_stick_y / 2;
