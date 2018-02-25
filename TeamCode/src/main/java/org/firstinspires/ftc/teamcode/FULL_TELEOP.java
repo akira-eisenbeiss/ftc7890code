@@ -29,7 +29,8 @@ public class FULL_TELEOP extends OpMode {
     //SPEEDS
     int intakePower = 0;
     double treadPower = -1;
-    double treadPowerSlow = -17/23;
+    double treadPowerSlow = -0.73;
+            //ratio = 17/23
 
     //DIRECTIONS
     private DcMotor.Direction LEFTDIRECTION = DcMotor.Direction.REVERSE;
