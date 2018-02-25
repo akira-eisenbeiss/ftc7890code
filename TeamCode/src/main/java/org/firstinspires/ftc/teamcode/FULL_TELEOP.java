@@ -110,14 +110,28 @@ public class FULL_TELEOP extends OpMode {
         boolean gamepad2X = gamepad2.x;
         boolean gamepad2Y = gamepad2.y;
         if (gamepad2X) {
-            intakePower = 0;
-            telemetry.addData("intake", "0");
-            telemetry.update();
+            if(intakePower == 1){
+                intakePower ^= 1;
+                telemetry.addData("INTAKE", "0");
+                telemetry.update();
+            }
+            else if(intakePower == 0){
+                intakePower ^= 0;
+                telemetry.addData("INTAKE", "0");
+                telemetry.update();
+            }
         }
         if (gamepad2Y) {
-            intakePower = 1;
-            telemetry.addData("intake", "1");
-            telemetry.update();
+            if(intakePower == 1){
+                intakePower ^= 0;
+                telemetry.addData("INTAKE", "1");
+                telemetry.update();
+            }
+            else if(intakePower == 0){
+                intakePower ^= 1;
+                telemetry.addData("INTAKE", "1");
+                telemetry.update();
+            }
         }
 
         //INTAKE CODE
