@@ -42,8 +42,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 GOALS: jewel, vuforia, glyph scoring, parking
  */
 
-@Autonomous(name="red back up code", group="LinearOpMode")
-public class BACKUPCODE_RED extends LinearOpMode {
+@Autonomous(name="blu back up code", group="LinearOpMode")
+public class BACKUPCODE_BLU extends LinearOpMode {
     private ElapsedTime     runtime = new ElapsedTime();
 
     //MOTORS
@@ -171,7 +171,7 @@ public class BACKUPCODE_RED extends LinearOpMode {
                 telemetry.addData("DETECTED COLOR", "RED");
                 telemetry.update();
                 //turning to the left (counter-clockwise
-                rotateCW(leftFront,leftBack,rightFront,rightBack);
+                rotateCCW(leftFront,leftBack,rightFront,rightBack);
                 sleep(300);
                 stopDatMovement(leftFront, leftBack, rightFront, rightBack);
                 sleep(5000);
@@ -184,7 +184,7 @@ public class BACKUPCODE_RED extends LinearOpMode {
                 telemetry.addData("DETECTED COLOR", "BLUE");
                 telemetry.update();
                 //turning to the right (clockwise)
-                rotateCCW(leftFront,leftBack,rightFront,rightBack);
+                rotateCW(leftFront,leftBack,rightFront,rightBack);
                 sleep(300);
                 stopDatMovement(leftFront, leftBack, rightFront, rightBack);
                 sleep(5000);
