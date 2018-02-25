@@ -141,14 +141,14 @@ public class FULL_TELEOP extends OpMode {
         {
             leftIntake.setPower(treadPower);
             rightIntake.setPower(-treadPowerSlow);
-            telemetry.addData("intake", "0");
+            telemetry.addData("INTAKE", "0");
             telemetry.update();
             intakePower ^= 1;
         } else if (gamepad2A && intakePower == 1)// out
         {
             leftIntake.setPower(-treadPower);
             rightIntake.setPower(treadPowerSlow);
-            telemetry.addData("intake", "1");
+            telemetry.addData("INTAKE", "1");
             telemetry.update();
             intakePower ^= 1;
         } else if (gamepad2B) {
