@@ -41,6 +41,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 7890 Space Lions 2018 "FULL AUTO FINAL"
 GOALS: jewel, vuforia, glyph scoring, parking
  */
+//has become the red side
 
 @Autonomous(name="FULL AUTO FINAL", group="LinearOpMode")
 public class FULL_AUTO extends LinearOpMode {
@@ -58,7 +59,6 @@ public class FULL_AUTO extends LinearOpMode {
     ModernRoboticsI2cGyro MRGyro;
     IntegratingGyroscope gyro;
     ColorSensor jewelSensorL, cryptoSensor; //these two are mounted on the ballArm
-    OpticalDistanceSensor odsSensor;
     ModernRoboticsI2cRangeSensor rangeSensor;
 
     //COUNTERS AND BOOLEANS
@@ -113,7 +113,8 @@ public class FULL_AUTO extends LinearOpMode {
     SPEED OF THE WHEEL MOTORS
     used in all movement methods [end of the code]
     */
-
+    double sleepTime;
+    long sleepTimeLong;
     //GYRO SENSOR CODES
     int balanceMove = 250;
     int targetHeadingGlyph = 180;
@@ -124,8 +125,8 @@ public class FULL_AUTO extends LinearOpMode {
     static final double     DRIVE_GEAR_REDUCTION    = 2.0 ;     // This is < 1.0 if geared UP
     static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
-            (WHEEL_DIAMETER_INCHES * 3.1415);
-    static final double     DRIVE_SPEED             = 0.6;
+                                                      (WHEEL_DIAMETER_INCHES * 3.1415);
+    static final double     DRIVE_SPEED             = 0.5;
     static final double     TURN_SPEED              = 0.5;
 
     //VUFORIA
@@ -148,23 +149,22 @@ public class FULL_AUTO extends LinearOpMode {
         cryptoSensor = hardwareMap.colorSensor.get("jewel sensor R");
         MRGyro = hardwareMap.get(ModernRoboticsI2cGyro.class, "gyro");
         gyro = (IntegratingGyroscope) MRGyro;
-        odsSensor = hardwareMap.opticalDistanceSensor.get("ods");
         rangeSensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "ultrasound range");
 
         //SERVOS
         ballArm = hardwareMap.crservo.get("ball arm");
-        waitForStart();
 
+        waitForStart();
         /*
         Below are our actual methods for
         autonomous...
-         */
+        */
+        //commented out for testing
         jewel(); //detects enemy team's jewel and knocks it off
-        vuMark(); //scans the pictograph to decide which column to deposit glyph
-        dividerCount(); //moves us to the correct column and deposits the glyph
-        scoreTurning(); //correts our orientation in prep. for depositing glyph
+ //       vuMark(); //scans the pictograph to decide which column to deposit glyph
+   //     dividerCount(); //moves us to the correct column and deposits the glyph
+     //   scoreTurning(); //correts our orientation in prep. for depositing glyph
     }
-
     //KNOCKS OFF THE CORRECT JEWEL
     public void jewel(){
         while(!sensed && opModeIsActive()) {
@@ -173,24 +173,20 @@ public class FULL_AUTO extends LinearOpMode {
             if (color.equals("RED")){
                 telemetry.addData("DETECTED COLOR", "RED");
                 telemetry.update();
-                //turning to the left (counter-clockwise
-                encoderDrive(0.5, 0.5, 0.5, -0.5, -0.5, 5);
-                stopDatMovement(leftFront, leftBack, rightFront, rightBack);
-                sleep(5000);
+                //right strafe
+                encoderDrive(0.3, 3, -3, -3, 3, 30);
                 ballArm.setPower(-out);
-                sleep(1000);
+                sleep(extendArm);
                 sensed = true;
                 break;
             }
             else if (color.equals("BLUE")) {
                 telemetry.addData("DETECTED COLOR", "BLUE");
                 telemetry.update();
-                //turning to the right (clockwise)
-                encoderDrive(0.5, -0.5, -0.5, 0.5, 0.5, 5);
-                stopDatMovement(leftFront, leftBack, rightFront, rightBack);
-                sleep(5000);
+                //left strafe
+                encoderDrive(0.3, -3, 3, 3, -3, 30);
                 ballArm.setPower(-out);
-                sleep(1000);
+                sleep(extendArm);
                 sensed = true;
                 break;
             }
@@ -198,7 +194,11 @@ public class FULL_AUTO extends LinearOpMode {
                 telemetry.addData("DETECTED COLOR", "SKIP");
                 telemetry.update();
                 ballArm.setPower(-out);
+                sleep(extendArm);
                 sensed = true;
+                break;
+            }
+            else if (!opModeIsActive()) {
                 break;
             }
             else{
@@ -208,7 +208,6 @@ public class FULL_AUTO extends LinearOpMode {
             }
         }
     }
-
     //EXTENDS JEWEL ARM UNTIL IT SENSES JEWEL
     public void extendBallArm(){
         while (!stopArm && opModeIsActive()) {
@@ -216,14 +215,17 @@ public class FULL_AUTO extends LinearOpMode {
                 ballArm.setPower(0);
                 stopArm = true;
                 break;
-            } else {
+            }
+            else if (!opModeIsActive()) {
+               break;
+            }
+            else {
                 ballArm.setPower(out);
                 telemetry.addLine("extending ball arm");
                 telemetry.update();
             }
         }
     }
-
     //DETECTS COLOR
     String colorDetected;
     public String isColor(){
@@ -248,15 +250,19 @@ public class FULL_AUTO extends LinearOpMode {
     public void dividerCount(){
         telemetry.addLine("dividerCount ACTIVATED");
         telemetry.update();
-        encoderDrive(0.5, -2, -2, 2, 2, 5);
+        //moving off balancing plate
+        encoderDrive(0.5,-5,5,5,-5,30); //arbitrary values
+        //moving forward so that we can sense cryptobox
+        encoderDrive(0.5,1,1,1,1,30); //arbitrary values
         /*
         WHILE THE AMOUNT OF DIVIDERS SENSED IS
         LESS THAN THE AMOUNT OF DIVIDERS DESIRED,
         WE KEEP STRAFING... this breaks when we
         have passed the correct number of dividers.
         */
+        targetCount = 2;
         while (targetCount > cntr && opModeIsActive()) {
-            leftStrafe(leftFront, leftBack, rightFront, rightBack);
+            rightStrafe(leftFront, leftBack, rightFront, rightBack);
             telemetry.addLine("strafing to cypher");
             telemetry.update();
             if (cryptoSensor.blue() > cryptoSensor.red()) {
@@ -270,7 +276,7 @@ public class FULL_AUTO extends LinearOpMode {
         }
         if (targetCount == cntr) {
             //BACKING UP TO AVOID HITTING THE CRYPTOBOX
-            encoderDrive(0.5, 5, 5, -5, -5, 5);
+            encoderDrive(0.5,1,1,1,1,30); //arbitrary values
             telemetry.addLine("READY TO SCORE");
             telemetry.update();
         }
@@ -288,10 +294,10 @@ public class FULL_AUTO extends LinearOpMode {
                 turned = true;
                 telemetry.addLine("TURNING COMPLETE");
                 telemetry.update();
-                //
-                encoderDrive(0.5, -1, -1, 1, 1, 5);
+                //moving to get closer to cryptobox
+                encoderDrive(0.5,1,1,1,1,30); //arbitrary values
+                //to score the glyph
                 scoreGlyph();
-                sleep(1000);
             }
         }
     }
@@ -304,7 +310,6 @@ public class FULL_AUTO extends LinearOpMode {
             rightIntake.setPower(-0.7);
         }
     }
-
     //VUFORIA METHOD
     public void vuMark(){
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -322,9 +327,17 @@ public class FULL_AUTO extends LinearOpMode {
         while(detectedPicto == false && opModeIsActive()) {
             vuMark = RelicRecoveryVuMark.from(relicTemplate);
             telemetry.addData("VuMark", "%s visible", vuMark);
+            while(vuMark == RelicRecoveryVuMark.UNKNOWN && opModeIsActive( )) {
+                runtime.reset();
+                rotateCCWSlow(leftFront, leftBack, rightFront, rightBack);
+                sleepTime = runtime.seconds();
+                sleepTimeLong = (new Double(sleepTime)).longValue();
+            }
             if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
                 detectedPicto  = true;
                 stopDatMovement(leftFront,leftBack,rightFront,rightBack);
+                rotateCW(leftFront, leftBack, rightFront, rightBack);
+                sleep(sleepTimeLong);
                 telemetry.addData("Vuforia", vuMark);
                 sleep(1000);
                 //CHANGING TARGET COUNT
@@ -340,51 +353,72 @@ public class FULL_AUTO extends LinearOpMode {
                 leftStrafe(leftFront,leftBack,rightFront,rightBack);
                 //TODO: FIX THE STRAFING DIRECTIONS!?
             }
-
             telemetry.update();
         }
     }
-
+    //Setting up encoders
     public void encoderDrive(double speed, double leftFrontInches, double leftBackInches, double rightFrontInches, double rightBackInches, double timeOut) {
 
         //sets up target for wheels
         int leftFrontTarget, leftBackTarget, rightFrontTarget, rightBackTarget;
-        leftFrontTarget = leftFront.getCurrentPosition() + (int) (leftFrontInches * COUNTS_PER_INCH);
-        leftBackTarget = leftBack.getCurrentPosition() + (int) (leftBackInches * COUNTS_PER_INCH);
-        rightFrontTarget = rightFront.getCurrentPosition() + (int) (rightFrontInches * COUNTS_PER_INCH);
-        rightBackTarget = rightBack.getCurrentPosition() + (int) (rightBackInches * COUNTS_PER_INCH);
-        //setting target
-        leftFront.setTargetPosition(leftFrontTarget);
-        leftBack.setTargetPosition(leftBackTarget);
-        rightFront.setTargetPosition(rightFrontTarget);
-        rightBack.setTargetPosition(rightBackTarget);
-        //turning on RUN_TO_POSITION
-        leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        leftBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        //reset timer, set motors to absolute value of speed(shown in method parameters)
-        runtime.reset();
-        leftFront.setPower(Math.abs(speed));
-        rightFront.setPower(Math.abs(speed));
-        leftBack.setPower(Math.abs(speed));
-        rightBack.setPower(Math.abs(speed));
 
-        while (runtime.seconds() < timeOut){
-            telemetry.addData("turn status", "timer has not run out");
-            telemetry.update();
+        if (opModeIsActive()) {
+            //the reversing of left side may cause some problems, make sure ot comment them out
+            //the inch values get converted into actual inches here
+            leftFrontTarget = (leftFront.getCurrentPosition() + (int) (leftFrontInches * COUNTS_PER_INCH)) * -1;
+            leftBackTarget = (leftBack.getCurrentPosition() + (int) (leftBackInches * COUNTS_PER_INCH)) * -1;
+            rightFrontTarget = rightFront.getCurrentPosition() + (int) (rightFrontInches * COUNTS_PER_INCH);
+            rightBackTarget = rightBack.getCurrentPosition() + (int) (rightBackInches * COUNTS_PER_INCH);
+
+            //setting target
+            leftFront.setTargetPosition(leftFrontTarget);
+            leftBack.setTargetPosition(leftBackTarget);
+            rightFront.setTargetPosition(rightFrontTarget);
+            rightBack.setTargetPosition(rightBackTarget);
+
+            //turning on RUN_TO_POSITION
+            leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            leftBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            //reset timer, set motors to absolute value of speed(shown in method parameters)
+            runtime.reset();
+
+            leftFront.setPower(Math.abs(speed));
+            leftBack.setPower(Math.abs(speed));
+            rightFront.setPower(Math.abs(speed));
+            rightBack.setPower(Math.abs(speed));
+
+            while (opModeIsActive() && (runtime.seconds() < timeOut) &&
+                    (leftFront.isBusy() || leftBack.isBusy() || rightFront.isBusy() || rightBack.isBusy())) {
+
+                telemetry.addData("movement", "Running to %7d :%7d : %7d :%7d",
+                        leftFront.getCurrentPosition(),
+                        leftBack.getCurrentPosition(),
+                        rightFront.getCurrentPosition(),
+                        rightBack.getCurrentPosition()
+                );
+                telemetry.addData("targets", "Running to %7d :%7d : %7d :%7d ",
+                        leftFrontTarget,
+                        leftBackTarget,
+                        rightFrontTarget,
+                        rightBackTarget);
+                telemetry.update();
+            }
+
+            // Stop dat movement
+            stopDatMovement(leftFront, leftBack, rightFront, rightBack);
+
+            // Turn off RUN_TO_POSITION
+            leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            leftBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
-        stopDatMovement(leftFront, leftBack, rightFront, rightBack);
-        // Turn off RUN_TO_POSITION
-        leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        leftBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
     }
 
     //---------------------------//
-
 
     //methods for basic movements
     public static void stopDatMovement(DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4) {
@@ -406,12 +440,24 @@ public class FULL_AUTO extends LinearOpMode {
         motor3.setPower(-move);
         motor4.setPower(move);
     }
+    public void rightStrafeSlow(DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4) {
+        motor1.setPower(-0.2);
+        motor2.setPower(0.2);
+        motor3.setPower(-0.2);
+        motor4.setPower(0.2);
+    }
     //y-axis movement methods
     public void moveForward(DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4) {
         motor1.setPower(-move);
         motor2.setPower(-move);
         motor3.setPower(move);
         motor4.setPower(move);
+    }
+    public void moveForwardSlow(DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4) {
+        motor1.setPower(-0.2);
+        motor2.setPower(-0.2);
+        motor3.setPower(0.2);
+        motor4.setPower(0.2);
     }
     public void moveBackwards(DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4) {
         motor1.setPower(move);
@@ -431,5 +477,17 @@ public class FULL_AUTO extends LinearOpMode {
         motor2.setPower(move);
         motor3.setPower(move);
         motor4.setPower(move);
+    }
+    public static void rotateCCWSlow(DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4) {
+        motor1.setPower(0.1);
+        motor2.setPower(0.1);
+        motor3.setPower(0.1);
+        motor4.setPower(0.1);
+    }
+    public static void rotateCWSlow(DcMotor motor1, DcMotor motor2, DcMotor motor3, DcMotor motor4) {
+        motor1.setPower(-0.1);
+        motor2.setPower(-0.1);
+        motor3.setPower(-0.1);
+        motor4.setPower(-0.1);
     }
 }
